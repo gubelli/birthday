@@ -30,8 +30,7 @@ canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #hall{opacity:0}
 .veil{background:radial-gradient(ellipse at 50% 70%,var(--dusk),var(--night) 70%);opacity:0}
 .flare{background:radial-gradient(circle at 50% 46%,#fff3f8,#ffc4dc 45%,var(--gold));opacity:0}
-.outside>svg,.outside>.vault{position:absolute}
-.outside>svg *{animation:none!important}
+.outside>.vault{position:absolute}
 .walking .wrap,.walking .aurora,.walking #sky{visibility:hidden}
 /* opening curtain: velvet folds with a satin sheen, gold trim, fringe and a pleated valance. Only transform and
    opacity animate, on textures painted once. The valance's top edge stays night because Safari tints the iPhone status bar from it */
@@ -383,6 +382,7 @@ async function go(ix,popIx,fromFlash){
   if(busy)return;busy=true;
   const old=stage.querySelector(".page");
   const swap=()=>{pageIx=ix;save();letters(popIx);const p=build(ix);if(old)old.remove();stage.appendChild(p);window.scrollTo({top:0});
+    if(ix===0&&!still)setTimeout(()=>{if(pageIx===0)castleArt=prepareCastle()},1200);
     if(popIx!=null){const s=document.querySelectorAll(".slot")[popIx];s.textContent=R[popIx].l;s.classList.add("lit","pop")}
     const inp=p.querySelector("input");if(inp&&old&&matchMedia("(pointer:fine)").matches)setTimeout(()=>inp.focus({preventScroll:true}),1200);
     if(ix===7){setTimeout(()=>fireworks(8),300);setTimeout(()=>hearts(40),900)}};
@@ -407,26 +407,46 @@ async function walkIn(old,swap,ix){
   document.body.classList.remove("walking");swap();await fadeTo(hallC,0,700);walk.hidden=true;
 }
 
+// the walk up to the gate is drawn on the hall canvas from images rendered once in advance,
+// so each frame only scales finished bitmaps instead of re-rasterising the castle SVG
+const gateScale=w=>Math.max(2.5,innerWidth*.42/(w*44/320));
+let castleArt=null;
+function prepareCastle(){
+  const src=stage.querySelector(".page .bigcastle");if(!src)return Promise.resolve(null);
+  const w=src.getBoundingClientRect().width,cw=Math.min(2048,Math.round(w*gateScale(w)*Math.min(devicePixelRatio||1,2))),ch=Math.round(cw*304/320);
+  const m=bigCastle("p",true,true).replace("<svg ",`<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}" `),
+    head=m.slice(0,m.indexOf(">")+1),gL=m.match(/<g class="gL"[\s\S]*?<\/g>/)[0],gR=m.match(/<g class="gR"[\s\S]*?<\/g>/)[0];
+  const bitmap=svg=>new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const c=document.createElement("canvas");c.width=cw;c.height=ch;c.getContext("2d").drawImage(img,0,0,cw,ch);res(c)};img.onerror=rej;img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)});
+  return Promise.all([bitmap(m.replace(gL,"").replace(gR,"").replace(/<path class="spill"[^>]*\/>/,"")),bitmap(head+gL+"</svg>"),bitmap(head+gR+"</svg>")])
+    .then(([bg,dl,dr])=>({bg,dl,dr})).catch(()=>null);
+}
+
 async function approach(src){
   const box=src.closest(".artbox");box.style.transition="none";box.style.transform="";
-  const r=src.getBoundingClientRect();
-  outside.innerHTML=`<i class="veil"></i>${bigCastle("o",false,true)}<i class="flare"></i>`;
-  const [veil,svg,flare]=outside.children;
-  const gx=r.width*GATE[0],gy=r.height*GATE[1],tx=innerWidth/2-r.left-gx,ty=innerHeight*.62-r.top-gy,S=Math.max(2.5,innerWidth*.42/(r.width*44/320));
-  // the copy is rendered K times larger and shrunk to fit, so it is still sharp when we reach the gate
-  const K=Math.min(S,2.5);
-  Object.assign(svg.style,{left:r.left+"px",top:r.top+"px",width:r.width*K+"px",height:r.height*K+"px",transformOrigin:"0 0"});
-  // m: how much bigger the castle looks, e: how far the gate has moved towards its spot on screen, b: footstep bob
-  const view=(m,e,b=0)=>({transform:`translate(${tx*e-gx*(m-1)}px,${ty*e+b-gy*(m-1)}px) scale(${m/K})`});
-  fadeTo(veil,1,700);
-  // stride towards the gate: each keyframe is one footstep, bobbing the view
-  const kf=Array.from({length:11},(_,i)=>{const t=i/10,e=ease(t);return view(1+(S-1)*e,e,(i%2?5:-2)*Math.sin(Math.PI*t))});
-  setTimeout(()=>svg.classList.add("open"),1300);
-  await svg.animate(kf,{duration:2200,fill:"forwards"}).finished;
-  await wait(450);
-  fadeTo(flare,1,750);
-  await svg.animate([kf[10],view(S*10,1)],{duration:850,easing:"cubic-bezier(.55,0,.85,.4)",fill:"forwards"}).finished;
-  hallC.style.opacity=1;outside.innerHTML="";
+  const art=await(castleArt||(castleArt=prepareCastle()));
+  if(!art){fadeTo(hallC,1,500);return}
+  const r=src.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),W=hallC.width=Math.round(innerWidth*dpr),H=hallC.height=Math.round(innerHeight*dpr);
+  const gx=r.width*GATE[0],gy=r.height*GATE[1],tx=innerWidth/2-r.left-gx,ty=innerHeight*.62-r.top-gy,S=gateScale(r.width);
+  const veil=hc.createRadialGradient(W/2,H*.7,0,W/2,H*.7,Math.max(W,H)*.75);veil.addColorStop(0,"#45123d");veil.addColorStop(.7,"#24091f");veil.addColorStop(1,"#24091f");
+  const flare=hc.createRadialGradient(W/2,H*.46,0,W/2,H*.46,Math.hypot(W,H)*.55);flare.addColorStop(0,"#fff3f8");flare.addColorStop(.45,"#ffc4dc");flare.addColorStop(1,"#f7b5cd");
+  hallC.style.opacity=1;
+  const WALK=2200,HOLD=450,RUSH=850,END=WALK+HOLD+RUSH;
+  return new Promise(done=>{const t0=performance.now();
+    function frame(now){const el=now-t0,t=Math.min(1,el/WALK),e=ease(t),rush=smooth(WALK+HOLD,END,el);
+      // m: how much bigger the castle looks; four smooth footsteps bob and sway the view
+      const m=(1+(S-1)*e)*(1+2.2*rush*rush),env=Math.sin(Math.PI*t),bob=-Math.abs(Math.sin(t*Math.PI*4))*5*env,sway=Math.sin(t*Math.PI*4)*1.6*env;
+      const X=(r.left+tx*e-gx*(m-1)+sway)*dpr,Y=(r.top+ty*e-gy*(m-1)+bob)*dpr,w=r.width*m*dpr,h=r.height*m*dpr,open=smooth(1300,2400,el);
+      hc.setTransform(1,0,0,1,0,0);hc.clearRect(0,0,W,H);
+      hc.globalAlpha=smooth(0,700,el);hc.fillStyle=veil;hc.fillRect(0,0,W,H);hc.globalAlpha=1;
+      hc.drawImage(art.bg,X,Y,w,h);
+      for(const[img,hinge]of[[art.dl,140],[art.dr,180]]){const hx=X+w*hinge/320;hc.save();hc.translate(hx,0);hc.scale(1-.94*open,1);hc.translate(-hx,0);hc.drawImage(img,X,Y,w,h);hc.restore()}
+      if(open>0){const yy=v=>Y+h*(v+14)/304,xx=v=>X+w*v/320,g=hc.createLinearGradient(0,yy(250),0,yy(290));
+        g.addColorStop(0,`rgba(255,211,228,${.9*open})`);g.addColorStop(1,"rgba(255,211,228,0)");
+        hc.fillStyle=g;hc.beginPath();hc.moveTo(xx(140),yy(250));hc.lineTo(xx(180),yy(250));hc.lineTo(xx(214),yy(290));hc.lineTo(xx(106),yy(290));hc.fill()}
+      const fl=smooth(WALK+HOLD,WALK+HOLD+750,el);if(fl>0){hc.globalAlpha=fl;hc.fillStyle=flare;hc.fillRect(0,0,W,H);hc.globalAlpha=1}
+      if(el>700)document.body.classList.add("walking");
+      if(el<END)requestAnimationFrame(frame);else done()}
+    requestAnimationFrame(frame)})
 }
 
 // one hallway per riddle (keyed by its art), each hinting at what waits behind its door
@@ -611,7 +631,8 @@ function drawSky(t){
   for(const s of stars){sc.globalAlpha=.3+.6*Math.sin(t/900+s.p)**2;sc.fillStyle="#ffe1ee";sc.beginPath();sc.arc(s.x,s.y,s.r,0,6.28);sc.fill()}
   if(!still){if(!shoot&&Math.random()<.008)shoot={x:Math.random()*sky.width*.7,y:Math.random()*sky.height*.35,l:0};
     if(shoot){shoot.l++;const d=sky.width/innerWidth,x=shoot.x+shoot.l*10*d,y=shoot.y+shoot.l*4.5*d;const g=sc.createLinearGradient(x,y,x-110*d,y-50*d);g.addColorStop(0,"rgba(255,225,238,1)");g.addColorStop(1,"rgba(255,225,238,0)");sc.globalAlpha=1;sc.strokeStyle=g;sc.lineWidth=2.2*d;sc.beginPath();sc.moveTo(x,y);sc.lineTo(x-110*d,y-50*d);sc.stroke();if(shoot.l>55)shoot=null}}}
-addEventListener("resize",()=>{sizeSky();sizeFx()});sizeSky();requestAnimationFrame(drawSky);
+let lastW=innerWidth;
+addEventListener("resize",()=>{sizeSky();sizeFx();if(innerWidth!==lastW){lastW=innerWidth;castleArt=null}});sizeSky();requestAnimationFrame(drawSky);
 
 // particle effects
 const fx=document.getElementById("fx"),fc=fx.getContext("2d");let bits=[],running=false;
