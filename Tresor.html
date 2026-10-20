@@ -5,8 +5,8 @@
 <style>
 /* Layout: a storybook that turns one page at a time under an aurora night sky; walking into a fairy-tale castle between pages, staggered entrances, flying letters. Deliberately dark, single theme. */
 :root{
-  --night:#0d0a1f; --dusk:#1d1640; --ink:#f3ead6; --muted:#b9add6;
-  --gold:#e8c26a; --gold-deep:#a9822f; --rose:#e98aa8; --ok:#8fd6a8; --sea:#6fc3d9; --violet:#7a4fb0;
+  --night:#24091f; --dusk:#45123d; --ink:#fff1f6; --muted:#f0bfd6;
+  --gold:#f7b5cd; --gold-deep:#c45a86; --rose:#ff5fa2; --ok:#8fd6a8; --sea:#c3a6ff; --violet:#b04f9a;
   --display:"Cinzel Decorative","Cinzel",Georgia,serif;
   --label:"Cinzel",Georgia,serif;
   --body:"Cormorant Garamond",Georgia,"Times New Roman",serif;
@@ -18,9 +18,9 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:
 /* aurora */
 .aurora{position:fixed;inset:-20%;z-index:0;pointer-events:none}
 .aurora i{position:absolute;border-radius:50%;opacity:.5;will-change:transform;animation:drift 22s ease-in-out infinite alternate}
-.aurora i:nth-child(1){width:60vmax;height:40vmax;left:5%;top:0;background:radial-gradient(closest-side,#4b2fa0,color-mix(in srgb,#4b2fa0 35%,transparent) 55%,transparent)}
-.aurora i:nth-child(2){width:50vmax;height:35vmax;right:0;top:10%;background:radial-gradient(closest-side,#1f6f8b,color-mix(in srgb,#1f6f8b 35%,transparent) 55%,transparent);animation-duration:28s;animation-delay:-8s}
-.aurora i:nth-child(3){width:45vmax;height:30vmax;left:30%;top:35%;background:radial-gradient(closest-side,#8b2f63,color-mix(in srgb,#8b2f63 35%,transparent) 55%,transparent);animation-duration:34s;animation-delay:-14s}
+.aurora i:nth-child(1){width:60vmax;height:40vmax;left:5%;top:0;background:radial-gradient(closest-side,#a02f7a,color-mix(in srgb,#a02f7a 35%,transparent) 55%,transparent)}
+.aurora i:nth-child(2){width:50vmax;height:35vmax;right:0;top:10%;background:radial-gradient(closest-side,#7a2f8b,color-mix(in srgb,#7a2f8b 35%,transparent) 55%,transparent);animation-duration:28s;animation-delay:-8s}
+.aurora i:nth-child(3){width:45vmax;height:30vmax;left:30%;top:35%;background:radial-gradient(closest-side,#c2406f,color-mix(in srgb,#c2406f 35%,transparent) 55%,transparent);animation-duration:34s;animation-delay:-14s}
 @keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.2) rotate(25deg)}}
 canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #sky{z-index:0} #fx{z-index:8}
@@ -29,22 +29,22 @@ canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #hall,.outside,.veil,.flare{position:absolute;inset:0;width:100%;height:100%}
 #hall{opacity:0}
 .veil{background:radial-gradient(ellipse at 50% 70%,var(--dusk),var(--night) 70%);opacity:0}
-.flare{background:radial-gradient(circle at 50% 46%,#fff8e6,#f6dc98 45%,var(--gold));opacity:0}
+.flare{background:radial-gradient(circle at 50% 46%,#fff3f8,#ffc4dc 45%,var(--gold));opacity:0}
 .outside>svg,.outside>.vault{position:absolute}
 .outside>svg *{animation:none!important}
 .walking .wrap,.walking .aurora,.walking #sky{visibility:hidden}
 /* opening curtain; its top edge stays night blue because Safari tints the iPhone status bar from it */
 #curtain{position:fixed;inset:0;z-index:9;display:flex;pointer-events:none}
-#curtain b{flex:1;background:repeating-linear-gradient(90deg,#5a1630 0 22px,#781e3f 22px 40px);box-shadow:inset 0 -40px 60px rgba(0,0,0,.5);transition:transform 1.6s cubic-bezier(.7,0,.2,1)}
+#curtain b{flex:1;background:repeating-linear-gradient(90deg,#9c2a5e 0 22px,#c23c78 22px 40px);box-shadow:inset 0 -40px 60px rgba(0,0,0,.5);transition:transform 1.6s cubic-bezier(.7,0,.2,1)}
 #curtain.open b:first-child{transform:translateX(-102%)} #curtain.open b:last-child{transform:translateX(102%)}
-#curtain::after{content:"";position:absolute;inset:0 0 auto;height:56px;background:linear-gradient(180deg,var(--night),#5a1630);border-bottom:3px solid var(--gold);transition:transform 1.4s .4s}
+#curtain::after{content:"";position:absolute;inset:0 0 auto;height:56px;background:linear-gradient(180deg,var(--night),#9c2a5e);border-bottom:3px solid var(--gold);transition:transform 1.4s .4s}
 #curtain.open::after{transform:translateY(-110%)}
 .wrap{position:relative;z-index:1;box-sizing:border-box;min-height:100%;max-width:560px;margin:0 auto;padding-block:12px 20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:12px}
 .top{display:flex;flex-direction:column;align-items:center;gap:8px}
 .eyebrow{font-family:var(--label);letter-spacing:.22em;text-transform:uppercase;font-size:.76rem;color:var(--gold)}
 .letters{display:flex;justify-content:center;gap:8px}
 .slot{width:42px;height:50px;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent);border-radius:6px;display:grid;place-items:center;font-family:var(--display);font-size:1.4rem;color:var(--gold);background:color-mix(in srgb,var(--night) 70%,transparent);transition:transform .5s,box-shadow .5s;position:relative;overflow:hidden}
-.slot::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,244,210,.55) 50%,transparent 70%);transform:translateX(-120%)}
+.slot::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,225,238,.55) 50%,transparent 70%);transform:translateX(-120%)}
 .slot.lit{box-shadow:0 0 16px color-mix(in srgb,var(--gold) 60%,transparent);transform:translateY(-3px)}
 .slot.lit::after{animation:shine 3.5s ease-in-out infinite}
 .slot.lit:nth-child(2)::after{animation-delay:.25s}.slot.lit:nth-child(3)::after{animation-delay:.5s}.slot.lit:nth-child(4)::after{animation-delay:.75s}.slot.lit:nth-child(5)::after{animation-delay:1s}
@@ -75,7 +75,7 @@ canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 h1,h2{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
 h1{font-size:clamp(1.8rem,7.5vw,2.6rem)}
 h2{font-size:clamp(1.35rem,5.5vw,1.8rem);color:var(--gold)}
-.ch{display:inline-block;background:linear-gradient(180deg,#fff4d2,var(--gold) 60%,var(--gold-deep));-webkit-background-clip:text;background-clip:text;color:transparent;animation:drop .9s cubic-bezier(.2,1.4,.4,1) both,wave 3.2s ease-in-out infinite;animation-delay:calc(var(--c)*55ms + 400ms),calc(var(--c)*90ms + 1.6s)}
+.ch{display:inline-block;background:linear-gradient(180deg,#fff0f6,var(--gold) 60%,var(--gold-deep));-webkit-background-clip:text;background-clip:text;color:transparent;animation:drop .9s cubic-bezier(.2,1.4,.4,1) both,wave 3.2s ease-in-out infinite;animation-delay:calc(var(--c)*55ms + 400ms),calc(var(--c)*90ms + 1.6s)}
 h2 .ch{background:none;color:var(--gold);-webkit-background-clip:initial;background-clip:initial}
 @keyframes drop{from{opacity:0;transform:translateY(-40px) rotate(-20deg) scale(.4);filter:blur(4px)}}
 @keyframes wave{50%{transform:translateY(-4px)}}
@@ -86,9 +86,10 @@ h2 .ch{background:none;color:var(--gold);-webkit-background-clip:initial;backgro
 @keyframes line{from{opacity:0;filter:blur(8px);transform:translateY(8px)}}
 form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;max-width:380px}
 input{flex:1 1 170px;min-width:0;font:inherit;font-size:1.1rem;padding:10px 12px;border-radius:6px;border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);background:var(--night);color:var(--ink);text-align:center;transition:box-shadow .3s,border-color .3s}
+input::placeholder{color:var(--muted);opacity:1}
 input:focus{border-color:var(--gold);box-shadow:0 0 20px color-mix(in srgb,var(--gold) 35%,transparent)}
 input:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-button{font-family:var(--label);font-weight:700;letter-spacing:.08em;font-size:.85rem;padding:11px 18px;border-radius:6px;border:0;cursor:pointer;background:linear-gradient(110deg,var(--gold-deep),var(--gold) 40%,#fff4d2 50%,var(--gold) 60%,var(--gold-deep));background-size:250% 100%;color:var(--night);transition:transform .2s,box-shadow .2s;animation:btn 3s linear infinite}
+button{font-family:var(--label);font-weight:700;letter-spacing:.08em;font-size:.85rem;padding:11px 18px;border-radius:6px;border:0;cursor:pointer;background:linear-gradient(110deg,var(--gold-deep),var(--gold) 40%,#fff0f6 50%,var(--gold) 60%,var(--gold-deep));background-size:250% 100%;color:var(--night);transition:transform .2s,box-shadow .2s;animation:btn 3s linear infinite}
 @keyframes btn{to{background-position:-250% 0}}
 button:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 22px color-mix(in srgb,var(--gold) 60%,transparent)}
 button.ghost{background:transparent;color:var(--muted);border:1px solid color-mix(in srgb,var(--muted) 35%,transparent);animation:none}
@@ -126,18 +127,18 @@ button.big{font-size:1rem;padding:14px 24px;box-shadow:0 0 0 0 color-mix(in srgb
 .vault>*{position:absolute}
 .vf{inset:0;width:100%;height:100%;overflow:visible}
 .core,.leaf{left:25.833%;top:14.118%;width:48.333%;height:85.882%}
-.core{border-radius:50% 50% 0 0/39.73% 39.73% 0 0;background:radial-gradient(ellipse at 50% 62%,#fffbea,#ffe3a0 35%,var(--gold) 70%,var(--gold-deep));opacity:0;transition:opacity .6s}
+.core{border-radius:50% 50% 0 0/39.73% 39.73% 0 0;background:radial-gradient(ellipse at 50% 62%,#fff5fa,#ffc9de 35%,var(--gold) 70%,var(--gold-deep));opacity:0;transition:opacity .6s}
 .heartc{position:absolute;left:33%;top:40%;width:34%;height:auto}
-.rays{left:50%;top:64.7%;width:320%;aspect-ratio:1;transform:translate(-50%,-50%);background:repeating-conic-gradient(rgba(255,236,180,.3) 0 5deg,transparent 5deg 15deg);-webkit-mask:radial-gradient(closest-side,#000 12%,transparent 70%);mask:radial-gradient(closest-side,#000 12%,transparent 70%);opacity:0;transition:opacity 1.2s .3s;pointer-events:none}
+.rays{left:50%;top:64.7%;width:320%;aspect-ratio:1;transform:translate(-50%,-50%);background:repeating-conic-gradient(rgba(255,210,230,.3) 0 5deg,transparent 5deg 15deg);-webkit-mask:radial-gradient(closest-side,#000 12%,transparent 70%);mask:radial-gradient(closest-side,#000 12%,transparent 70%);opacity:0;transition:opacity 1.2s .3s;pointer-events:none}
 .leaf{width:24.167%;transition:transform 1.5s cubic-bezier(.45,0,.15,1)}
 .leaf.l{transform-origin:0 50%}
 .leaf.r{left:50%;transform-origin:100% 50%}
 .leaf svg,.dial svg{display:block;width:100%;height:100%;overflow:visible}
 .leaf .band{transition:stroke .5s}
-.seam{left:calc(50% - 1px);top:14.118%;width:2px;height:85.882%;background:#fff3cf;box-shadow:0 0 10px 3px rgba(255,226,150,.85);opacity:0;transition:opacity .5s}
+.seam{left:calc(50% - 1px);top:14.118%;width:2px;height:85.882%;background:#fff0f6;box-shadow:0 0 10px 3px rgba(255,180,215,.85);opacity:0;transition:opacity .5s}
 .dial{left:50%;top:65.88%;width:14%;aspect-ratio:1;transform:translate(-50%,-50%);transition:opacity .4s,transform .5s}
 .vault.unlock .core,.vault.unlock .seam{opacity:1}
-.vault.unlock .band{stroke:#ffe9a8}
+.vault.unlock .band{stroke:#ffd6e8}
 .vault.open .leaf.l{transform:rotateY(-112deg)}
 .vault.open .leaf.r{transform:rotateY(112deg)}
 .vault.open .seam{opacity:0}
@@ -170,67 +171,67 @@ const ART={
 vines:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true">
  <path d="M0 6 Q120 -8 240 8" stroke="#3f6b3a" stroke-width="10" fill="none" stroke-linecap="round"/>
  ${[[50,"a",120],[120,"b",150],[190,"c",105]].map(([x,c,l])=>`<g class="sway ${c}" style="transform-origin:${x}px 4px"><path d="M${x} 4 C${x-14} ${l*.35} ${x+14} ${l*.65} ${x} ${l}" stroke="#7fbf72" stroke-width="3" fill="none"/>
- ${[.25,.5,.75].map((t,i)=>`<path d="M${x} ${l*t} q${i%2?18:-18} -4 ${i%2?22:-22} 8 q${i%2?-14:14} 2 ${i%2?-22:22} -8z" fill="#7fbf72"/>`).join("")}<circle cx="${x}" cy="${l}" r="3" fill="#e8c26a"/></g>`).join("")}
- <g class="bob"><path d="M96 150q24-30 48 0q-24 14-48 0z" fill="#3f6b3a"/><path d="M110 142q10-10 20 0" stroke="#e8c26a" stroke-width="1.5" fill="none"/></g>
+ ${[.25,.5,.75].map((t,i)=>`<path d="M${x} ${l*t} q${i%2?18:-18} -4 ${i%2?22:-22} 8 q${i%2?-14:14} 2 ${i%2?-22:22} -8z" fill="#7fbf72"/>`).join("")}<circle cx="${x}" cy="${l}" r="3" fill="#f7b5cd"/></g>`).join("")}
+ <g class="bob"><path d="M96 150q24-30 48 0q-24 14-48 0z" fill="#3f6b3a"/><path d="M110 142q10-10 20 0" stroke="#f7b5cd" stroke-width="1.5" fill="none"/></g>
 </svg>`,
 tower:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true">
- <path d="M150 170V70h40v100z" fill="#2c2160" stroke="#e8c26a" stroke-width="1.2"/>
- <path d="M142 72l28-40 28 40z" fill="#3a2b78" stroke="#e8c26a" stroke-width="1.2"/>
- <path d="M162 92a8 8 0 0116 0v14h-16z" fill="#e8c26a" class="flick"/>
- <path d="M170 106 C150 120 175 140 158 170" stroke="#e8c26a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/>
- ${[[30,0],[70,2.3],[105,4.6],[50,1.2],[90,3.5],[125,5.8]].map(([x,d])=>`<g class="rise" style="animation-delay:-${d}s"><rect x="${x}" y="150" width="14" height="18" rx="4" fill="#f2b65a"/><rect x="${x+3}" y="153" width="8" height="12" rx="3" fill="#fff4d2" opacity=".8"/></g>`).join("")}
+ <path d="M150 170V70h40v100z" fill="#6a1f52" stroke="#f7b5cd" stroke-width="1.2"/>
+ <path d="M142 72l28-40 28 40z" fill="#8a2f6a" stroke="#f7b5cd" stroke-width="1.2"/>
+ <path d="M162 92a8 8 0 0116 0v14h-16z" fill="#f7b5cd" class="flick"/>
+ <path d="M170 106 C150 120 175 140 158 170" stroke="#f7b5cd" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/>
+ ${[[30,0],[70,2.3],[105,4.6],[50,1.2],[90,3.5],[125,5.8]].map(([x,d])=>`<g class="rise" style="animation-delay:-${d}s"><rect x="${x}" y="150" width="14" height="18" rx="4" fill="#f2b65a"/><rect x="${x+3}" y="153" width="8" height="12" rx="3" fill="#fff0f6" opacity=".8"/></g>`).join("")}
 </svg>`,
-lamp:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="lampHalo"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".75"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></radialGradient></defs>
- <path class="smoke" d="M150 108 C170 80 130 70 150 46 C168 24 130 14 146 -6" stroke="#b9add6" stroke-width="3" fill="none" stroke-linecap="round"/>
- <path class="smoke" style="animation-delay:-1.6s" d="M154 108 C186 86 160 62 178 40 C194 20 170 6 182 -10" stroke="#6fc3d9" stroke-width="2" fill="none" stroke-linecap="round"/>
+lamp:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="lampHalo"><stop offset="0" stop-color="#ffd3e4" stop-opacity=".75"/><stop offset="1" stop-color="#ffd3e4" stop-opacity="0"/></radialGradient></defs>
+ <path class="smoke" d="M150 108 C170 80 130 70 150 46 C168 24 130 14 146 -6" stroke="#f0bfd6" stroke-width="3" fill="none" stroke-linecap="round"/>
+ <path class="smoke" style="animation-delay:-1.6s" d="M154 108 C186 86 160 62 178 40 C194 20 170 6 182 -10" stroke="#c3a6ff" stroke-width="2" fill="none" stroke-linecap="round"/>
  <g class="bob"><ellipse class="glow" cx="104" cy="122" rx="80" ry="42" fill="url(#lampHalo)"/>
-  <path d="M60 128 C60 104 100 100 130 112 L160 104 C166 102 168 108 162 112 L138 126 C130 140 74 144 60 128z" fill="#e8c26a" stroke="#a9822f" stroke-width="1.5"/>
-  <path d="M60 126 C40 124 34 106 48 104" stroke="#e8c26a" stroke-width="5" fill="none" stroke-linecap="round"/>
-  <path d="M84 108 C86 96 104 96 106 108" fill="#e8c26a" stroke="#a9822f"/><circle cx="95" cy="94" r="4" fill="#e98aa8"/>
-  <path d="M74 144h44l-6 8h-32z" fill="#a9822f"/>
+  <path d="M60 128 C60 104 100 100 130 112 L160 104 C166 102 168 108 162 112 L138 126 C130 140 74 144 60 128z" fill="#f7b5cd" stroke="#c45a86" stroke-width="1.5"/>
+  <path d="M60 126 C40 124 34 106 48 104" stroke="#f7b5cd" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M84 108 C86 96 104 96 106 108" fill="#f7b5cd" stroke="#c45a86"/><circle cx="95" cy="94" r="4" fill="#ff5fa2"/>
+  <path d="M74 144h44l-6 8h-32z" fill="#c45a86"/>
  </g>
 </svg>`,
-shell:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="pearlHalo"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".75"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></radialGradient></defs>
- <path d="M0 150 Q60 140 120 152 T240 148V170H0z" fill="#1f3a5a"/>
- <g class="bob"><path d="M80 140 L120 70 L160 140 Q120 156 80 140z" fill="#e98aa8" stroke="#fde8ee" stroke-width="1.5"/>
+shell:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="pearlHalo"><stop offset="0" stop-color="#ffd3e4" stop-opacity=".75"/><stop offset="1" stop-color="#ffd3e4" stop-opacity="0"/></radialGradient></defs>
+ <path d="M0 150 Q60 140 120 152 T240 148V170H0z" fill="#3a1a4a"/>
+ <g class="bob"><path d="M80 140 L120 70 L160 140 Q120 156 80 140z" fill="#ff5fa2" stroke="#fde8ee" stroke-width="1.5"/>
  ${[-30,-15,0,15,30].map(o=>`<path d="M120 72 L${120+o} 146" stroke="#fde8ee" stroke-width="1.3"/>`).join("")}
- <circle cx="120" cy="120" r="22" fill="url(#pearlHalo)" class="glow"/><circle cx="120" cy="120" r="7" fill="#fff4d2"/></g>
- ${[[60,0,6],[96,1.4,4],[150,2.6,7],[182,.8,5],[130,3.6,3]].map(([x,d,r])=>`<circle class="bubble" style="animation-delay:-${d}s" cx="${x}" cy="140" r="${r}" fill="none" stroke="#6fc3d9" stroke-width="1.5"/>`).join("")}
- <path d="M30 150 C20 120 44 110 34 80" stroke="#7a4fb0" stroke-width="7" fill="none" stroke-linecap="round" class="sway" style="transform-origin:30px 150px"/>
- <path d="M210 150 C222 124 198 108 212 86" stroke="#7a4fb0" stroke-width="6" fill="none" stroke-linecap="round" class="sway b" style="transform-origin:210px 150px"/>
+ <circle cx="120" cy="120" r="22" fill="url(#pearlHalo)" class="glow"/><circle cx="120" cy="120" r="7" fill="#fff0f6"/></g>
+ ${[[60,0,6],[96,1.4,4],[150,2.6,7],[182,.8,5],[130,3.6,3]].map(([x,d,r])=>`<circle class="bubble" style="animation-delay:-${d}s" cx="${x}" cy="140" r="${r}" fill="none" stroke="#c3a6ff" stroke-width="1.5"/>`).join("")}
+ <path d="M30 150 C20 120 44 110 34 80" stroke="#b04f9a" stroke-width="7" fill="none" stroke-linecap="round" class="sway" style="transform-origin:30px 150px"/>
+ <path d="M210 150 C222 124 198 108 212 86" stroke="#b04f9a" stroke-width="6" fill="none" stroke-linecap="round" class="sway b" style="transform-origin:210px 150px"/>
 </svg>`,
 blossom:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true">
  <path d="M240 20 C180 30 150 60 90 66 M170 38 C160 60 140 70 130 96 M120 64 C110 50 96 44 70 46" stroke="#5b3a2e" stroke-width="5" fill="none" stroke-linecap="round"/>
- ${[[200,28],[160,46],[120,64],[86,66],[72,46],[138,86],[180,34]].map(([x,y])=>`<g transform="translate(${x} ${y})">${[0,72,144,216,288].map(a=>`<ellipse rx="4" ry="7" cy="-6" transform="rotate(${a})" fill="#f6c1d2"/>`).join("")}<circle r="2.5" fill="#e8c26a"/></g>`).join("")}
+ ${[[200,28],[160,46],[120,64],[86,66],[72,46],[138,86],[180,34]].map(([x,y])=>`<g transform="translate(${x} ${y})">${[0,72,144,216,288].map(a=>`<ellipse rx="4" ry="7" cy="-6" transform="rotate(${a})" fill="#f6c1d2"/>`).join("")}<circle r="2.5" fill="#f7b5cd"/></g>`).join("")}
  ${[[150,0],[110,1.5],[190,3],[80,4.2],[130,2.2]].map(([x,d])=>`<ellipse class="fall" style="animation-delay:-${d}s" cx="${x}" cy="70" rx="3" ry="5" fill="#f6c1d2"/>`).join("")}
- <g class="bob" style="animation-delay:-1s"><path d="M44 104h24" stroke="#e8c26a" stroke-width="2"/><rect x="40" y="106" width="32" height="40" rx="12" fill="#c8324f"/><path d="M40 126h32" stroke="#e8c26a" stroke-width="1.5"/><path d="M56 146v12" stroke="#e8c26a" stroke-width="2"/><circle cx="56" cy="126" r="9" fill="#fff4d2" opacity=".35" class="flick"/></g>
+ <g class="bob" style="animation-delay:-1s"><path d="M44 104h24" stroke="#f7b5cd" stroke-width="2"/><rect x="40" y="106" width="32" height="40" rx="12" fill="#c8324f"/><path d="M40 126h32" stroke="#f7b5cd" stroke-width="1.5"/><path d="M56 146v12" stroke="#f7b5cd" stroke-width="2"/><circle cx="56" cy="126" r="9" fill="#fff0f6" opacity=".35" class="flick"/></g>
 </svg>`
 
 };
 
 // the vault door is layered HTML so its leaves can swing open in 3D
 const vaultDoor=()=>`<div class="vault" aria-hidden="true">
- <svg class="vf" viewBox="0 0 240 170"><defs><linearGradient id="vst" x2="0" y2="1"><stop offset="0" stop-color="#3d2e80"/><stop offset="1" stop-color="#241a52"/></linearGradient></defs>
-  <path d="M30 170h180" stroke="#e8c26a" stroke-opacity=".5"/>
-  <path d="M44 170V80a76 76 0 01152 0v90z" fill="url(#vst)" stroke="#e8c26a" stroke-width="2"/>
-  <path d="M53 170V81a67 67 0 01134 0v89" fill="none" stroke="#e8c26a" stroke-opacity=".5" stroke-width="2.4" stroke-dasharray="0 6" stroke-linecap="round"/>
-  <path d="M62 170V82a58 58 0 01116 0v88z" fill="#0b0818" stroke="#a9822f" stroke-width="1.5"/>
-  <path d="M120 2l6 8-6 8-6-8z" fill="#e8c26a"/>
-  ${[[24,40],[214,30],[208,120],[30,128]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.6}s" d="M${x} ${y-5}L${x+1.5} ${y-1.5}L${x+5} ${y}L${x+1.5} ${y+1.5}L${x} ${y+5}L${x-1.5} ${y+1.5}L${x-5} ${y}L${x-1.5} ${y-1.5}Z" fill="#e8c26a"/>`).join("")}
+ <svg class="vf" viewBox="0 0 240 170"><defs><linearGradient id="vst" x2="0" y2="1"><stop offset="0" stop-color="#7a2a66"/><stop offset="1" stop-color="#4a1640"/></linearGradient></defs>
+  <path d="M30 170h180" stroke="#f7b5cd" stroke-opacity=".5"/>
+  <path d="M44 170V80a76 76 0 01152 0v90z" fill="url(#vst)" stroke="#f7b5cd" stroke-width="2"/>
+  <path d="M53 170V81a67 67 0 01134 0v89" fill="none" stroke="#f7b5cd" stroke-opacity=".5" stroke-width="2.4" stroke-dasharray="0 6" stroke-linecap="round"/>
+  <path d="M62 170V82a58 58 0 01116 0v88z" fill="#1a0716" stroke="#c45a86" stroke-width="1.5"/>
+  <path d="M120 2l6 8-6 8-6-8z" fill="#f7b5cd"/>
+  ${[[24,40],[214,30],[208,120],[30,128]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.6}s" d="M${x} ${y-5}L${x+1.5} ${y-1.5}L${x+5} ${y}L${x+1.5} ${y+1.5}L${x} ${y+5}L${x-1.5} ${y+1.5}L${x-5} ${y}L${x-1.5} ${y-1.5}Z" fill="#f7b5cd"/>`).join("")}
  </svg>
- <div class="core"><svg class="heartc" viewBox="-12 -11 24 22"><path d="M0 9C-6 4-10 1-10-4a5 5 0 0110-1a5 5 0 0110 1c0 5-4 8-10 13z" fill="#e98aa8" stroke="#fff4d2" stroke-width="1"/></svg></div>
+ <div class="core"><svg class="heartc" viewBox="-12 -11 24 22"><path d="M0 9C-6 4-10 1-10-4a5 5 0 0110-1a5 5 0 0110 1c0 5-4 8-10 13z" fill="#ff5fa2" stroke="#fff0f6" stroke-width="1"/></svg></div>
  <div class="rays"></div>
- <div class="leaf l"><svg viewBox="62 24 58 146" preserveAspectRatio="none"><defs><linearGradient id="wdl"><stop offset="0" stop-color="#34226a"/><stop offset="1" stop-color="#4f3496"/></linearGradient></defs>
-  <path d="M62 170V82a58 58 0 0158-58v146z" fill="url(#wdl)" stroke="#a9822f" stroke-width="1.5"/><path d="M76 170V45M91 170V32.5M106 170V26.5" stroke="#2a1a55" stroke-width="1.2"/>
-  <path class="band" d="M66.3 60H120M62 100H120M62 140H120" stroke="#c9a24a" stroke-width="4"/>${[60,100,140].map(y=>[70,84,98,112].map(x=>`<circle cx="${x}" cy="${y}" r="1.4" fill="#ffe2a0"/>`).join("")).join("")}</svg></div>
- <div class="leaf r"><svg viewBox="120 24 58 146" preserveAspectRatio="none"><defs><linearGradient id="wdr"><stop offset="0" stop-color="#4f3496"/><stop offset="1" stop-color="#34226a"/></linearGradient></defs>
-  <path d="M178 170V82a58 58 0 00-58-58v146z" fill="url(#wdr)" stroke="#a9822f" stroke-width="1.5"/><path d="M164 170V45M149 170V32.5M134 170V26.5" stroke="#2a1a55" stroke-width="1.2"/>
-  <path class="band" d="M173.7 60H120M178 100H120M178 140H120" stroke="#c9a24a" stroke-width="4"/>${[60,100,140].map(y=>[170,156,142,128].map(x=>`<circle cx="${x}" cy="${y}" r="1.4" fill="#ffe2a0"/>`).join("")).join("")}
-  <circle cx="132" cy="122" r="5" fill="none" stroke="#e8c26a" stroke-width="1.6"/></svg></div>
+ <div class="leaf l"><svg viewBox="62 24 58 146" preserveAspectRatio="none"><defs><linearGradient id="wdl"><stop offset="0" stop-color="#7a2358"/><stop offset="1" stop-color="#b0407f"/></linearGradient></defs>
+  <path d="M62 170V82a58 58 0 0158-58v146z" fill="url(#wdl)" stroke="#c45a86" stroke-width="1.5"/><path d="M76 170V45M91 170V32.5M106 170V26.5" stroke="#5a1a46" stroke-width="1.2"/>
+  <path class="band" d="M66.3 60H120M62 100H120M62 140H120" stroke="#f2a0c0" stroke-width="4"/>${[60,100,140].map(y=>[70,84,98,112].map(x=>`<circle cx="${x}" cy="${y}" r="1.4" fill="#ffd0e2"/>`).join("")).join("")}</svg></div>
+ <div class="leaf r"><svg viewBox="120 24 58 146" preserveAspectRatio="none"><defs><linearGradient id="wdr"><stop offset="0" stop-color="#b0407f"/><stop offset="1" stop-color="#7a2358"/></linearGradient></defs>
+  <path d="M178 170V82a58 58 0 00-58-58v146z" fill="url(#wdr)" stroke="#c45a86" stroke-width="1.5"/><path d="M164 170V45M149 170V32.5M134 170V26.5" stroke="#5a1a46" stroke-width="1.2"/>
+  <path class="band" d="M173.7 60H120M178 100H120M178 140H120" stroke="#f2a0c0" stroke-width="4"/>${[60,100,140].map(y=>[170,156,142,128].map(x=>`<circle cx="${x}" cy="${y}" r="1.4" fill="#ffd0e2"/>`).join("")).join("")}
+  <circle cx="132" cy="122" r="5" fill="none" stroke="#f7b5cd" stroke-width="1.6"/></svg></div>
  <i class="seam"></i>
- <div class="dial"><svg viewBox="-20 -20 40 40"><defs><radialGradient id="dlg" cx=".4" cy=".35"><stop offset="0" stop-color="#fff4d2"/><stop offset=".55" stop-color="#e8c26a"/><stop offset="1" stop-color="#a9822f"/></radialGradient></defs>
-  <circle r="17" fill="#6b4f1d"/><circle r="15.5" fill="url(#dlg)"/>${Array.from({length:12},(_,i)=>`<path d="M0-14.5v3" stroke="#6b4f1d" stroke-width="1.2" transform="rotate(${i*30})"/>`).join("")}
-  <circle r="7.5" fill="#3a2466" stroke="#fff4d2"/><path d="M0-4a2 2 0 012 2c0 .8-.4 1.3-.9 1.7L2 4h-4l.9-4.3A2 2 0 01-2-2a2 2 0 012-2z" fill="#fff4d2"/><path d="M0-17l2.4 3.6h-4.8z" fill="#fff4d2"/></svg></div>
+ <div class="dial"><svg viewBox="-20 -20 40 40"><defs><radialGradient id="dlg" cx=".4" cy=".35"><stop offset="0" stop-color="#fff0f6"/><stop offset=".55" stop-color="#f7b5cd"/><stop offset="1" stop-color="#c45a86"/></radialGradient></defs>
+  <circle r="17" fill="#8a3a5a"/><circle r="15.5" fill="url(#dlg)"/>${Array.from({length:12},(_,i)=>`<path d="M0-14.5v3" stroke="#8a3a5a" stroke-width="1.2" transform="rotate(${i*30})"/>`).join("")}
+  <circle r="7.5" fill="#6a1f52" stroke="#fff0f6"/><path d="M0-4a2 2 0 012 2c0 .8-.4 1.3-.9 1.7L2 4h-4l.9-4.3A2 2 0 01-2-2a2 2 0 012-2z" fill="#fff0f6"/><path d="M0-17l2.4 3.6h-4.8z" fill="#fff0f6"/></svg></div>
 </div>`;
 
 // the big fairy-tale castle; u keeps gradient ids unique per copy, GATE is the gate centre as a fraction of the viewBox
@@ -238,49 +239,49 @@ const GATE=[160/320,(236+14)/304];
 function bigCastle(u,open,calm){
   const win=(x,y,d)=>`<path class="flick" style="animation-delay:-${d}s" d="M${x-2.5} ${y+8}v-5.5a2.5 2.5 0 015 0v5.5z" fill="#ffd98a"/>`;
   const tower=(x,w,top,rh,wins,flag)=>{const a=top-rh,l=x-w/2-4,r=x+w/2+4;return`<rect x="${x-w/2}" y="${top}" width="${w}" height="${250-top}" fill="url(#${u}c)"/>
-   <path d="M${l} ${top}L${x} ${a}L${r} ${top}Q${x} ${top+7} ${l} ${top}z" fill="url(#${u}r)"/><path d="M${l+1} ${top+1.5}Q${x} ${top+8} ${r-1} ${top+1.5}" stroke="#e8c26a" stroke-width="1.6" fill="none"/>
-   ${wins.map(y=>win(x,y,(x+y*7)%10*.37)).join("")}<path d="M${x} ${a}v-${flag?16:6}" stroke="#e8c26a" stroke-width="1.2"/>
-   ${flag?`<path class="sway" style="transform-origin:${x}px ${a-16}px;animation-delay:-${x%5}s" d="M${x} ${a-16}l${flag} 4.5-${flag} 4.5z" fill="#e98aa8"/>`:`<circle cx="${x}" cy="${a-7}" r="1.8" fill="#e8c26a"/>`}`};
+   <path d="M${l} ${top}L${x} ${a}L${r} ${top}Q${x} ${top+7} ${l} ${top}z" fill="url(#${u}r)"/><path d="M${l+1} ${top+1.5}Q${x} ${top+8} ${r-1} ${top+1.5}" stroke="#f7b5cd" stroke-width="1.6" fill="none"/>
+   ${wins.map(y=>win(x,y,(x+y*7)%10*.37)).join("")}<path d="M${x} ${a}v-${flag?16:6}" stroke="#f7b5cd" stroke-width="1.2"/>
+   ${flag?`<path class="sway" style="transform-origin:${x}px ${a-16}px;animation-delay:-${x%5}s" d="M${x} ${a-16}l${flag} 4.5-${flag} 4.5z" fill="#ff5fa2"/>`:`<circle cx="${x}" cy="${a-7}" r="1.8" fill="#f7b5cd"/>`}`};
   const merlons=(x0,x1,y)=>{let m="";for(let x=x0;x<x1;x+=10)m+=`<rect x="${x}" y="${y}" width="6" height="8" fill="url(#${u}k)"/>`;return m};
   const arc="M8 236Q120 -80 312 150";
   return`<svg class="art bigcastle${open?" open":""}" viewBox="0 -14 320 304" aria-hidden="true">
  <defs>
-  <linearGradient id="${u}c"><stop offset="0" stop-color="#fbf8ff"/><stop offset=".5" stop-color="#d9cff4"/><stop offset="1" stop-color="#8d7fc2"/></linearGradient>
-  <linearGradient id="${u}r"><stop offset="0" stop-color="#7d93f0"/><stop offset=".45" stop-color="#4357c4"/><stop offset="1" stop-color="#1f2470"/></linearGradient>
-  <linearGradient id="${u}k" x2="0" y2="1"><stop offset="0" stop-color="#efe8ff"/><stop offset="1" stop-color="#a596d4"/></linearGradient>
-  <radialGradient id="${u}g" cy=".8"><stop offset="0" stop-color="#fffbea"/><stop offset="1" stop-color="#e8c26a"/></radialGradient>
-  <linearGradient id="${u}s" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".9"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></linearGradient>
-  <linearGradient id="${u}a"><stop offset="0" stop-color="#e8c26a" stop-opacity="0"/><stop offset=".55" stop-color="#fff4d2"/><stop offset="1" stop-color="#e8c26a" stop-opacity=".15"/></linearGradient>
-  <radialGradient id="${u}h"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".75"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></radialGradient>
+  <linearGradient id="${u}c"><stop offset="0" stop-color="#fff6fa"/><stop offset=".5" stop-color="#f6d3e3"/><stop offset="1" stop-color="#c983a8"/></linearGradient>
+  <linearGradient id="${u}r"><stop offset="0" stop-color="#ffa3cf"/><stop offset=".45" stop-color="#e0569a"/><stop offset="1" stop-color="#8a1f5a"/></linearGradient>
+  <linearGradient id="${u}k" x2="0" y2="1"><stop offset="0" stop-color="#fff0f6"/><stop offset="1" stop-color="#d79ab9"/></linearGradient>
+  <radialGradient id="${u}g" cy=".8"><stop offset="0" stop-color="#fff5fa"/><stop offset="1" stop-color="#f7b5cd"/></radialGradient>
+  <linearGradient id="${u}s" x2="0" y2="1"><stop offset="0" stop-color="#ffd3e4" stop-opacity=".9"/><stop offset="1" stop-color="#ffd3e4" stop-opacity="0"/></linearGradient>
+  <linearGradient id="${u}a"><stop offset="0" stop-color="#f7b5cd" stop-opacity="0"/><stop offset=".55" stop-color="#fff0f6"/><stop offset="1" stop-color="#f7b5cd" stop-opacity=".15"/></linearGradient>
+  <radialGradient id="${u}h"><stop offset="0" stop-color="#ffd3e4" stop-opacity=".75"/><stop offset="1" stop-color="#ffd3e4" stop-opacity="0"/></radialGradient>
   <mask id="${u}m"><rect x="240" y="0" width="80" height="80" fill="#fff"/><circle cx="284" cy="26" r="15" fill="#000"/></mask>
  </defs>
- <circle cx="276" cy="34" r="32" fill="url(#${u}h)" class="glow"/><circle cx="276" cy="34" r="16" fill="#fff4d2" mask="url(#${u}m)"/>
- ${[[24,30],[62,10],[206,4],[236,58],[304,100],[12,128],[96,40]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.4}s" d="M${x} ${y-5}L${x+1.5} ${y-1.5}L${x+5} ${y}L${x+1.5} ${y+1.5}L${x} ${y+5}L${x-1.5} ${y+1.5}L${x-5} ${y}L${x-1.5} ${y-1.5}Z" fill="#e8c26a"/>`).join("")}
- <path d="M0 232Q70 212 140 228T320 222V290H0z" fill="#1b1546"/>
+ <circle cx="276" cy="34" r="32" fill="url(#${u}h)" class="glow"/><circle cx="276" cy="34" r="16" fill="#fff0f6" mask="url(#${u}m)"/>
+ ${[[24,30],[62,10],[206,4],[236,58],[304,100],[12,128],[96,40]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.4}s" d="M${x} ${y-5}L${x+1.5} ${y-1.5}L${x+5} ${y}L${x+1.5} ${y+1.5}L${x} ${y+5}L${x-1.5} ${y+1.5}L${x-5} ${y}L${x-1.5} ${y-1.5}Z" fill="#f7b5cd"/>`).join("")}
+ <path d="M0 232Q70 212 140 228T320 222V290H0z" fill="#3b1238"/>
  ${tower(112,18,96,46,[106,128,152],9)}${tower(208,18,96,46,[106,128,152],9)}${tower(160,30,58,52,[66,80],12)}
  <rect x="124" y="118" width="72" height="132" fill="url(#${u}k)"/>
- <path d="M120 120L160 94L200 120Q160 126 120 120z" fill="url(#${u}r)"/><path d="M121 121.5Q160 127 199 121.5" stroke="#e8c26a" stroke-width="1.6" fill="none"/>
- <circle cx="160" cy="146" r="9" fill="#ffd98a" stroke="#e8c26a" stroke-width="2" class="flick"/><path d="M160 137v18M151 146h18M154 140l12 12M166 140l-12 12" stroke="#a9822f" stroke-width=".8"/>
+ <path d="M120 120L160 94L200 120Q160 126 120 120z" fill="url(#${u}r)"/><path d="M121 121.5Q160 127 199 121.5" stroke="#f7b5cd" stroke-width="1.6" fill="none"/>
+ <circle cx="160" cy="146" r="9" fill="#ffd98a" stroke="#f7b5cd" stroke-width="2" class="flick"/><path d="M160 137v18M151 146h18M154 140l12 12M166 140l-12 12" stroke="#c45a86" stroke-width=".8"/>
  ${win(140,160,.6)}${win(180,160,1.9)}
  ${tower(124,12,132,26,[],0)}${tower(196,12,132,26,[],0)}
  ${tower(80,28,124,58,[136,160,180],10)}${tower(240,28,124,58,[136,160,180],10)}
- <rect x="44" y="197" width="232" height="53" fill="url(#${u}k)"/>${merlons(44,276,189)}<path d="M44 197H276" stroke="#e8c26a" stroke-opacity=".7"/>
+ <rect x="44" y="197" width="232" height="53" fill="url(#${u}k)"/>${merlons(44,276,189)}<path d="M44 197H276" stroke="#f7b5cd" stroke-opacity=".7"/>
  ${win(64,216,.3)}${win(108,214,2.2)}${win(212,214,1.1)}${win(256,216,3)}
  ${tower(40,24,164,44,[176,200,222],8)}${tower(280,24,164,44,[176,200,222],8)}
- <rect x="130" y="186" width="60" height="64" fill="url(#${u}k)"/>${merlons(130,190,178)}<path d="M130 186H190" stroke="#e8c26a" stroke-opacity=".7"/>
- <circle cx="160" cy="195" r="13" fill="url(#${u}h)" class="glow"/><path d="M160 200c-4-3-7-5-7-8a3.5 3.5 0 017-1a3.5 3.5 0 017 1c0 3-3 5-7 8z" fill="#e98aa8"/>
- <path d="M0 250H320V258H0z" fill="#2a2060"/><rect y="256" width="320" height="20" fill="#17224d"/>
- ${[[24,264,0],[70,270,1],[236,266,.6],[284,271,1.6],[110,268,2.1],[206,272,.3]].map(([x,y,d])=>`<path class="twinkle" style="animation-delay:-${d}s" d="M${x} ${y}h${18}" stroke="#6fc3d9" stroke-width="1.2" stroke-linecap="round"/>`).join("")}
- <path d="M0 274Q160 264 320 274V290H0z" fill="#120e2c"/>
- ${[[10,252,10],[26,254,7],[300,251,11],[314,255,7]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#1c3b45"/>`).join("")}
- <path d="M142 250H178L204 290H116z" fill="#3f3480" stroke="#e8c26a" stroke-opacity=".45"/>
+ <rect x="130" y="186" width="60" height="64" fill="url(#${u}k)"/>${merlons(130,190,178)}<path d="M130 186H190" stroke="#f7b5cd" stroke-opacity=".7"/>
+ <circle cx="160" cy="195" r="13" fill="url(#${u}h)" class="glow"/><path d="M160 200c-4-3-7-5-7-8a3.5 3.5 0 017-1a3.5 3.5 0 017 1c0 3-3 5-7 8z" fill="#ff5fa2"/>
+ <path d="M0 250H320V258H0z" fill="#4a1a4a"/><rect y="256" width="320" height="20" fill="#2e1442"/>
+ ${[[24,264,0],[70,270,1],[236,266,.6],[284,271,1.6],[110,268,2.1],[206,272,.3]].map(([x,y,d])=>`<path class="twinkle" style="animation-delay:-${d}s" d="M${x} ${y}h${18}" stroke="#c3a6ff" stroke-width="1.2" stroke-linecap="round"/>`).join("")}
+ <path d="M0 274Q160 264 320 274V290H0z" fill="#1e0a1c"/>
+ ${[[10,252,10],[26,254,7],[300,251,11],[314,255,7]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#3a1a3a"/>`).join("")}
+ <path d="M142 250H178L204 290H116z" fill="#7a2f66" stroke="#f7b5cd" stroke-opacity=".45"/>
  <path d="M140 250V228a20 20 0 0140 0V250z" fill="url(#${u}g)"/>
  <path class="spill" d="M140 250H180L214 290H106z" fill="url(#${u}s)"/>
- <g class="gL" style="transform-origin:140px 240px"><path d="M140 250V228a20 20 0 0120-20V250z" fill="#4a2f80" stroke="#a9822f"/><path d="M140.5 224h19.5M140 240h20M147 214v36M153 210v40" stroke="#a9822f" stroke-width="1.2"/></g>
- <g class="gR" style="transform-origin:180px 240px"><path d="M180 250V228a20 20 0 00-20-20V250z" fill="#4a2f80" stroke="#a9822f"/><path d="M179.5 224h-19.5M180 240h-20M173 214v36M167 210v40" stroke="#a9822f" stroke-width="1.2"/><circle cx="164" cy="234" r="1.8" fill="#e8c26a"/></g>
- <path d="M138 250V228a22 22 0 0144 0V250" fill="none" stroke="#e8c26a" stroke-width="2"/>
+ <g class="gL" style="transform-origin:140px 240px"><path d="M140 250V228a20 20 0 0120-20V250z" fill="#8a2f6a" stroke="#c45a86"/><path d="M140.5 224h19.5M140 240h20M147 214v36M153 210v40" stroke="#c45a86" stroke-width="1.2"/></g>
+ <g class="gR" style="transform-origin:180px 240px"><path d="M180 250V228a20 20 0 00-20-20V250z" fill="#8a2f6a" stroke="#c45a86"/><path d="M179.5 224h-19.5M180 240h-20M173 214v36M167 210v40" stroke="#c45a86" stroke-width="1.2"/><circle cx="164" cy="234" r="1.8" fill="#f7b5cd"/></g>
+ <path d="M138 250V228a22 22 0 0144 0V250" fill="none" stroke="#f7b5cd" stroke-width="2"/>
  <path class="dust" d="${arc}" stroke="url(#${u}a)" stroke-width="2" stroke-linecap="round" fill="none"/>
- ${still||calm?"":`<g><circle r="11" fill="url(#${u}h)"/><path d="M0-6L1.6-1.6L6 0L1.6 1.6L0 6L-1.6 1.6L-6 0L-1.6-1.6Z" fill="#fff4d2"/><animateMotion dur="4.8s" repeatCount="indefinite" path="${arc}"/></g>`}
+ ${still||calm?"":`<g><circle r="11" fill="url(#${u}h)"/><path d="M0-6L1.6-1.6L6 0L1.6 1.6L0 6L-1.6 1.6L-6 0L-1.6-1.6Z" fill="#fff0f6"/><animateMotion dur="4.8s" repeatCount="indefinite" path="${arc}"/></g>`}
 </svg>`;
 }
 
@@ -403,8 +404,8 @@ async function approach(src){
 }
 
 // one hallway per riddle (keyed by its art), each hinting at what waits behind its door
-const HALL={wall:[64,50,122],floor:[[62,48,112],[46,36,90]],carpet:[150,30,70],ceil:[28,20,60],stone:[150,134,206],trim:[232,194,106],rail:[170,140,80],
-  arch:"round",climb:0,turn:0,light:"torch",glow:[255,180,90],motes:"dust",fog:[0,0,0],banners:[[196,70,110],[70,104,200]]};
+const HALL={wall:[112,40,92],floor:[[98,36,82],[76,26,64]],carpet:[232,92,152],ceil:[52,14,42],stone:[238,172,202],trim:[247,181,205],rail:[206,112,152],
+  arch:"round",climb:0,turn:0,light:"torch",glow:[255,140,190],motes:"dust",fog:[0,0,0],banners:[[255,95,162],[188,120,230]]};
 const HALLS={
   start:{turn:-.018},
   // Rapunzel: winding stairs up the tower, lanterns drifting upwards
@@ -416,7 +417,7 @@ const HALLS={
   // red lacquer moon gates, paper lanterns, falling blossoms
   blossom:{wall:[124,30,40],floor:[[52,32,34],[40,24,28]],carpet:[196,146,66],ceil:[40,12,18],stone:[168,44,50],rail:[230,180,90],arch:"moon",turn:.03,light:"paper",glow:[255,110,70],motes:"petal",banners:[[30,24,30],[214,160,70]]},
   // the gilded hall to the vault door
-  door:{wall:[92,70,130],floor:[[120,96,60],[96,76,50]],stone:[236,206,140],trim:[255,236,180],banners:[[233,138,168],[232,194,106]]}
+  door:{wall:[124,50,104],floor:[[150,80,122],[120,60,98]],stone:[255,200,222],trim:[255,222,236],banners:[[233,138,168],[247,181,205]]}
 };
 const MOTE_VY={lantern:-.35,bubble:-.6,petal:.4,sparkle:-.1};
 
@@ -463,7 +464,7 @@ function hall(D,fromLight,th){return new Promise(done=>{
   // world units: corridor half-width, floor, ceiling, arch half-width + springline (centre for moon gates), arch spacing, end door
   const{climb,turn}=th,f=Math.min(W,H*.6)*.42,HW=1.55,FL=1.3,CE=-2.7,L=3,DW=.62,DS=-.55,dist=7,zEnd=dist+1.7,NEAR=.28;
   const[AW,SP]=th.arch==="moon"?[1.45,-.55]:th.arch==="pointed"?[1.1,-.95]:[1.25,-1.25];
-  const GOLD=[255,214,140],motes=Array.from({length:44},()=>({x:(Math.random()-.5)*2.6,y:Math.random()*3.4,z:Math.random()*12,p:Math.random()*6.3}));
+  const GOLD=[255,190,216],motes=Array.from({length:44},()=>({x:(Math.random()-.5)*2.6,y:Math.random()*3.4,z:Math.random()*12,p:Math.random()*6.3}));
   const t0=performance.now();
   function frame(now){
     const t=Math.min(1,(now-t0)/D),e=fromLight?1-(1-t)**2:ease(t),v=fromLight?1-t:(t<.5?2*t:2-2*t),cam=dist*e,tt=now/1000;
@@ -481,14 +482,14 @@ function hall(D,fromLight,th){return new Promise(done=>{
       hc.beginPath();hc.rect(l,tp,r-l,bt-tp);hole();hc.closePath();hc.fillStyle=fill;hc.fill("evenodd");
       if(trim){hc.strokeStyle=trim;hc.lineWidth=.06*s;hc.beginPath();hole();hc.stroke();hc.fillStyle=trim;hc.beginPath();hc.arc(ax,sy-R*(shape==="pointed"?1.55:1),.09*s,0,6.29);hc.fill()}};
     const lamp=(x,y,qx,qy,s,fl,z)=>{
-      if(th.light==="torch"){hc.fillStyle=col([169,130,47],z);hc.beginPath();hc.arc(x,y,.06*s,0,6.29);hc.fill();
+      if(th.light==="torch"){hc.fillStyle=col([196,90,134],z);hc.beginPath();hc.arc(x,y,.06*s,0,6.29);hc.fill();
         hc.fillStyle="#ffc65c";hc.beginPath();hc.ellipse(qx,qy,.07*s,.14*s*fl,0,0,6.29);hc.fill();
-        hc.fillStyle="#fff6dc";hc.beginPath();hc.ellipse(qx,qy+.04*s,.03*s,.07*s*fl,0,0,6.29);hc.fill()}
-      else if(th.light==="lamp"){hc.fillStyle=col([232,194,106],z);hc.beginPath();hc.ellipse(x,y,.11*s,.045*s,0,0,6.29);hc.fill();
+        hc.fillStyle="#fff0f6";hc.beginPath();hc.ellipse(qx,qy+.04*s,.03*s,.07*s*fl,0,0,6.29);hc.fill()}
+      else if(th.light==="lamp"){hc.fillStyle=col([247,181,205],z);hc.beginPath();hc.ellipse(x,y,.11*s,.045*s,0,0,6.29);hc.fill();
         hc.fillStyle="#ffd27a";hc.beginPath();hc.ellipse(qx,qy+.07*s,.035*s,.08*s*fl,0,0,6.29);hc.fill()}
       else if(th.light==="lantern"){hc.fillStyle="#ffb347";hc.fillRect(qx-.06*s,qy-.06*s,.12*s,.17*s);hc.fillStyle="#fff0c0";hc.fillRect(qx-.03*s,qy-.03*s,.06*s,.11*s*fl);
-        hc.strokeStyle=col([232,194,106],z);hc.lineWidth=.015*s;hc.strokeRect(qx-.06*s,qy-.06*s,.12*s,.17*s)}
-      else if(th.light==="paper"){hc.fillStyle=col([232,194,106],z);hc.fillRect(qx-.05*s,qy-.16*s,.1*s,.03*s);hc.fillRect(qx-.05*s,qy+.11*s,.1*s,.03*s);
+        hc.strokeStyle=col([247,181,205],z);hc.lineWidth=.015*s;hc.strokeRect(qx-.06*s,qy-.06*s,.12*s,.17*s)}
+      else if(th.light==="paper"){hc.fillStyle=col([247,181,205],z);hc.fillRect(qx-.05*s,qy-.16*s,.1*s,.03*s);hc.fillRect(qx-.05*s,qy+.11*s,.1*s,.03*s);
         hc.fillStyle="#e0453a";hc.beginPath();hc.ellipse(qx,qy,.1*s,.13*s,0,0,6.29);hc.fill();
         hc.fillStyle="#ff9a6b";hc.beginPath();hc.ellipse(qx,qy,.05*s,.1*s*fl,0,0,6.29);hc.fill()}
       else{hc.fillStyle="#d8fbff";hc.beginPath();hc.arc(qx,qy+Math.sin(tt*1.7+z)*.06*s,.07*s*fl,0,6.29);hc.fill()}};
@@ -497,8 +498,8 @@ function hall(D,fromLight,th){return new Promise(done=>{
       else if(m==="lantern"){const r=Math.max(1,.03*s);hc.fillStyle="#ffb04a";hc.fillRect(a-r*.7,b-r,r*1.4,r*1.9);hc.fillStyle="#fff0c0";hc.fillRect(a-r*.35,b-r*.5,r*.7,r)}
       else if(m==="bubble"){hc.strokeStyle="rgba(190,240,255,.9)";hc.lineWidth=Math.max(.6,.005*s);hc.beginPath();hc.arc(a,b,Math.max(1.2,.035*s),0,6.29);hc.stroke()}
       else if(m==="petal"){hc.fillStyle="#f6b6cb";hc.beginPath();hc.ellipse(a,b,Math.max(1.2,.03*s),Math.max(.7,.017*s),tt*2+p.p,0,6.29);hc.fill()}
-      else{hc.fillStyle="#ffe6a8";hc.beginPath();hc.arc(a,b,Math.max(.8,.018*s),0,6.29);hc.fill()}};
-    hc.setTransform(1,0,0,1,0,0);hc.fillStyle="#fff3d6";hc.fillRect(0,0,W,H);
+      else{hc.fillStyle="#ffd1e4";hc.beginPath();hc.arc(a,b,Math.max(.8,.018*s),0,6.29);hc.fill()}};
+    hc.setTransform(1,0,0,1,0,0);hc.fillStyle="#fff0f6";hc.fillRect(0,0,W,H);
     hc.translate(W/2,H/2);hc.rotate(Math.sin(ph)*.008*v);hc.translate(-W/2,-H/2);
     face(zEnd,DW,DS,"round",col(th.wall.map(x=>x*1.6),zEnd),col(th.trim,zEnd));
     const glows=[];
@@ -515,7 +516,7 @@ function hall(D,fromLight,th){return new Promise(done=>{
       const tz=z+.5;
       if(z%L===1&&tz>cam+NEAR&&tz<zEnd)for(const sx of[-1,1]){
         const s=f/(tz-cam),fl=.85+.15*Math.sin(now/70+z*5+sx),lx=sx*(HW-.12),[ux,uy]=P(lx,-.8,tz),[qx,qy]=P(lx,-.97,tz);
-        if(th.light!=="orb")poly([[sx*HW,-.78,tz],[lx,-.82,tz],[lx,-.76,tz],[sx*HW,-.6,tz]],col([169,130,47],tz));
+        if(th.light!=="orb")poly([[sx*HW,-.78,tz],[lx,-.82,tz],[lx,-.76,tz],[sx*HW,-.6,tz]],col([196,90,134],tz));
         lamp(ux,uy,qx,qy,s,fl,tz);glows.push([lx,-.97,tz,fl])}
       const z1=z+.45,z2=z+1.05,zm=(z1+z2)/2;
       if(th.banners&&z%L===0&&z1>cam+NEAR&&z2<zEnd)for(const sx of[-1,1]){
@@ -534,7 +535,7 @@ function hall(D,fromLight,th){return new Promise(done=>{
     for(const[x,y,z,fl]of glows){const[a,b]=P(x,y,z),rad=1.2*f/(z-cam),g=hc.createRadialGradient(a,b,0,a,b,rad);
       g.addColorStop(0,`rgba(${gc},${.42*fl*Math.exp(-(z-cam)/6)})`);g.addColorStop(1,`rgba(${gc},0)`);hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
     {const[a,b]=P(0,.2,zEnd),rad=2.4*f/(zEnd-cam),g=hc.createRadialGradient(a,b,0,a,b,rad);
-      g.addColorStop(0,"rgba(255,236,190,.55)");g.addColorStop(1,"rgba(255,236,190,0)");hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
+      g.addColorStop(0,"rgba(255,214,232,.55)");g.addColorStop(1,"rgba(255,214,232,0)");hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
     if(th.motes==="bubble"||th.motes==="petal")hc.globalCompositeOperation="source-over";
     for(const p of motes){while(p.z<cam+NEAR)p.z+=12;const dz=p.z-cam;if(p.z>zEnd)continue;
       const vy=MOTE_VY[th.motes],y=vy?-2.3+((p.y+vy*tt)%3.4+3.4)%3.4:p.y-2.3+Math.sin(now/900+p.p)*.1,x=p.x+(th.motes==="petal"?Math.sin(tt*1.5+p.p)*.15:0);
@@ -544,7 +545,7 @@ function hall(D,fromLight,th){return new Promise(done=>{
     // golden light: fades out after stepping through the gate, floods in as we reach the far door
     const sh=Math.max(fromLight?1-smooth(0,.3,t):0,smooth(.7,1,t));
     if(sh>0){hc.setTransform(1,0,0,1,0,0);const g=hc.createRadialGradient(W/2,H*.46,0,W/2,H*.46,Math.hypot(W,H)*.55);
-      g.addColorStop(0,"#fff8e6");g.addColorStop(.45,"#f6dc98");g.addColorStop(1,"#e8c26a");hc.globalAlpha=sh;hc.fillStyle=g;hc.fillRect(0,0,W,H);hc.globalAlpha=1}
+      g.addColorStop(0,"#fff3f8");g.addColorStop(.45,"#ffc4dc");g.addColorStop(1,"#f7b5cd");hc.globalAlpha=sh;hc.fillStyle=g;hc.fillRect(0,0,W,H);hc.globalAlpha=1}
     if(t<1)requestAnimationFrame(frame);else done();
   }
   requestAnimationFrame(frame);
@@ -559,23 +560,23 @@ function drawSky(t){
     // stars twinkle slowly, so ~30fps is plenty unless a shooting star is crossing; nothing shows behind the hallway
     if((!shoot&&t-skyLast<30)||document.body.classList.contains("walking"))return}
   skyLast=t;sc.clearRect(0,0,sky.width,sky.height);
-  for(const s of stars){sc.globalAlpha=.3+.6*Math.sin(t/900+s.p)**2;sc.fillStyle="#f6e9c4";sc.beginPath();sc.arc(s.x,s.y,s.r,0,6.28);sc.fill()}
+  for(const s of stars){sc.globalAlpha=.3+.6*Math.sin(t/900+s.p)**2;sc.fillStyle="#ffe1ee";sc.beginPath();sc.arc(s.x,s.y,s.r,0,6.28);sc.fill()}
   if(!still){if(!shoot&&Math.random()<.008)shoot={x:Math.random()*sky.width*.7,y:Math.random()*sky.height*.35,l:0};
-    if(shoot){shoot.l++;const d=sky.width/innerWidth,x=shoot.x+shoot.l*10*d,y=shoot.y+shoot.l*4.5*d;const g=sc.createLinearGradient(x,y,x-110*d,y-50*d);g.addColorStop(0,"rgba(255,244,210,1)");g.addColorStop(1,"rgba(255,244,210,0)");sc.globalAlpha=1;sc.strokeStyle=g;sc.lineWidth=2.2*d;sc.beginPath();sc.moveTo(x,y);sc.lineTo(x-110*d,y-50*d);sc.stroke();if(shoot.l>55)shoot=null}}}
+    if(shoot){shoot.l++;const d=sky.width/innerWidth,x=shoot.x+shoot.l*10*d,y=shoot.y+shoot.l*4.5*d;const g=sc.createLinearGradient(x,y,x-110*d,y-50*d);g.addColorStop(0,"rgba(255,225,238,1)");g.addColorStop(1,"rgba(255,225,238,0)");sc.globalAlpha=1;sc.strokeStyle=g;sc.lineWidth=2.2*d;sc.beginPath();sc.moveTo(x,y);sc.lineTo(x-110*d,y-50*d);sc.stroke();if(shoot.l>55)shoot=null}}}
 addEventListener("resize",()=>{sizeSky();sizeFx()});sizeSky();requestAnimationFrame(drawSky);
 
 // particle effects
 const fx=document.getElementById("fx"),fc=fx.getContext("2d");let bits=[],running=false;
 function sizeFx(){fx.width=innerWidth;fx.height=innerHeight}sizeFx();
-const COLS=["#e8c26a","#fff4d2","#e98aa8","#8fd6a8","#6fc3d9","#b9add6"];
+const COLS=["#f7b5cd","#fff0f6","#ff5fa2","#8fd6a8","#c3a6ff","#f0bfd6"];
 function add(b){if(still)return;bits.push(b);if(!running){running=true;requestAnimationFrame(step)}}
 function star(x,y,r){fc.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?r*.4:r;fc.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}fc.closePath();fc.fill()}
 function heart(x,y,s){fc.beginPath();fc.moveTo(x,y+s*.3);fc.bezierCurveTo(x,y,x-s*.5,y,x-s*.5,y+s*.3);fc.bezierCurveTo(x-s*.5,y+s*.6,x,y+s*.8,x,y+s);fc.bezierCurveTo(x,y+s*.8,x+s*.5,y+s*.6,x+s*.5,y+s*.3);fc.bezierCurveTo(x+s*.5,y,x,y,x,y+s*.3);fc.fill()}
 function sparkleBurst(n,x=innerWidth/2,y=innerHeight*.45){for(let i=0;i<n;i++){const a=Math.random()*6.28,v=Math.random()*8+2;add({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,g:.12,s:Math.random()*4+2,c:COLS[i%6],life:70+Math.random()*40,max:110,k:"star"})}}
 function fireworks(n){for(let k=0;k<n;k++)setTimeout(()=>{const x=innerWidth*(.12+Math.random()*.76),y=innerHeight*(.1+Math.random()*.32),c=COLS[k%6],c2=COLS[(k+2)%6];
   for(let i=0;i<80;i++){const a=i/80*6.28,v=Math.random()*1.8+3.4;add({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:.055,s:2.2,c:i%2?c:c2,life:85+Math.random()*35,max:120,trail:true})}
-  for(let i=0;i<20;i++){const a=Math.random()*6.28,v=Math.random()*1.5;add({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:.02,s:3,c:"#fff4d2",life:140,max:140,k:"star"})}},k*420)}
-function hearts(n){for(let i=0;i<n;i++)setTimeout(()=>add({x:Math.random()*innerWidth,y:innerHeight+20,vx:(Math.random()-.5)*.6,vy:-(Math.random()*1.4+1.2),g:-.002,s:Math.random()*10+10,c:i%3?"#e98aa8":"#e8c26a",life:420,max:420,k:"heart",w:Math.random()*6.28}),i*130)}
+  for(let i=0;i<20;i++){const a=Math.random()*6.28,v=Math.random()*1.5;add({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:.02,s:3,c:"#fff0f6",life:140,max:140,k:"star"})}},k*420)}
+function hearts(n){for(let i=0;i<n;i++)setTimeout(()=>add({x:Math.random()*innerWidth,y:innerHeight+20,vx:(Math.random()-.5)*.6,vy:-(Math.random()*1.4+1.2),g:-.002,s:Math.random()*10+10,c:i%3?"#ff5fa2":"#f7b5cd",life:420,max:420,k:"heart",w:Math.random()*6.28}),i*130)}
 addEventListener("pointermove",e=>{if(Math.random()>.55)return;add({x:e.clientX,y:e.clientY,vx:(Math.random()-.5)*1.4,vy:Math.random()*.9,g:.03,s:Math.random()*2.6+1.4,c:COLS[Math.floor(Math.random()*3)],life:45,max:45,k:"star"})});
 addEventListener("pointerdown",e=>{if(e.target.closest("button,input"))return;sparkleBurst(24,e.clientX,e.clientY)});
 function step(){fc.globalCompositeOperation="destination-out";fc.fillStyle="rgba(0,0,0,.35)";fc.fillRect(0,0,fx.width,fx.height);fc.globalCompositeOperation="lighter";
