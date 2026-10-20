@@ -326,7 +326,7 @@ function build(ix){
     const v=p.querySelector(".verse");r.v.split("\n").forEach((t,i)=>{const s=document.createElement("span");s.style.setProperty("--l",i);s.textContent=t;v.appendChild(s)});
     const f=p.querySelector("form"),fb=p.querySelector(".feedback"),inp=f.querySelector("input");
     f.onsubmit=async e=>{e.preventDefault();const val=norm(inp.value);
-      if(r.a.some(a=>norm(a)===val)){fb.className="feedback good";fb.textContent="Siegel gebrochen! Du erhältst den Buchstaben "+r.l+".";f.querySelectorAll("button,input").forEach(x=>x.disabled=true);
+      if(r.a.some(a=>norm(a)===val)){fb.className="feedback good";fb.textContent="Siegel gebrochen! Du erhältst den Buchstaben "+r.l+".";document.activeElement.blur();f.querySelectorAll("button,input").forEach(x=>x.disabled=true);
         const ir=inp.getBoundingClientRect();sparkleBurst(90,ir.left+ir.width/2,ir.top);await flyLetter(r.l,ir,ix-1);await wait(500);go(ix+1,ix-1)}
       else wrong(p,fb,val?"Das Siegel hält. Versuch einen anderen Namen.":"Gib zuerst einen Namen ein.")};
     p.querySelector("#tip").onclick=()=>{if(!p.querySelector(".hint")){const h=document.createElement("p");h.className="hint";h.textContent="Tipp: "+r.h;p.appendChild(h)}};
@@ -334,7 +334,7 @@ function build(ix){
     p.innerHTML=`<div class="artbox">${vaultDoor()}</div><h2>${chars("Die Tresortür")}</h2><p class="lead">Alle fünf Siegel sind gebrochen. Ordne deine Buchstaben zu dem Wort, aus dem Wünsche gemacht sind, und sprich es an der Tür aus.</p><form><input id="final" placeholder="Das Zauberwort" autocomplete="off" aria-label="Zauberwort"><button>Öffnen</button></form><p class="feedback" aria-live="polite"></p>`;
     const f=p.querySelector("form"),fb=p.querySelector(".feedback");
     f.onsubmit=async e=>{e.preventDefault();
-      if(norm(f.querySelector("input").value)===FINAL){f.querySelectorAll("button,input").forEach(x=>x.disabled=true);fb.className="feedback good";fb.textContent="Die Tür öffnet sich …";
+      if(norm(f.querySelector("input").value)===FINAL){document.activeElement.blur();f.querySelectorAll("button,input").forEach(x=>x.disabled=true);fb.className="feedback good";fb.textContent="Die Tür öffnet sich …";
         if(still){go(7,null,true);return}
         await spellWord();await wait(450);await openVault(p.querySelector(".vault"))}
       else wrong(p,fb,"Die Tür rührt sich nicht. Tipp: Man hat ihn nachts, und manchmal wird er wahr.")};
@@ -352,10 +352,10 @@ async function go(ix,popIx,fromFlash){
   const old=stage.querySelector(".page");
   const swap=()=>{pageIx=ix;save();letters(popIx);const p=build(ix);if(old)old.remove();stage.appendChild(p);window.scrollTo({top:0});
     if(popIx!=null){const s=document.querySelectorAll(".slot")[popIx];s.textContent=R[popIx].l;s.classList.add("lit","pop")}
-    const inp=p.querySelector("input");if(inp&&old)setTimeout(()=>inp.focus({preventScroll:true}),1200);
+    const inp=p.querySelector("input");if(inp&&old&&matchMedia("(pointer:fine)").matches)setTimeout(()=>inp.focus({preventScroll:true}),1200);
     if(ix===7){setTimeout(()=>fireworks(8),300);setTimeout(()=>hearts(40),900)}};
   if(!old||still||fromFlash){swap();busy=false;return}
-  await walkIn(old,swap,ix);busy=false;
+  await walkIn(old,swap,ix);window.scrollTo({top:0});busy=false;
 }
 document.getElementById("reset").onclick=()=>go(0);
 
@@ -446,7 +446,7 @@ async function openVault(src){
   document.body.classList.remove("walking");
   await go(7,null,true);
   vault.remove();veil.remove();
-  await fadeTo(flare,0,1000);outside.innerHTML="";walk.hidden=true;
+  await fadeTo(flare,0,1000);outside.innerHTML="";walk.hidden=true;window.scrollTo({top:0});
 }
 
 function hall(D,fromLight,th){return new Promise(done=>{
