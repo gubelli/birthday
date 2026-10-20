@@ -243,17 +243,17 @@ function bigCastle(u,open,calm){
 }
 
 const R=[
- {t:"Der Herr des Dschungels",art:"vines",v:"Als Baby verlor ich meine Eltern,\nGorillas zogen mich gross.\nIch schwinge mich an Lianen durch den Urwald,\nbis eine Forscherin namens Jane auftaucht.\nWer bin ich?",a:["tarzan"],h:"Seine Gorilla-Mutter heisst Kala.",l:"T"},
- {t:"Das Haar im Turm",art:"tower",v:"Achtzehn Jahre sass ich in einem Turm,\nmein goldenes Haar war mein Geheimnis.\nJedes Jahr an meinem Geburtstag\nstiegen Lichter in den Himmel.\nWer bin ich?",a:["rapunzel"],h:"Ihr Begleiter ist ein Chamäleon namens Pascal.",l:"R"},
- {t:"Die Lampe in der Höhle",art:"lamp",v:"Am Tag ein Strassendieb, dank eines Wunsches ein Prinz.\nAuf einem fliegenden Teppich zog ich über Agrabah\nund schenkte meinem Freund mit dem letzten Wunsch die Freiheit.\nWer bin ich?",a:["aladdin","aladin"],h:"Sein bester Freund ist ein blauer Dschinni.",l:"A"},
  {t:"Die Hexe der Tiefe",art:"shell",v:"Halb Frau, halb Krake, herrsche ich in meiner Grotte.\nEiner jungen Meerjungfrau gab ich Beine,\ndoch als Preis nahm ich ihr die Stimme.\nWer bin ich?",a:["ursula"],h:"Die Bösewichtin aus «Arielle, die Meerjungfrau».",l:"U"},
- {t:"Die Kriegerin im Verborgenen",art:"blossom",v:"Für meinen Vater zog ich als Mann verkleidet in den Krieg.\nEin kleiner Drache wich nicht von meiner Seite,\nund am Ende rettete ich ganz China.\nWer bin ich?",a:["mulan"],h:"Ihr Drachen-Begleiter heisst Mushu.",l:"M"}
+ {t:"Die Kriegerin im Verborgenen",art:"blossom",v:"Für meinen Vater zog ich als Mann verkleidet in den Krieg.\nEin kleiner Drache wich nicht von meiner Seite,\nund am Ende rettete ich ganz China.\nWer bin ich?",a:["mulan"],h:"Ihr Drachen-Begleiter heisst Mushu.",l:"M"},
+ {t:"Der Herr des Dschungels",art:"vines",v:"Als Baby verlor ich meine Eltern,\nGorillas zogen mich gross.\nIch schwinge mich an Lianen durch den Urwald,\nbis eine Forscherin namens Jane auftaucht.\nWer bin ich?",a:["tarzan"],h:"Seine Gorilla-Mutter heisst Kala.",l:"T"},
+ {t:"Die Lampe in der Höhle",art:"lamp",v:"Am Tag ein Strassendieb, dank eines Wunsches ein Prinz.\nAuf einem fliegenden Teppich zog ich über Agrabah\nund schenkte meinem Freund mit dem letzten Wunsch die Freiheit.\nWer bin ich?",a:["aladdin","aladin"],h:"Sein bester Freund ist ein blauer Dschinni.",l:"A"},
+ {t:"Das Haar im Turm",art:"tower",v:"Achtzehn Jahre sass ich in einem Turm,\nmein goldenes Haar war mein Geheimnis.\nJedes Jahr an meinem Geburtstag\nstiegen Lichter in den Himmel.\nWer bin ich?",a:["rapunzel"],h:"Ihr Begleiter ist ein Chamäleon namens Pascal.",l:"R"}
 ];
 
 const FINAL="traum", N=R.length;
 let pageIx=0;
-try{pageIx=Math.min(7,Math.max(0,parseInt(localStorage.getItem("tresor-deluxe-page")||"0",10)||0))}catch(e){}
-const save=()=>{try{localStorage.setItem("tresor-deluxe-page",String(pageIx))}catch(e){}};
+try{pageIx=Math.min(7,Math.max(0,parseInt(localStorage.getItem("tresor-deluxe-v2")||"0",10)||0))}catch(e){}
+const save=()=>{try{localStorage.setItem("tresor-deluxe-v2",String(pageIx))}catch(e){}};
 const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z]/g,"");
 const solvedCount=()=>Math.min(N,Math.max(0,pageIx-1));
 const stage=document.getElementById("stage");
@@ -329,7 +329,7 @@ async function walkIn(old,swap,ix){
   const hide=()=>document.body.classList.add("walking");
   if(gate){await approach(gate);hide()}
   else{old.animate([{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"scale(1.08)",filter:"blur(6px)"}],{duration:550,easing:"ease-in",fill:"forwards"});fadeTo(hallC,1,500).then(hide)}
-  await hall(gate?2600:2300,!!gate,{...HALL,...HALLS[ix]});
+  await hall(gate?2600:2300,!!gate,{...HALL,...HALLS[ix===0?"start":ix<=N?R[ix-1].art:"door"]});
   document.body.classList.remove("walking");swap();await fadeTo(hallC,0,700);walk.hidden=true;
 }
 
@@ -351,21 +351,21 @@ async function approach(src){
   hallC.style.opacity=1;outside.innerHTML="";
 }
 
-// one hallway per destination page, each hinting at the riddle behind its door
+// one hallway per riddle (keyed by its art), each hinting at what waits behind its door
 const HALL={wall:[64,50,122],floor:[[62,48,112],[46,36,90]],carpet:[150,30,70],ceil:[28,20,60],stone:[150,134,206],trim:[232,194,106],rail:[170,140,80],
   arch:"round",climb:0,turn:0,light:"torch",glow:[255,180,90],motes:"dust",fog:[0,0,0],banners:[[196,70,110],[70,104,200]]};
 const HALLS={
-  0:{turn:-.018},
+  start:{turn:-.018},
   // Rapunzel: winding stairs up the tower, lanterns drifting upwards
-  2:{wall:[74,58,124],carpet:[112,62,168],stone:[166,146,214],climb:.3,turn:.02,light:"lantern",glow:[255,170,80],motes:"lantern",banners:[[112,62,168],[214,150,60]]},
+  tower:{wall:[74,58,124],carpet:[112,62,168],stone:[166,146,214],climb:.3,turn:.02,light:"lantern",glow:[255,170,80],motes:"lantern",banners:[[112,62,168],[214,150,60]]},
   // Agrabah: sandstone, onion arches, oil lamps, genie sparkles
-  3:{wall:[116,82,58],floor:[[96,70,52],[78,56,42]],carpet:[34,112,146],ceil:[48,30,36],stone:[220,186,124],rail:[90,170,180],arch:"pointed",turn:-.03,light:"lamp",motes:"sparkle",banners:[[104,48,140],[30,124,146]]},
+  lamp:{wall:[116,82,58],floor:[[96,70,52],[78,56,42]],carpet:[34,112,146],ceil:[48,30,36],stone:[220,186,124],rail:[90,170,180],arch:"pointed",turn:-.03,light:"lamp",motes:"sparkle",banners:[[104,48,140],[30,124,146]]},
   // down the steps into the sea witch's grotto
-  4:{wall:[30,64,98],floor:[[30,70,92],[22,54,74]],carpet:[92,60,132],ceil:[10,26,46],stone:[76,136,156],trim:[170,234,240],rail:[90,180,190],climb:-.3,turn:.024,light:"orb",glow:[110,220,240],motes:"bubble",fog:[2,22,40],banners:null},
+  shell:{wall:[30,64,98],floor:[[30,70,92],[22,54,74]],carpet:[92,60,132],ceil:[10,26,46],stone:[76,136,156],trim:[170,234,240],rail:[90,180,190],climb:-.3,turn:.024,light:"orb",glow:[110,220,240],motes:"bubble",fog:[2,22,40],banners:null},
   // red lacquer moon gates, paper lanterns, falling blossoms
-  5:{wall:[124,30,40],floor:[[52,32,34],[40,24,28]],carpet:[196,146,66],ceil:[40,12,18],stone:[168,44,50],rail:[230,180,90],arch:"moon",turn:.03,light:"paper",glow:[255,110,70],motes:"petal",banners:[[30,24,30],[214,160,70]]},
+  blossom:{wall:[124,30,40],floor:[[52,32,34],[40,24,28]],carpet:[196,146,66],ceil:[40,12,18],stone:[168,44,50],rail:[230,180,90],arch:"moon",turn:.03,light:"paper",glow:[255,110,70],motes:"petal",banners:[[30,24,30],[214,160,70]]},
   // the gilded hall to the vault door
-  6:{wall:[92,70,130],floor:[[120,96,60],[96,76,50]],stone:[236,206,140],trim:[255,236,180],banners:[[233,138,168],[232,194,106]]}
+  door:{wall:[92,70,130],floor:[[120,96,60],[96,76,50]],stone:[236,206,140],trim:[255,236,180],banners:[[233,138,168],[232,194,106]]}
 };
 const MOTE_VY={lantern:-.35,bubble:-.6,petal:.4,sparkle:-.1};
 
