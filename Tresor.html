@@ -3,7 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Cinzel:wght@500;700&display=swap">
 <style>
-/* Layout: a storybook that turns one page at a time under an aurora night sky; golden iris wipes between pages, staggered entrances, flying letters. Deliberately dark, single theme. */
+/* Layout: a storybook that turns one page at a time under an aurora night sky; walking into a fairy-tale castle between pages, staggered entrances, flying letters. Deliberately dark, single theme. */
 :root{
   --night:#0d0a1f; --dusk:#1d1640; --ink:#f3ead6; --muted:#b9add6;
   --gold:#e8c26a; --gold-deep:#a9822f; --rose:#e98aa8; --ok:#8fd6a8; --sea:#6fc3d9; --violet:#7a4fb0;
@@ -24,10 +24,13 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:
 @keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.2) rotate(25deg)}}
 canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #sky{z-index:0} #fx{z-index:8}
-/* iris transition */
-#iris{position:fixed;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at var(--x,50%) var(--y,50%),#fff4d2 0%,var(--gold) 18%,#6b3fa8 55%,var(--night) 85%);clip-path:circle(0% at var(--x,50%) var(--y,50%))}
-#iris.close{transition:clip-path .7s cubic-bezier(.7,0,.3,1);clip-path:circle(150% at var(--x,50%) var(--y,50%))}
-#iris.open{transition:clip-path .8s cubic-bezier(.3,0,.2,1);clip-path:circle(0% at 50% 50%)}
+/* walk-in transition: approach the castle gate, then stride down a torch-lit hall */
+#walk{position:fixed;inset:0;z-index:7;pointer-events:none}
+#hall,.outside,.veil,.flare{position:absolute;inset:0;width:100%;height:100%}
+#hall{opacity:0}
+.veil{background:radial-gradient(ellipse at 50% 70%,var(--dusk),var(--night) 70%);opacity:0}
+.flare{background:radial-gradient(circle at 50% 46%,#fff8e6,#f6dc98 45%,var(--gold));opacity:0}
+.outside svg{position:absolute}
 /* opening curtain */
 #curtain{position:fixed;inset:0;z-index:9;display:flex;pointer-events:none}
 #curtain b{flex:1;background:repeating-linear-gradient(90deg,#5a1630 0 22px,#781e3f 22px 40px);box-shadow:inset 0 -40px 60px rgba(0,0,0,.5);transition:transform 1.6s cubic-bezier(.7,0,.2,1)}
@@ -59,6 +62,13 @@ canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .page.wrong{box-shadow:0 0 0 2px var(--rose),0 0 40px color-mix(in srgb,var(--rose) 50%,transparent)}
 .artbox{width:min(100%,280px);transition:transform .25s ease-out;transform-style:preserve-3d}
 .art{width:100%;height:auto;overflow:visible;display:block}
+.artbox.wide{width:100%;max-width:360px}
+.bigcastle .gL,.bigcastle .gR{transition:transform 1.1s cubic-bezier(.6,0,.2,1)}
+.bigcastle.open .gL,.bigcastle.open .gR{transform:scaleX(.06)}
+.bigcastle .spill{opacity:0;transition:opacity 1.2s .3s}
+.bigcastle.open .spill{opacity:1}
+.dust{stroke-dasharray:1.5 7;animation:dust 2.4s linear infinite}
+@keyframes dust{to{stroke-dashoffset:-34}}
 .word{white-space:nowrap;display:inline-block}
 h1,h2{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
 h1{font-size:clamp(1.8rem,7.5vw,2.6rem)}
@@ -122,7 +132,7 @@ button.big{font-size:1rem;padding:14px 24px;box-shadow:0 0 0 0 color-mix(in srgb
 <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 <canvas id="sky" class="fx" aria-hidden="true"></canvas>
 <canvas id="fx" class="fx" aria-hidden="true"></canvas>
-<div id="iris" aria-hidden="true"></div>
+<div id="walk" hidden aria-hidden="true"><canvas id="hall"></canvas><div class="outside"></div></div>
 <div id="flash" aria-hidden="true"></div>
 <div id="curtain" aria-hidden="true"><b></b><b></b></div>
 <main class="wrap" lang="de">
@@ -136,22 +146,6 @@ button.big{font-size:1rem;padding:14px 24px;box-shadow:0 0 0 0 color-mix(in srgb
 
 <script>
 const ART={
-castle:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true">
- <circle cx="190" cy="38" r="20" fill="#fff4d2" class="glow"/><circle cx="198" cy="32" r="18" fill="#1d1640"/>
- ${[[30,30],[70,18],[120,12],[150,40],[220,70],[15,80]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.4}s" d="M${x} ${y-5}L${x+1.5} ${y-1.5}L${x+5} ${y}L${x+1.5} ${y+1.5}L${x} ${y+5}L${x-1.5} ${y+1.5}L${x-5} ${y}L${x-1.5} ${y-1.5}Z" fill="#e8c26a"/>`).join("")}
- <g fill="#2c2160" stroke="#e8c26a" stroke-width="1.2">
-  <path d="M40 170V100h18v70M182 170V100h18v70"/>
-  <path d="M36 102l13-26 13 26zM178 102l13-26 13 26z"/>
-  <path d="M70 170V80h22v90M148 170V80h22v90"/>
-  <path d="M66 82l15-36 15 36zM144 82l15-36 15 36z"/>
-  <path d="M100 170V60h40v110"/>
-  <path d="M95 62l25-50 25 50z"/>
-  <path d="M58 170v-46h124v46"/>
- </g>
- <path d="M110 170v-24a10 10 0 0120 0v24z" fill="#100c24" stroke="#e8c26a"/>
- <g fill="#e8c26a" class="flick"><rect x="114" y="88" width="5" height="9" rx="2.5"/><rect x="122" y="88" width="5" height="9" rx="2.5"/><rect x="78" y="104" width="5" height="9" rx="2.5"/><rect x="156" y="104" width="5" height="9" rx="2.5"/><rect x="46" y="118" width="5" height="8" rx="2.5"/><rect x="188" y="118" width="5" height="8" rx="2.5"/></g>
- <path d="M120 12V-4l12 5-12 5" fill="#e98aa8" class="sway"/>
-</svg>`,
 vines:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true">
  <path d="M0 6 Q120 -8 240 8" stroke="#3f6b3a" stroke-width="10" fill="none" stroke-linecap="round"/>
  ${[[50,"a",120],[120,"b",150],[190,"c",105]].map(([x,c,l])=>`<g class="sway ${c}" style="transform-origin:${x}px 4px"><path d="M${x} 4 C${x-14} ${l*.35} ${x+14} ${l*.65} ${x} ${l}" stroke="#7fbf72" stroke-width="3" fill="none"/>
@@ -198,6 +192,55 @@ door:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true" id="doorArt">
 </svg>`
 };
 
+// the big fairy-tale castle; u keeps gradient ids unique per copy, GATE is the gate centre as a fraction of the viewBox
+const GATE=[160/320,(236+14)/304];
+function bigCastle(u,open){
+  const win=(x,y,d)=>`<path class="flick" style="animation-delay:-${d}s" d="M${x-2.5} ${y+8}v-5.5a2.5 2.5 0 015 0v5.5z" fill="#ffd98a"/>`;
+  const tower=(x,w,top,rh,wins,flag)=>{const a=top-rh,l=x-w/2-4,r=x+w/2+4;return`<rect x="${x-w/2}" y="${top}" width="${w}" height="${250-top}" fill="url(#${u}c)"/>
+   <path d="M${l} ${top}L${x} ${a}L${r} ${top}Q${x} ${top+7} ${l} ${top}z" fill="url(#${u}r)"/><path d="M${l+1} ${top+1.5}Q${x} ${top+8} ${r-1} ${top+1.5}" stroke="#e8c26a" stroke-width="1.6" fill="none"/>
+   ${wins.map(y=>win(x,y,(x+y*7)%10*.37)).join("")}<path d="M${x} ${a}v-${flag?16:6}" stroke="#e8c26a" stroke-width="1.2"/>
+   ${flag?`<path class="sway" style="transform-origin:${x}px ${a-16}px;animation-delay:-${x%5}s" d="M${x} ${a-16}l${flag} 4.5-${flag} 4.5z" fill="#e98aa8"/>`:`<circle cx="${x}" cy="${a-7}" r="1.8" fill="#e8c26a"/>`}`};
+  const merlons=(x0,x1,y)=>{let m="";for(let x=x0;x<x1;x+=10)m+=`<rect x="${x}" y="${y}" width="6" height="8" fill="url(#${u}k)"/>`;return m};
+  const arc="M8 236Q120 -80 312 150";
+  return`<svg class="art bigcastle${open?" open":""}" viewBox="0 -14 320 304" aria-hidden="true">
+ <defs>
+  <linearGradient id="${u}c"><stop offset="0" stop-color="#fbf8ff"/><stop offset=".5" stop-color="#d9cff4"/><stop offset="1" stop-color="#8d7fc2"/></linearGradient>
+  <linearGradient id="${u}r"><stop offset="0" stop-color="#7d93f0"/><stop offset=".45" stop-color="#4357c4"/><stop offset="1" stop-color="#1f2470"/></linearGradient>
+  <linearGradient id="${u}k" x2="0" y2="1"><stop offset="0" stop-color="#efe8ff"/><stop offset="1" stop-color="#a596d4"/></linearGradient>
+  <radialGradient id="${u}g" cy=".8"><stop offset="0" stop-color="#fffbea"/><stop offset="1" stop-color="#e8c26a"/></radialGradient>
+  <linearGradient id="${u}s" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".9"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></linearGradient>
+  <linearGradient id="${u}a"><stop offset="0" stop-color="#e8c26a" stop-opacity="0"/><stop offset=".55" stop-color="#fff4d2"/><stop offset="1" stop-color="#e8c26a" stop-opacity=".15"/></linearGradient>
+  <mask id="${u}m"><rect x="240" y="0" width="80" height="80" fill="#fff"/><circle cx="284" cy="26" r="15" fill="#000"/></mask>
+ </defs>
+ <g class="glow"><circle cx="276" cy="34" r="16" fill="#fff4d2" mask="url(#${u}m)"/></g>
+ ${[[24,30],[62,10],[206,4],[236,58],[304,100],[12,128],[96,40]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.4}s" d="M${x} ${y-5}L${x+1.5} ${y-1.5}L${x+5} ${y}L${x+1.5} ${y+1.5}L${x} ${y+5}L${x-1.5} ${y+1.5}L${x-5} ${y}L${x-1.5} ${y-1.5}Z" fill="#e8c26a"/>`).join("")}
+ <path d="M0 232Q70 212 140 228T320 222V290H0z" fill="#1b1546"/>
+ ${tower(112,18,96,46,[106,128,152],9)}${tower(208,18,96,46,[106,128,152],9)}${tower(160,30,58,52,[66,80],12)}
+ <rect x="124" y="118" width="72" height="132" fill="url(#${u}k)"/>
+ <path d="M120 120L160 94L200 120Q160 126 120 120z" fill="url(#${u}r)"/><path d="M121 121.5Q160 127 199 121.5" stroke="#e8c26a" stroke-width="1.6" fill="none"/>
+ <circle cx="160" cy="146" r="9" fill="#ffd98a" stroke="#e8c26a" stroke-width="2" class="flick"/><path d="M160 137v18M151 146h18M154 140l12 12M166 140l-12 12" stroke="#a9822f" stroke-width=".8"/>
+ ${win(140,160,.6)}${win(180,160,1.9)}
+ ${tower(124,12,132,26,[],0)}${tower(196,12,132,26,[],0)}
+ ${tower(80,28,124,58,[136,160,180],10)}${tower(240,28,124,58,[136,160,180],10)}
+ <rect x="44" y="197" width="232" height="53" fill="url(#${u}k)"/>${merlons(44,276,189)}<path d="M44 197H276" stroke="#e8c26a" stroke-opacity=".7"/>
+ ${win(64,216,.3)}${win(108,214,2.2)}${win(212,214,1.1)}${win(256,216,3)}
+ ${tower(40,24,164,44,[176,200,222],8)}${tower(280,24,164,44,[176,200,222],8)}
+ <rect x="130" y="186" width="60" height="64" fill="url(#${u}k)"/>${merlons(130,190,178)}<path d="M130 186H190" stroke="#e8c26a" stroke-opacity=".7"/>
+ <path d="M160 200c-4-3-7-5-7-8a3.5 3.5 0 017-1a3.5 3.5 0 017 1c0 3-3 5-7 8z" fill="#e98aa8" class="glow"/>
+ <path d="M0 250H320V258H0z" fill="#2a2060"/><rect y="256" width="320" height="20" fill="#17224d"/>
+ ${[[24,264,0],[70,270,1],[236,266,.6],[284,271,1.6],[110,268,2.1],[206,272,.3]].map(([x,y,d])=>`<path class="twinkle" style="animation-delay:-${d}s" d="M${x} ${y}h${18}" stroke="#6fc3d9" stroke-width="1.2" stroke-linecap="round"/>`).join("")}
+ <path d="M0 274Q160 264 320 274V290H0z" fill="#120e2c"/>
+ ${[[10,252,10],[26,254,7],[300,251,11],[314,255,7]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#1c3b45"/>`).join("")}
+ <path d="M142 250H178L204 290H116z" fill="#3f3480" stroke="#e8c26a" stroke-opacity=".45"/>
+ <path d="M140 250V228a20 20 0 0140 0V250z" fill="url(#${u}g)"/>
+ <path class="spill" d="M140 250H180L214 290H106z" fill="url(#${u}s)"/>
+ <g class="gL" style="transform-origin:140px 240px"><path d="M140 250V228a20 20 0 0120-20V250z" fill="#4a2f80" stroke="#a9822f"/><path d="M140.5 224h19.5M140 240h20M147 214v36M153 210v40" stroke="#a9822f" stroke-width="1.2"/></g>
+ <g class="gR" style="transform-origin:180px 240px"><path d="M180 250V228a20 20 0 00-20-20V250z" fill="#4a2f80" stroke="#a9822f"/><path d="M179.5 224h-19.5M180 240h-20M173 214v36M167 210v40" stroke="#a9822f" stroke-width="1.2"/><circle cx="164" cy="234" r="1.8" fill="#e8c26a"/></g>
+ <path d="M138 250V228a22 22 0 0144 0V250" fill="none" stroke="#e8c26a" stroke-width="2"/>
+ <path class="dust" d="${arc}" stroke="url(#${u}a)" stroke-width="2" stroke-linecap="round" fill="none"/>
+ ${still?"":`<g><path d="M0-6L1.6-1.6L6 0L1.6 1.6L0 6L-1.6 1.6L-6 0L-1.6-1.6Z" fill="#fff4d2" class="glow"/><animateMotion dur="4.8s" repeatCount="indefinite" path="${arc}"/></g>`}
+</svg>`;
+}
 
 const R=[
  {t:"Der Herr des Dschungels",art:"vines",v:"Als Baby verlor ich meine Eltern,\nGorillas zogen mich gross.\nIch schwinge mich an Lianen durch den Urwald,\nbis eine Forscherin namens Jane auftaucht.\nWer bin ich?",a:["tarzan"],h:"Seine Gorilla-Mutter heisst Kala.",l:"T"},
@@ -213,7 +256,7 @@ try{pageIx=Math.min(7,Math.max(0,parseInt(localStorage.getItem("tresor-deluxe-pa
 const save=()=>{try{localStorage.setItem("tresor-deluxe-page",String(pageIx))}catch(e){}};
 const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z]/g,"");
 const solvedCount=()=>Math.min(N,Math.max(0,pageIx-1));
-const stage=document.getElementById("stage"),iris=document.getElementById("iris");
+const stage=document.getElementById("stage");
 const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const wait=ms=>new Promise(r=>setTimeout(r,still?0:ms));
 const chars=t=>{let i=0;return t.split(" ").map(w=>`<span class="word">${[...w].map(c=>`<span class="ch" style="--c:${i++}">${c}</span>`).join("")}</span>`).join(" ")};
@@ -232,8 +275,8 @@ function wrong(p,fb,msg){fb.className="feedback bad";fb.textContent=msg;p.classL
 function build(ix){
   const p=document.createElement("section");p.className="page";
   if(ix===0){
-    p.innerHTML=`<div class="artbox">${ART.castle}</div><h1>${chars("Der verzauberte")}<br>${chars("Geburtstagstresor")}</h1><p class="lead">Irgendwo in deinen Lieblingsgeschichten ist ein Geschenk eingeschlossen. Brich fünf Siegel, indem du die Figur in jedem Rätsel errätst. Jedes Siegel schenkt dir einen Buchstaben.</p><button class="big" id="go">Das Märchen beginnt</button>`;
-    p.querySelector("#go").onclick=e=>go(1,null,e);
+    p.innerHTML=`<div class="artbox wide">${bigCastle("h")}</div><h1>${chars("Der verzauberte")}<br>${chars("Geburtstagstresor")}</h1><p class="lead">Irgendwo in deinen Lieblingsgeschichten ist ein Geschenk eingeschlossen. Brich fünf Siegel, indem du die Figur in jedem Rätsel errätst. Jedes Siegel schenkt dir einen Buchstaben.</p><button class="big" id="go">Das Märchen beginnt</button>`;
+    p.querySelector("#go").onclick=()=>go(1);
   } else if(ix<=N){
     const r=R[ix-1];
     p.innerHTML=`<div class="artbox">${ART[r.art]}</div><span class="eyebrow">Siegel ${ix} · ${r.t}</span><p class="verse"></p><form><input id="ans" placeholder="Name der Figur" autocomplete="off" aria-label="Antwort"><button>Siegel brechen</button><button type="button" class="ghost" id="tip">Tipp</button></form><p class="feedback" aria-live="polite"></p>`;
@@ -241,7 +284,7 @@ function build(ix){
     const f=p.querySelector("form"),fb=p.querySelector(".feedback"),inp=f.querySelector("input");
     f.onsubmit=async e=>{e.preventDefault();const val=norm(inp.value);
       if(r.a.some(a=>norm(a)===val)){fb.className="feedback good";fb.textContent="Siegel gebrochen! Du erhältst den Buchstaben "+r.l+".";f.querySelectorAll("button,input").forEach(x=>x.disabled=true);
-        const ir=inp.getBoundingClientRect();sparkleBurst(90,ir.left+ir.width/2,ir.top);await flyLetter(r.l,ir,ix-1);await wait(500);go(ix+1,null,null,ix-1)}
+        const ir=inp.getBoundingClientRect();sparkleBurst(90,ir.left+ir.width/2,ir.top);await flyLetter(r.l,ir,ix-1);await wait(500);go(ix+1,ix-1)}
       else wrong(p,fb,val?"Das Siegel hält. Versuch einen anderen Namen.":"Gib zuerst einen Namen ein.")};
     p.querySelector("#tip").onclick=()=>{if(!p.querySelector(".hint")){const h=document.createElement("p");h.className="hint";h.textContent="Tipp: "+r.h;p.appendChild(h)}};
   } else if(ix===6){
@@ -251,18 +294,18 @@ function build(ix){
       if(norm(f.querySelector("input").value)===FINAL){f.querySelectorAll("button,input").forEach(x=>x.disabled=true);fb.className="feedback good";fb.textContent="Die Tür öffnet sich …";
         document.querySelectorAll(".slot").forEach((s,i)=>setTimeout(()=>{s.classList.add("pop")},i*120));
         const d=p.querySelector("#doorArt");d.classList.add("opening");const r=d.getBoundingClientRect();vortex(r.left+r.width/2,r.top+r.height*.6);
-        await wait(1500);const fl=document.getElementById("flash");fl.classList.add("on");await wait(450);go(7,null,null,null,true);setTimeout(()=>fl.classList.remove("on"),1400)}
+        await wait(1500);const fl=document.getElementById("flash");fl.classList.add("on");await wait(450);go(7,null,true);setTimeout(()=>fl.classList.remove("on"),1400)}
       else wrong(p,fb,"Die Tür rührt sich nicht. Tipp: Man hat ihn nachts, und manchmal wird er wahr.")};
   } else {
     p.classList.add("reveal");
-    p.innerHTML=`<div class="artbox">${ART.castle}</div><span class="eyebrow">Der Tresor ist offen</span><h2>${chars("Alles Liebe zum Geburtstag,")}<br>${chars("mein Schatz")}</h2><p>Du hast jedes Rätsel gelöst, so wie du jeden gewöhnlichen Tag ein bisschen verzauberst. Ich wünsche dir für dieses Jahr Abenteuer, die einen ganzen Film füllen, Lachen in jedem Kapitel und ein Happy End, das einfach weitergeht.</p><p>Hör nie auf, gross zu träumen. Ich bin bei jedem deiner Träume an deiner Seite.</p><p class="sign">In Liebe, Fabian</p><button id="more">Noch mehr Feuerwerk</button>`;
+    p.innerHTML=`<div class="artbox wide">${bigCastle("v",true)}</div><span class="eyebrow">Der Tresor ist offen</span><h2>${chars("Alles Liebe zum Geburtstag,")}<br>${chars("mein Schatz")}</h2><p>Du hast jedes Rätsel gelöst, so wie du jeden gewöhnlichen Tag ein bisschen verzauberst. Ich wünsche dir für dieses Jahr Abenteuer, die einen ganzen Film füllen, Lachen in jedem Kapitel und ein Happy End, das einfach weitergeht.</p><p>Hör nie auf, gross zu träumen. Ich bin bei jedem deiner Träume an deiner Seite.</p><p class="sign">In Liebe, Fabian</p><button id="more">Noch mehr Feuerwerk</button>`;
     p.querySelector("#more").onclick=()=>{fireworks(6);hearts(30)};
   }
   stagger(p);tilt(p);return p;
 }
 
 let busy=false;
-async function go(ix,_,ev,popIx,fromFlash){
+async function go(ix,popIx,fromFlash){
   if(busy)return;busy=true;
   const old=stage.querySelector(".page");
   const swap=()=>{pageIx=ix;save();letters(popIx);const p=build(ix);if(old)old.remove();stage.appendChild(p);window.scrollTo({top:0});
@@ -270,12 +313,152 @@ async function go(ix,_,ev,popIx,fromFlash){
     const inp=p.querySelector("input");if(inp&&old)setTimeout(()=>inp.focus({preventScroll:true}),1200);
     if(ix===7){setTimeout(()=>fireworks(8),300);setTimeout(()=>hearts(40),900)}};
   if(!old||still||fromFlash){swap();busy=false;return}
-  const x=ev?ev.clientX+"px":"50%",y=ev?ev.clientY+"px":"50%";
-  iris.style.setProperty("--x",x);iris.style.setProperty("--y",y);
-  iris.className="";void iris.offsetWidth;iris.className="close";
-  swirl();await wait(720);swap();await wait(120);iris.className="open";await wait(800);iris.className="";busy=false;
+  await walkIn(old,swap,ix);busy=false;
 }
-document.getElementById("reset").onclick=e=>go(0,null,e);
+document.getElementById("reset").onclick=()=>go(0);
+
+// walking into the castle: up to the gate on the first step, then down a torch-lit hall to a glowing door
+const walk=document.getElementById("walk"),hallC=document.getElementById("hall"),hc=hallC.getContext("2d"),outside=walk.querySelector(".outside");
+const ease=t=>t<.5?2*t*t:1-(-2*t+2)**2/2;
+const smooth=(a,b,t)=>{t=Math.min(1,Math.max(0,(t-a)/(b-a)));return t*t*(3-2*t)};
+function fadeTo(el,to,ms){const a=el.animate([{opacity:getComputedStyle(el).opacity},{opacity:to}],{duration:ms,easing:"ease",fill:"forwards"});return a.finished.then(()=>{el.style.opacity=to;a.cancel()})}
+
+async function walkIn(old,swap,ix){
+  walk.hidden=false;
+  const gate=pageIx===0&&old.querySelector(".bigcastle");
+  if(gate)await approach(gate);
+  else{old.animate([{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"scale(1.08)",filter:"blur(6px)"}],{duration:550,easing:"ease-in",fill:"forwards"});fadeTo(hallC,1,500)}
+  await hall(gate?2600:2300,!!gate,{...HALL,...HALLS[ix]});
+  swap();await fadeTo(hallC,0,700);walk.hidden=true;
+}
+
+async function approach(src){
+  const box=src.closest(".artbox");box.style.transition="none";box.style.transform="";
+  const r=src.getBoundingClientRect();
+  outside.innerHTML=`<i class="veil"></i>${bigCastle("o")}<i class="flare"></i>`;
+  const [veil,svg,flare]=outside.children;
+  const gx=r.width*GATE[0],gy=r.height*GATE[1],tx=innerWidth/2-r.left-gx,ty=innerHeight*.62-r.top-gy,S=Math.max(2.5,innerWidth*.42/(r.width*44/320));
+  Object.assign(svg.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px",transformOrigin:`${gx}px ${gy}px`});
+  fadeTo(veil,1,700);
+  // stride towards the gate: each keyframe is one footstep, bobbing the view
+  const kf=Array.from({length:11},(_,i)=>{const t=i/10,e=ease(t);return{transform:`translate(${tx*e}px,${ty*e+(i%2?5:-2)*Math.sin(Math.PI*t)}px) scale(${1+(S-1)*e})`}});
+  setTimeout(()=>svg.classList.add("open"),1300);
+  await svg.animate(kf,{duration:2200,fill:"forwards"}).finished;
+  await wait(450);
+  fadeTo(flare,1,750);
+  await svg.animate([kf[10],{transform:`translate(${tx}px,${ty}px) scale(${S*10})`}],{duration:850,easing:"cubic-bezier(.55,0,.85,.4)",fill:"forwards"}).finished;
+  hallC.style.opacity=1;outside.innerHTML="";
+}
+
+// one hallway per destination page, each hinting at the riddle behind its door
+const HALL={wall:[64,50,122],floor:[[62,48,112],[46,36,90]],carpet:[150,30,70],ceil:[28,20,60],stone:[150,134,206],trim:[232,194,106],rail:[170,140,80],
+  arch:"round",climb:0,turn:0,light:"torch",glow:[255,180,90],motes:"dust",fog:[0,0,0],banners:[[196,70,110],[70,104,200]]};
+const HALLS={
+  0:{turn:-.018},
+  // Rapunzel: winding stairs up the tower, lanterns drifting upwards
+  2:{wall:[74,58,124],carpet:[112,62,168],stone:[166,146,214],climb:.3,turn:.02,light:"lantern",glow:[255,170,80],motes:"lantern",banners:[[112,62,168],[214,150,60]]},
+  // Agrabah: sandstone, onion arches, oil lamps, genie sparkles
+  3:{wall:[116,82,58],floor:[[96,70,52],[78,56,42]],carpet:[34,112,146],ceil:[48,30,36],stone:[220,186,124],rail:[90,170,180],arch:"pointed",turn:-.03,light:"lamp",motes:"sparkle",banners:[[104,48,140],[30,124,146]]},
+  // down the steps into the sea witch's grotto
+  4:{wall:[30,64,98],floor:[[30,70,92],[22,54,74]],carpet:[92,60,132],ceil:[10,26,46],stone:[76,136,156],trim:[170,234,240],rail:[90,180,190],climb:-.3,turn:.024,light:"orb",glow:[110,220,240],motes:"bubble",fog:[2,22,40],banners:null},
+  // red lacquer moon gates, paper lanterns, falling blossoms
+  5:{wall:[124,30,40],floor:[[52,32,34],[40,24,28]],carpet:[196,146,66],ceil:[40,12,18],stone:[168,44,50],rail:[230,180,90],arch:"moon",turn:.03,light:"paper",glow:[255,110,70],motes:"petal",banners:[[30,24,30],[214,160,70]]},
+  // the gilded hall to the vault door
+  6:{wall:[92,70,130],floor:[[120,96,60],[96,76,50]],stone:[236,206,140],trim:[255,236,180],banners:[[233,138,168],[232,194,106]]}
+};
+const MOTE_VY={lantern:-.35,bubble:-.6,petal:.4,sparkle:-.1};
+
+function hall(D,fromLight,th){return new Promise(done=>{
+  const dpr=Math.min(devicePixelRatio||1,2),W=hallC.width=Math.round(innerWidth*dpr),H=hallC.height=Math.round(innerHeight*dpr);
+  // world units: corridor half-width, floor, ceiling, arch half-width + springline (centre for moon gates), arch spacing, end door
+  const{climb,turn}=th,f=Math.min(W,H*.6)*.42,HW=1.55,FL=1.3,CE=-2.7,L=3,DW=.62,DS=-.55,dist=7,zEnd=dist+1.7,NEAR=.28;
+  const[AW,SP]=th.arch==="moon"?[1.45,-.55]:th.arch==="pointed"?[1.1,-.95]:[1.25,-1.25];
+  const GOLD=[255,214,140],motes=Array.from({length:44},()=>({x:(Math.random()-.5)*2.6,y:Math.random()*3.4,z:Math.random()*12,p:Math.random()*6.3}));
+  const t0=performance.now();
+  function frame(now){
+    const t=Math.min(1,(now-t0)/D),e=fromLight?1-(1-t)**2:ease(t),v=fromLight?1-t:(t<.5?2*t:2-2*t),cam=dist*e,tt=now/1000;
+    const ph=cam/.8*Math.PI,cx=W/2+Math.sin(ph)*W*.007*v,cy=H*.46-Math.abs(Math.sin(ph))*W*.016*v;
+    // fog fades towards the theme's murk; surfaces near the end door catch its warm light
+    const col=(c,z)=>{const k=Math.exp(-(z-cam)/6),w=.6*Math.exp(-(zEnd-z)/1.5);return`rgb(${c.map((x,i)=>(x*k+th.fog[i]*(1-k))*(1-w)+GOLD[i]*w|0)})`};
+    // h lifts a point for stairs; turn bends the corridor away the further ahead it is
+    const P=(x,y,z,h=climb*z)=>{const d=z-cam,s=f/d;return[cx+(x+turn*d*d)*s,cy+(y-h+climb*cam)*s]};
+    const poly=(pts,fill)=>{hc.fillStyle=fill;hc.beginPath();for(const p of pts){const[a,b]=P(...p);hc.lineTo(a,b)}hc.fill()};
+    const face=(z,aw,sp,shape,fill,trim)=>{const s=f/(z-cam),R=aw*s,[l,tp]=P(-HW,CE,z),[r,bt]=P(HW,FL+Math.abs(climb),z),[ax,sy]=P(0,sp,z);
+      const hole=()=>{if(shape==="moon"){hc.moveTo(ax+R,sy);hc.arc(ax,sy,R,0,6.2832);return}
+        hc.moveTo(ax-R,bt);hc.lineTo(ax-R,sy);
+        if(shape==="pointed"){hc.quadraticCurveTo(ax-R,sy-R*.95,ax,sy-R*1.55);hc.quadraticCurveTo(ax+R,sy-R*.95,ax+R,sy)}else hc.arc(ax,sy,R,Math.PI,0);
+        hc.lineTo(ax+R,bt)};
+      hc.beginPath();hc.rect(l,tp,r-l,bt-tp);hole();hc.closePath();hc.fillStyle=fill;hc.fill("evenodd");
+      if(trim){hc.strokeStyle=trim;hc.lineWidth=.06*s;hc.beginPath();hole();hc.stroke();hc.fillStyle=trim;hc.beginPath();hc.arc(ax,sy-R*(shape==="pointed"?1.55:1),.09*s,0,6.29);hc.fill()}};
+    const lamp=(x,y,qx,qy,s,fl,z)=>{
+      if(th.light==="torch"){hc.fillStyle=col([169,130,47],z);hc.beginPath();hc.arc(x,y,.06*s,0,6.29);hc.fill();
+        hc.fillStyle="#ffc65c";hc.beginPath();hc.ellipse(qx,qy,.07*s,.14*s*fl,0,0,6.29);hc.fill();
+        hc.fillStyle="#fff6dc";hc.beginPath();hc.ellipse(qx,qy+.04*s,.03*s,.07*s*fl,0,0,6.29);hc.fill()}
+      else if(th.light==="lamp"){hc.fillStyle=col([232,194,106],z);hc.beginPath();hc.ellipse(x,y,.11*s,.045*s,0,0,6.29);hc.fill();
+        hc.fillStyle="#ffd27a";hc.beginPath();hc.ellipse(qx,qy+.07*s,.035*s,.08*s*fl,0,0,6.29);hc.fill()}
+      else if(th.light==="lantern"){hc.fillStyle="#ffb347";hc.fillRect(qx-.06*s,qy-.06*s,.12*s,.17*s);hc.fillStyle="#fff0c0";hc.fillRect(qx-.03*s,qy-.03*s,.06*s,.11*s*fl);
+        hc.strokeStyle=col([232,194,106],z);hc.lineWidth=.015*s;hc.strokeRect(qx-.06*s,qy-.06*s,.12*s,.17*s)}
+      else if(th.light==="paper"){hc.fillStyle=col([232,194,106],z);hc.fillRect(qx-.05*s,qy-.16*s,.1*s,.03*s);hc.fillRect(qx-.05*s,qy+.11*s,.1*s,.03*s);
+        hc.fillStyle="#e0453a";hc.beginPath();hc.ellipse(qx,qy,.1*s,.13*s,0,0,6.29);hc.fill();
+        hc.fillStyle="#ff9a6b";hc.beginPath();hc.ellipse(qx,qy,.05*s,.1*s*fl,0,0,6.29);hc.fill()}
+      else{hc.fillStyle="#d8fbff";hc.beginPath();hc.arc(qx,qy+Math.sin(tt*1.7+z)*.06*s,.07*s*fl,0,6.29);hc.fill()}};
+    const mote=(a,b,s,p)=>{const m=th.motes;
+      if(m==="sparkle"){const r=Math.max(1.2,.035*s);hc.fillStyle="#bfefff";hc.beginPath();for(let i=0;i<8;i++){const q=i*Math.PI/4,rr=i%2?r*.3:r;hc.lineTo(a+Math.cos(q)*rr,b+Math.sin(q)*rr)}hc.fill()}
+      else if(m==="lantern"){const r=Math.max(1,.03*s);hc.fillStyle="#ffb04a";hc.fillRect(a-r*.7,b-r,r*1.4,r*1.9);hc.fillStyle="#fff0c0";hc.fillRect(a-r*.35,b-r*.5,r*.7,r)}
+      else if(m==="bubble"){hc.strokeStyle="rgba(190,240,255,.9)";hc.lineWidth=Math.max(.6,.005*s);hc.beginPath();hc.arc(a,b,Math.max(1.2,.035*s),0,6.29);hc.stroke()}
+      else if(m==="petal"){hc.fillStyle="#f6b6cb";hc.beginPath();hc.ellipse(a,b,Math.max(1.2,.03*s),Math.max(.7,.017*s),tt*2+p.p,0,6.29);hc.fill()}
+      else{hc.fillStyle="#ffe6a8";hc.beginPath();hc.arc(a,b,Math.max(.8,.018*s),0,6.29);hc.fill()}};
+    hc.setTransform(1,0,0,1,0,0);hc.fillStyle="#fff3d6";hc.fillRect(0,0,W,H);
+    hc.translate(W/2,H/2);hc.rotate(Math.sin(ph)*.008*v);hc.translate(-W/2,-H/2);
+    face(zEnd,DW,DS,"round",col(th.wall.map(x=>x*1.6),zEnd),col(th.trim,zEnd));
+    const glows=[];
+    // painter's order: slice [z,z+1] far to near, then whatever sits on its near edge
+    for(let z=Math.ceil(zEnd)-1;z>=Math.floor(cam);z--){
+      const a=Math.max(z,cam+NEAR),b=Math.min(z+1,zEnd),c=z+.5,ft=climb*c,lo=FL+Math.abs(climb)+.1;if(b<=a)continue;
+      poly([[-HW,FL,a,ft],[HW,FL,a,ft],[HW,FL,b,ft],[-HW,FL,b,ft]],col(th.floor[z&1],c));
+      poly([[-.5,FL,a,ft],[.5,FL,a,ft],[.5,FL,b,ft],[-.5,FL,b,ft]],col(th.carpet,c));
+      for(const sx of[-1,1]){
+        poly([[sx*.5,FL,a,ft],[sx*.57,FL,a,ft],[sx*.57,FL,b,ft],[sx*.5,FL,b,ft]],col(th.trim,c));
+        poly([[sx*HW,CE,a],[sx*HW,lo,a],[sx*HW,lo,b],[sx*HW,CE,b]],col(th.wall,c));
+        poly([[sx*HW,-.24,a],[sx*HW,-.17,a],[sx*HW,-.17,b],[sx*HW,-.24,b]],col(th.rail,c))}
+      poly([[-HW,CE,a],[HW,CE,a],[HW,CE,b],[-HW,CE,b]],col(th.ceil,c));
+      const tz=z+.5;
+      if(z%L===1&&tz>cam+NEAR&&tz<zEnd)for(const sx of[-1,1]){
+        const s=f/(tz-cam),fl=.85+.15*Math.sin(now/70+z*5+sx),lx=sx*(HW-.12),[ux,uy]=P(lx,-.8,tz),[qx,qy]=P(lx,-.97,tz);
+        if(th.light!=="orb")poly([[sx*HW,-.78,tz],[lx,-.82,tz],[lx,-.76,tz],[sx*HW,-.6,tz]],col([169,130,47],tz));
+        lamp(ux,uy,qx,qy,s,fl,tz);glows.push([lx,-.97,tz,fl])}
+      const z1=z+.45,z2=z+1.05,zm=(z1+z2)/2;
+      if(th.banners&&z%L===0&&z1>cam+NEAR&&z2<zEnd)for(const sx of[-1,1]){
+        const x=sx*(HW-.01),bc=th.banners[(z/L+(sx>0))%2];
+        poly([[x,-2.25,z1],[x,-2.25,z2],[x,-1.05,z2],[x,-.82,zm],[x,-1.05,z1]],col(bc,zm));
+        poly([[x,-2.3,z1-.04],[x,-2.3,z2+.04],[x,-2.2,z2+.04],[x,-2.2,z1-.04]],col(th.trim,zm));
+        const[ex,ey]=P(x,-1.55,zm);hc.fillStyle=col(th.trim,zm);hc.beginPath();hc.arc(ex,ey,.08*f/(zm-cam),0,6.29);hc.fill()}
+      // climbing: the step up at the slice's near edge faces us
+      if(climb>0&&z>cam+NEAR){const r0=climb*(c-1);
+        poly([[-HW,FL,z,r0],[HW,FL,z,r0],[HW,FL,z,ft],[-HW,FL,z,ft]],col(th.floor[0].map(x=>x*.7),z));
+        poly([[-.5,FL,z,r0],[.5,FL,z,r0],[.5,FL,z,ft],[-.5,FL,z,ft]],col(th.carpet.map(x=>x*.75),z))}
+      if(z%L===0&&z>cam+NEAR&&z<zEnd-.3){face(z+.32,AW,SP,th.arch,col(th.stone.map(x=>x*.52),z+.32));face(z,AW,SP,th.arch,col(th.stone,z),col(th.trim,z))}
+    }
+    hc.globalCompositeOperation="lighter";
+    const gc=th.glow.join(",");
+    for(const[x,y,z,fl]of glows){const[a,b]=P(x,y,z),rad=1.2*f/(z-cam),g=hc.createRadialGradient(a,b,0,a,b,rad);
+      g.addColorStop(0,`rgba(${gc},${.42*fl*Math.exp(-(z-cam)/6)})`);g.addColorStop(1,`rgba(${gc},0)`);hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
+    {const[a,b]=P(0,.2,zEnd),rad=2.4*f/(zEnd-cam),g=hc.createRadialGradient(a,b,0,a,b,rad);
+      g.addColorStop(0,"rgba(255,236,190,.55)");g.addColorStop(1,"rgba(255,236,190,0)");hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
+    if(th.motes==="bubble"||th.motes==="petal")hc.globalCompositeOperation="source-over";
+    for(const p of motes){while(p.z<cam+NEAR)p.z+=12;const dz=p.z-cam;if(p.z>zEnd)continue;
+      const vy=MOTE_VY[th.motes],y=vy?-2.3+((p.y+vy*tt)%3.4+3.4)%3.4:p.y-2.3+Math.sin(now/900+p.p)*.1,x=p.x+(th.motes==="petal"?Math.sin(tt*1.5+p.p)*.15:0);
+      const[a,b]=P(x,y,p.z);hc.globalAlpha=Math.min(1,dz/1.5)*Math.exp(-dz/7)*(vy&&th.motes!=="sparkle"?.85:.5+.5*Math.sin(now/200+p.p));
+      mote(a,b,f/dz,p)}
+    hc.globalAlpha=1;hc.globalCompositeOperation="source-over";
+    // golden light: fades out after stepping through the gate, floods in as we reach the far door
+    const sh=Math.max(fromLight?1-smooth(0,.3,t):0,smooth(.7,1,t));
+    if(sh>0){hc.setTransform(1,0,0,1,0,0);const g=hc.createRadialGradient(W/2,H*.46,0,W/2,H*.46,Math.hypot(W,H)*.55);
+      g.addColorStop(0,"#fff8e6");g.addColorStop(.45,"#f6dc98");g.addColorStop(1,"#e8c26a");hc.globalAlpha=sh;hc.fillStyle=g;hc.fillRect(0,0,W,H);hc.globalAlpha=1}
+    if(t<1)requestAnimationFrame(frame);else done();
+  }
+  requestAnimationFrame(frame);
+})}
 
 // sky: stars + shooting stars
 const sky=document.getElementById("sky"),sc=sky.getContext("2d");let stars=[],shoot=null;
@@ -295,7 +478,6 @@ function add(b){if(still)return;bits.push(b);if(!running){running=true;requestAn
 function star(x,y,r){fc.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?r*.4:r;fc.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}fc.closePath();fc.fill()}
 function heart(x,y,s){fc.beginPath();fc.moveTo(x,y+s*.3);fc.bezierCurveTo(x,y,x-s*.5,y,x-s*.5,y+s*.3);fc.bezierCurveTo(x-s*.5,y+s*.6,x,y+s*.8,x,y+s);fc.bezierCurveTo(x,y+s*.8,x+s*.5,y+s*.6,x+s*.5,y+s*.3);fc.bezierCurveTo(x+s*.5,y,x,y,x,y+s*.3);fc.fill()}
 function sparkleBurst(n,x=innerWidth/2,y=innerHeight*.45){for(let i=0;i<n;i++){const a=Math.random()*6.28,v=Math.random()*8+2;add({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2,g:.12,s:Math.random()*4+2,c:COLS[i%6],life:70+Math.random()*40,max:110,k:"star"})}}
-function swirl(){const cx=innerWidth/2,cy=innerHeight/2;for(let i=0;i<120;i++){const a=Math.random()*6.28,r=Math.max(innerWidth,innerHeight)*.6;add({orbit:true,cx,cy,a,r,dr:-r/60,da:.09,s:Math.random()*3+1.5,c:COLS[i%6],life:60,max:60,k:"star"})}}
 function vortex(cx,cy){for(let i=0;i<160;i++){const a=Math.random()*6.28,r=60+Math.random()*220;add({orbit:true,cx,cy,a,r,dr:-r/90,da:.12,s:Math.random()*3+1,c:COLS[i%3],life:90,max:90,k:"star"})}}
 function fireworks(n){for(let k=0;k<n;k++)setTimeout(()=>{const x=innerWidth*(.12+Math.random()*.76),y=innerHeight*(.1+Math.random()*.32),c=COLS[k%6],c2=COLS[(k+2)%6];
   for(let i=0;i<80;i++){const a=i/80*6.28,v=Math.random()*1.8+3.4;add({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:.055,s:2.2,c:i%2?c:c2,life:85+Math.random()*35,max:120,trail:true})}
