@@ -413,15 +413,19 @@ async function approach(src){
   outside.innerHTML=`<i class="veil"></i>${bigCastle("o",false,true)}<i class="flare"></i>`;
   const [veil,svg,flare]=outside.children;
   const gx=r.width*GATE[0],gy=r.height*GATE[1],tx=innerWidth/2-r.left-gx,ty=innerHeight*.62-r.top-gy,S=Math.max(2.5,innerWidth*.42/(r.width*44/320));
-  Object.assign(svg.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px",transformOrigin:`${gx}px ${gy}px`});
+  // the copy is rendered K times larger and shrunk to fit, so it is still sharp when we reach the gate
+  const K=Math.min(S,2.5);
+  Object.assign(svg.style,{left:r.left+"px",top:r.top+"px",width:r.width*K+"px",height:r.height*K+"px",transformOrigin:"0 0"});
+  // m: how much bigger the castle looks, e: how far the gate has moved towards its spot on screen, b: footstep bob
+  const view=(m,e,b=0)=>({transform:`translate(${tx*e-gx*(m-1)}px,${ty*e+b-gy*(m-1)}px) scale(${m/K})`});
   fadeTo(veil,1,700);
   // stride towards the gate: each keyframe is one footstep, bobbing the view
-  const kf=Array.from({length:11},(_,i)=>{const t=i/10,e=ease(t);return{transform:`translate(${tx*e}px,${ty*e+(i%2?5:-2)*Math.sin(Math.PI*t)}px) scale(${1+(S-1)*e})`}});
+  const kf=Array.from({length:11},(_,i)=>{const t=i/10,e=ease(t);return view(1+(S-1)*e,e,(i%2?5:-2)*Math.sin(Math.PI*t))});
   setTimeout(()=>svg.classList.add("open"),1300);
   await svg.animate(kf,{duration:2200,fill:"forwards"}).finished;
   await wait(450);
   fadeTo(flare,1,750);
-  await svg.animate([kf[10],{transform:`translate(${tx}px,${ty}px) scale(${S*10})`}],{duration:850,easing:"cubic-bezier(.55,0,.85,.4)",fill:"forwards"}).finished;
+  await svg.animate([kf[10],view(S*10,1)],{duration:850,easing:"cubic-bezier(.55,0,.85,.4)",fill:"forwards"}).finished;
   hallC.style.opacity=1;outside.innerHTML="";
 }
 
@@ -492,6 +496,8 @@ function hall(D,fromLight,th){return new Promise(done=>{
   const{climb,turn}=th,f=Math.min(W,H*.6)*.42,HW=1.55,FL=1.3,CE=-2.7,L=3,DW=.62,DS=-.55,dist=7,zEnd=dist+1.7,NEAR=.28;
   const[AW,SP]=th.arch==="moon"?[1.45,-.55]:th.arch==="pointed"?[1.1,-.95]:[1.25,-1.25];
   const GOLD=[255,190,216],motes=Array.from({length:44},()=>({x:(Math.random()-.5)*2.6,y:Math.random()*3.4,z:Math.random()*12,p:Math.random()*6.3}));
+  const vignette=hc.createRadialGradient(W/2,H*.48,Math.min(W,H)*.3,W/2,H*.48,Math.hypot(W,H)*.62);
+  vignette.addColorStop(0,"rgba(18,0,14,0)");vignette.addColorStop(1,"rgba(18,0,14,.55)");
   const t0=performance.now();
   function frame(now){
     const t=Math.min(1,(now-t0)/D),e=fromLight?1-(1-t)**2:ease(t),v=fromLight?1-t:(t<.5?2*t:2-2*t),cam=dist*e,tt=now/1000;
@@ -529,6 +535,13 @@ function hall(D,fromLight,th){return new Promise(done=>{
     hc.setTransform(1,0,0,1,0,0);hc.fillStyle="#fff0f6";hc.fillRect(0,0,W,H);
     hc.translate(W/2,H/2);hc.rotate(Math.sin(ph)*.008*v);hc.translate(-W/2,-H/2);
     face(zEnd,DW,DS,"round",col(th.wall.map(x=>x*1.6),zEnd),col(th.trim,zEnd));
+    const open=smooth(.42,.8,t),swing=open*1.4;
+    {const s=f/(zEnd-cam),[ax,sy]=P(0,DS,zEnd),[,bt]=P(0,FL,zEnd),R=DW*s;
+      hc.save();hc.beginPath();hc.moveTo(ax-R,bt);hc.lineTo(ax-R,sy);hc.arc(ax,sy,R,Math.PI,0);hc.lineTo(ax+R,bt);hc.closePath();hc.clip();
+      for(const sx of[-1,1]){const hx=sx*DW,ex=hx-sx*(DW-.012)*Math.cos(swing),ez=zEnd+(DW-.012)*Math.sin(swing),top=DS-DW;
+        poly([[hx,top,zEnd],[ex,top,ez],[ex,FL,ez],[hx,FL,zEnd]],col(th.wall.map(x=>x*1.25),zEnd));
+        for(const y of[-.15,.75])poly([[hx,y-.04,zEnd],[ex,y-.04,ez],[ex,y+.04,ez],[hx,y+.04,zEnd]],col(th.trim,zEnd))}
+      hc.restore()}
     const glows=[];
     // painter's order: slice [z,z+1] far to near, then whatever sits on its near edge
     for(let z=Math.ceil(zEnd)-1;z>=Math.floor(cam);z--){
@@ -559,16 +572,24 @@ function hall(D,fromLight,th){return new Promise(done=>{
     }
     hc.globalCompositeOperation="lighter";
     const gc=th.glow.join(",");
-    for(const[x,y,z,fl]of glows){const[a,b]=P(x,y,z),rad=1.2*f/(z-cam),g=hc.createRadialGradient(a,b,0,a,b,rad);
-      g.addColorStop(0,`rgba(${gc},${.42*fl*Math.exp(-(z-cam)/6)})`);g.addColorStop(1,`rgba(${gc},0)`);hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
+    for(const[x,y,z,fl]of glows){const[a,b]=P(x,y,z),rad=1.2*f/(z-cam),g=hc.createRadialGradient(a,b,0,a,b,rad),fog=Math.exp(-(z-cam)/6);
+      g.addColorStop(0,`rgba(${gc},${.42*fl*fog})`);g.addColorStop(1,`rgba(${gc},0)`);hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2);
+      // its reflection: a soft streak on the floor below, stretched towards us
+      const[fx2,fy2]=P(x*.8,FL,z),rr=.3*f/(z-cam),rg=hc.createRadialGradient(0,0,0,0,0,rr);
+      rg.addColorStop(0,`rgba(${gc},${.3*fl*fog})`);rg.addColorStop(1,`rgba(${gc},0)`);
+      hc.save();hc.translate(fx2,fy2);hc.scale(1,3.2);hc.fillStyle=rg;hc.fillRect(-rr,-rr,rr*2,rr*2);hc.restore()}
+    {const[,db]=P(0,FL,zEnd),near=cam+NEAR+.05,[,nb]=P(0,FL,near),g=hc.createLinearGradient(0,db,0,nb);
+      g.addColorStop(0,`rgba(255,214,232,${.42*(.25+.75*open)})`);g.addColorStop(1,"rgba(255,214,232,0)");
+      poly([[-DW*.85,FL,zEnd],[DW*.85,FL,zEnd],[1.15,FL,near],[-1.15,FL,near]],g)}
     {const[a,b]=P(0,.2,zEnd),rad=2.4*f/(zEnd-cam),g=hc.createRadialGradient(a,b,0,a,b,rad);
-      g.addColorStop(0,"rgba(255,214,232,.55)");g.addColorStop(1,"rgba(255,214,232,0)");hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
+      g.addColorStop(0,`rgba(255,214,232,${.55*(.35+.65*open)})`);g.addColorStop(1,"rgba(255,214,232,0)");hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
     if(th.motes==="bubble"||th.motes==="petal")hc.globalCompositeOperation="source-over";
     for(const p of motes){while(p.z<cam+NEAR)p.z+=12;const dz=p.z-cam;if(p.z>zEnd)continue;
       const vy=MOTE_VY[th.motes],y=vy?-2.3+((p.y+vy*tt)%3.4+3.4)%3.4:p.y-2.3+Math.sin(now/900+p.p)*.1,x=p.x+(th.motes==="petal"?Math.sin(tt*1.5+p.p)*.15:0);
       const[a,b]=P(x,y,p.z);hc.globalAlpha=Math.min(1,dz/1.5)*Math.exp(-dz/7)*(vy&&th.motes!=="sparkle"?.85:.5+.5*Math.sin(now/200+p.p));
       mote(a,b,f/dz,p)}
     hc.globalAlpha=1;hc.globalCompositeOperation="source-over";
+    hc.setTransform(1,0,0,1,0,0);hc.fillStyle=vignette;hc.fillRect(0,0,W,H);
     // golden light: fades out after stepping through the gate, floods in as we reach the far door
     const sh=Math.max(fromLight?1-smooth(0,.3,t):0,smooth(.7,1,t));
     if(sh>0){hc.setTransform(1,0,0,1,0,0);const g=hc.createRadialGradient(W/2,H*.46,0,W/2,H*.46,Math.hypot(W,H)*.55);
