@@ -3,7 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Cinzel:wght@500;700&display=swap">
 <style>
-/* Layout: a storybook that turns one page at a time under an aurora night sky; walking into a fairy-tale castle between pages, staggered entrances, flying letters. Deliberately dark, single theme. */
+/* Layout: a storybook that turns one page at a time under an aurora night sky; a peek into each riddle's story between pages, staggered entrances, flying letters. Deliberately dark, single theme. */
 :root{
   --night:#24091f; --dusk:#45123d; --ink:#fff1f6; --muted:#f0bfd6;
   --gold:#f7b5cd; --gold-deep:#c45a86; --rose:#ff5fa2; --ok:#8fd6a8; --sea:#c3a6ff; --violet:#b04f9a;
@@ -24,7 +24,7 @@ body{background:var(--night);color:var(--ink);font-family:var(--body);font-size:
 @keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.2) rotate(25deg)}}
 canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #sky{z-index:0} #fx{z-index:8}
-/* walk-in transition: approach the castle gate, then stride down a torch-lit hall */
+/* transitions: approach the castle gate, a scene from the next riddle's story, or a torch-lit hall to the vault */
 #walk{position:fixed;inset:0;z-index:7;pointer-events:none}
 #hall,.outside,.veil,.flare{position:absolute;inset:0;width:100%;height:100%}
 #hall{opacity:0}
@@ -391,7 +391,7 @@ async function go(ix,popIx,fromFlash){
 }
 document.getElementById("reset").onclick=()=>go(0);
 
-// walking into the castle: up to the gate on the first step, then down a torch-lit hall to a glowing door
+// between pages: up to the castle gate on the first step, a peek into each riddle's story, and a torch-lit hall to the vault door
 const walk=document.getElementById("walk"),hallC=document.getElementById("hall"),hc=hallC.getContext("2d"),outside=walk.querySelector(".outside");
 const ease=t=>t<.5?2*t*t:1-(-2*t+2)**2/2;
 const smooth=(a,b,t)=>{t=Math.min(1,Math.max(0,(t-a)/(b-a)));return t*t*(3-2*t)};
@@ -399,11 +399,12 @@ function fadeTo(el,to,ms){const a=el.animate([{opacity:getComputedStyle(el).opac
 
 async function walkIn(old,swap,ix){
   walk.hidden=false;
-  const gate=pageIx===0&&old.querySelector(".bigcastle");
+  const gate=pageIx===0&&old.querySelector(".bigcastle"),scene=ix>=1&&ix<=N&&PEEK[R[ix-1].art];
   const hide=()=>document.body.classList.add("walking");
   if(gate){await approach(gate);hide()}
-  else{old.animate([{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"scale(1.08)",filter:"blur(6px)"}],{duration:550,easing:"ease-in",fill:"forwards"});fadeTo(hallC,1,500).then(hide)}
-  await hall(gate?2600:2300,!!gate,{...HALL,...HALLS[ix===0?"start":ix<=N?R[ix-1].art:"door"]});
+  if(scene){await peek(scene,swap,!!gate);hallC.style.opacity=0;walk.hidden=true;return}
+  old.animate([{opacity:1,transform:"none",filter:"blur(0)"},{opacity:0,transform:"scale(1.08)",filter:"blur(6px)"}],{duration:550,easing:"ease-in",fill:"forwards"});fadeTo(hallC,1,500).then(hide);
+  await hall(2300,{...HALL,...HALLS[ix===0?"start":"door"]});
   document.body.classList.remove("walking");swap();await fadeTo(hallC,0,700);walk.hidden=true;
 }
 
@@ -449,28 +450,210 @@ async function approach(src){
     requestAnimationFrame(frame)})
 }
 
-// one hallway per riddle (keyed by its art), each hinting at what waits behind its door
-// fl/fl2: light body and bright core, mc: drifting particles. Every hallway is a tone of one pink family.
+// the torch-lit hallway back to the start and on to the vault door
+// fl/fl2: torch flame and bright core, mc: drifting dust
 const HALL={wall:[112,40,92],floor:[[98,36,82],[76,26,64]],carpet:[232,92,152],ceil:[52,14,42],stone:[238,172,202],trim:[247,181,205],rail:[206,112,152],
-  arch:"round",climb:0,turn:0,light:"torch",glow:[255,140,190],fl:"#ffb0a0",fl2:"#fff0f6",motes:"dust",mc:"#ffd1e4",fog:[0,0,0],banners:[[255,95,162],[188,120,230]]};
+  arch:"round",climb:0,turn:0,glow:[255,140,190],fl:"#ffb0a0",fl2:"#fff0f6",mc:"#ffd1e4",fog:[0,0,0],banners:[[255,95,162],[188,120,230]]};
 const HALLS={
   start:{turn:-.018},
-  // Rapunzel, lilac: winding stairs up the tower, peach lanterns drifting upwards
-  tower:{wall:[92,58,140],floor:[[84,52,128],[66,40,104]],carpet:[196,150,240],ceil:[40,22,64],stone:[222,200,246],trim:[255,214,236],rail:[196,150,240],climb:.3,turn:.02,
-    light:"lantern",glow:[255,168,150],fl:"#ffb79e",fl2:"#fff3ec",motes:"lantern",mc:"#ffc2a6",banners:[[255,120,180],[180,140,240]]},
-  // Agrabah, peach and coral sunset: onion arches, oil lamps, lavender genie sparkles
-  lamp:{wall:[150,70,88],floor:[[130,58,76],[106,46,62]],carpet:[255,140,150],ceil:[60,20,36],stone:[255,200,190],trim:[255,224,200],rail:[255,170,160],arch:"pointed",turn:-.03,
-    light:"lamp",glow:[255,170,140],fl:"#ffc0a0",fl2:"#fff3ec",motes:"sparkle",mc:"#e6d4ff",banners:[[150,90,220],[255,150,130]]},
-  // the sea witch's grotto, deep orchid: steps down, glowing orbs, rising bubbles
-  shell:{wall:[74,30,96],floor:[[66,26,88],[52,20,72]],carpet:[214,96,196],ceil:[30,10,44],stone:[176,116,214],trim:[255,200,245],rail:[226,140,236],climb:-.3,turn:.024,
-    light:"orb",glow:[236,140,255],fl:"#f6d6ff",fl2:"#ffffff",motes:"bubble",mc:"rgba(255,215,245,.9)",fog:[30,8,40],banners:null},
-  // raspberry and cherry blossom: moon gates, rose paper lanterns, falling petals
-  blossom:{wall:[150,36,82],floor:[[72,22,48],[58,16,38]],carpet:[255,190,214],ceil:[52,12,32],stone:[214,72,124],trim:[255,214,228],rail:[255,190,214],arch:"moon",turn:.03,
-    light:"paper",glow:[255,120,160],fl:"#ff5c8f",fl2:"#ffc4d8",motes:"petal",mc:"#ffc8dc",banners:[[255,230,238],[200,40,100]]},
   // champagne rose hall to the vault door
   door:{wall:[158,92,116],floor:[[184,124,144],[158,102,122]],carpet:[255,214,228],ceil:[74,30,54],stone:[255,222,214],trim:[255,232,206],rail:[255,214,190],glow:[255,200,186],fl:"#ffd6c0",mc:"#fff0f6",banners:[[255,95,162],[255,226,200]]}
 };
-const MOTE_VY={lantern:-.35,bubble:-.6,petal:.4,sparkle:-.1};
+
+// sneak peeks: on the way to a riddle a short scene from its story covers the screen, the page swaps underneath,
+// then the scene clears itself away. C: screen fully covered, S: page swapped, both as fractions of D
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const paint=(W,H,fn)=>{const c=document.createElement("canvas");c.width=W;c.height=H;fn(c.getContext("2d"));return c};
+function leaf(g,x,y,a,L,w,fill,vein){g.save();g.translate(x,y);g.rotate(a);g.beginPath();g.moveTo(0,0);g.quadraticCurveTo(L*.45,-w,L,0);g.quadraticCurveTo(L*.45,w,0,0);g.fillStyle=fill;g.fill();
+  if(vein){g.strokeStyle=vein;g.lineWidth=Math.max(1,L*.012);g.beginPath();g.moveTo(0,0);g.lineTo(L*.95,0);for(let k=1;k<6;k++){const q=L*k/6,v=w*.6*(1-k/7);g.moveTo(q,0);g.lineTo(q+L*.09,-v);g.moveTo(q,0);g.lineTo(q+L*.09,v)}g.stroke()}g.restore()}
+function blossomAt(g,x,y,r,c){g.fillStyle=c;for(let k=0;k<5;k++){const a=k*1.2566;g.beginPath();g.ellipse(x+Math.cos(a)*r*.55,y+Math.sin(a)*r*.55,r*.5,r*.32,a,0,6.29);g.fill()}g.fillStyle="#fff0f6";g.beginPath();g.arc(x,y,r*.2,0,6.29);g.fill()}
+function star4(g,x,y,r){g.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?r*.3:r;g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}g.closePath();g.fill()}
+function glowAt(x,y,r,rgb,a){const g=hc.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${rgb},${a})`);g.addColorStop(1,`rgba(${rgb},0)`);hc.fillStyle=g;hc.fillRect(x-r,y-r,r*2,r*2)}
+const PEEK={
+ // Ursula: the sea rises over the page, tentacles curl up around a glowing shell, then the water drains away
+ shell:{D:3600,C:.34,S:.6,
+  init:()=>({bub:Array.from({length:60},()=>({x:Math.random(),y:Math.random()*1.2,r:rnd(.004,.016),v:rnd(.1,.3),p:rnd(0,6.3)})),
+   kelp:Array.from({length:8},(_,i)=>({x:(i+.5)/8+rnd(-.03,.03),h:rnd(.3,.55),p:rnd(0,6.3)})),
+   fish:Array.from({length:6},()=>({x:Math.random(),y:rnd(.2,.75),s:rnd(.7,1.3),v:rnd(.06,.14),d:Math.random()<.5?-1:1}))}),
+  draw(s,t,tt,W,H,u){
+   const dr=smooth(this.S,1,t),lvl=H*(1.08-1.26*ease(smooth(0,this.C,t))+1.32*dr*dr);if(lvl>H+u*.05)return;
+   const wave=x=>Math.sin(x/W*8+tt*2.6)*u*.018+Math.sin(x/W*3.3-tt*1.7)*u*.012,surf=()=>{hc.beginPath();for(let k=0;k<=40;k++){const x=W*k/40;hc.lineTo(x,lvl+wave(x))}};
+   const g=hc.createLinearGradient(0,lvl,0,lvl+H);g.addColorStop(0,"#b46ad6");g.addColorStop(.35,"#5a1d78");g.addColorStop(1,"#1c0626");
+   surf();hc.lineTo(W,H);hc.lineTo(0,H);hc.closePath();hc.fillStyle=g;hc.fill();hc.save();hc.clip();
+   // light shafts from the surface, kelp, little fish
+   hc.globalCompositeOperation="lighter";
+   for(let i=0;i<5;i++){const x=W*(i+.5)/5+Math.sin(tt*.6+i*1.7)*W*.06,w=W*.035,sk=W*.12,lg=hc.createLinearGradient(0,lvl,0,lvl+H*.9);
+    lg.addColorStop(0,"rgba(255,200,255,.22)");lg.addColorStop(1,"rgba(255,200,255,0)");hc.fillStyle=lg;
+    hc.beginPath();hc.moveTo(x-w,lvl-u*.05);hc.lineTo(x+w,lvl-u*.05);hc.lineTo(x+w*3+sk,lvl+H);hc.lineTo(x-w*2+sk,lvl+H);hc.fill()}
+   hc.globalCompositeOperation="source-over";hc.lineCap="round";
+   for(const k of s.kelp)for(const[c,w]of[["#4a1458",.026],["#9a3a9a",.012]]){hc.strokeStyle=c;hc.lineWidth=u*w;hc.beginPath();
+    for(let j=0;j<=12;j++){const q=j/12;hc.lineTo(k.x*W+Math.sin(tt*1.4+k.p+q*2.5)*u*.05*q,H-k.h*H*q)}hc.stroke()}
+   hc.fillStyle="rgba(255,175,225,.5)";
+   for(const f of s.fish){const x=(((f.x+tt*f.v*f.d)%1.3+1.3)%1.3-.15)*W,y=f.y*H+Math.sin(tt*2+f.x*9)*u*.01,z=u*.03*f.s;
+    hc.save();hc.translate(x,y);hc.scale(f.d,1);hc.beginPath();hc.ellipse(0,0,z,z*.45,0,0,6.29);hc.moveTo(-z*.8,0);hc.lineTo(-z*1.6,-z*.5);hc.lineTo(-z*1.6,z*.5);hc.fill();hc.restore()}
+   // two tentacles curl up from the corners, suckers on the inside of the curl
+   const gr=smooth(.14,.48,t)*(1-smooth(this.S,this.S+.3,t));
+   if(gr>.01)for(const sx of[1,-1]){let x=sx>0?-u*.04:W+u*.04,y=H+u*.04,a=sx>0?-1.15:-1.99;const n=60,step=Math.max(W,H)*.85*gr/n,pts=[];
+    for(let i=0;i<=n;i++){const q=i/n;pts.push([x,y,a,u*.07*(1-q*.9)]);a+=sx*(.012+.24*q*q*q*(.8+.2*Math.sin(tt*1.3)))+Math.sin(tt*2.2+q*7)*.015;x+=Math.cos(a)*step;y+=Math.sin(a)*step}
+    for(const[c,k]of[["#3e0f4c",1],["#7a2a8e",.8]]){hc.strokeStyle=c;for(let i=1;i<=n;i++){hc.lineWidth=2*pts[i][3]*k;hc.beginPath();hc.moveTo(pts[i-1][0],pts[i-1][1]);hc.lineTo(pts[i][0],pts[i][1]);hc.stroke()}}
+    hc.fillStyle="#f0b4ea";for(let i=2;i<n;i+=3){const[x,y,a,r]=pts[i],na=a+sx*Math.PI/2;hc.beginPath();hc.arc(x+Math.cos(na)*r*.55,y+Math.sin(na)*r*.55,r*.26,0,6.29);hc.fill()}}
+   // the golden shell that holds a mermaid's voice
+   const sh=smooth(this.C-.06,this.C+.1,t)*(1-smooth(this.S-.04,this.S+.1,t));
+   if(sh>0){const cx=W/2,cy=H*.44+Math.sin(tt*2)*u*.012;hc.globalCompositeOperation="lighter";glowAt(cx,cy,u*.32,"255,215,150",.75*sh);hc.globalCompositeOperation="source-over";
+    hc.globalAlpha=sh;hc.strokeStyle="#ffe6a8";hc.lineWidth=u*.008;hc.beginPath();for(let k=0;k<=90;k++){const q=k*.14,r=u*.005*Math.exp(q*.2);hc.lineTo(cx+Math.cos(q+tt)*r,cy+Math.sin(q+tt)*r)}hc.stroke();hc.globalAlpha=1}
+   hc.strokeStyle="rgba(255,225,250,.75)";hc.lineWidth=Math.max(1,u*.003);
+   for(const b of s.bub){const y=(((b.y-tt*b.v-2*dr)%1.2+1.2)%1.2-.1)*H,x=b.x*W+Math.sin(tt*2+b.p)*u*.012;hc.beginPath();hc.arc(x,y,b.r*u,0,6.29);hc.stroke()}
+   hc.restore();hc.strokeStyle="rgba(255,225,250,.85)";hc.lineWidth=u*.006;surf();hc.stroke()}},
+ // Mulan: a painted silk fan unfolds over the page in a drift of cherry petals, then folds shut again
+ blossom:{D:3500,C:.34,S:.62,
+  init(W,H,u){const px=W/2,py=H+u*.03,R=Math.hypot(W/2,py)*1.03;
+   const art=paint(W,H,g=>{const sk=g.createLinearGradient(0,0,0,H);sk.addColorStop(0,"#fff4f7");sk.addColorStop(1,"#f4b4cc");g.fillStyle=sk;g.fillRect(0,0,W,H);
+    g.fillStyle="rgba(214,40,90,.85)";g.beginPath();g.arc(W*.66,H*.32,u*.13,0,6.29);g.fill();
+    // ink-wash mountains, fading into the distance
+    [[.52,"rgba(120,30,70,.2)",.06],[.64,"rgba(110,25,64,.32)",.08],[.78,"rgba(80,14,48,.55)",.1]].forEach(([b,c,a],j)=>{g.fillStyle=c;g.beginPath();g.moveTo(0,H);
+     for(let k=0;k<=60;k++)g.lineTo(W*k/60,H*(b-Math.abs(Math.sin(k*.21+j*2))*a-Math.sin(k*.53+j)*a*.4));g.lineTo(W,H);g.fill()});
+    g.strokeStyle="#4a1a2c";g.lineCap="round";const br=[[-.05,.12],[.14,.14],[.27,.1],[.4,.16],[.54,.13]].map(([x,y])=>[x*W,y*H]);
+    g.lineWidth=u*.022;g.beginPath();br.forEach(p=>g.lineTo(...p));g.stroke();
+    g.lineWidth=u*.01;g.beginPath();for(const[i,[x,y]]of[[1,[.2,.24]],[2,[.32,.03]],[3,[.45,.26]]]){g.moveTo(...br[i]);g.lineTo(x*W,y*H)}g.stroke();
+    for(let k=0;k<26;k++){const i=Math.floor(Math.random()*4),q=Math.random(),[x0,y0]=br[i],[x1,y1]=br[i+1];
+     blossomAt(g,x0+(x1-x0)*q+rnd(-1,1)*u*.05,y0+(y1-y0)*q+rnd(-1,1)*u*.05,u*rnd(.03,.05),k%3?"#ff9cc4":"#ffc6dc")}
+    // a red seal with a heart
+    g.fillStyle="#c8324f";g.fillRect(W*.1,H*.3,u*.08,u*.08);g.fillStyle="#fff0f6";g.save();g.translate(W*.1+u*.04,H*.3+u*.04);g.scale(u*.0018,u*.0018);
+    g.fill(new Path2D("M0 9C-6 4-10 1-10-4a5 5 0 0110-1a5 5 0 0110 1c0 5-4 8-10 13z"));g.restore()});
+   return{px,py,R,art,pet:Array.from({length:70},()=>({x:rnd(-.2,1),y:Math.random(),v:rnd(.1,.22),s:rnd(.6,1.3),p:rnd(0,6.3)}))}},
+  draw(s,t,tt,W,H,u){
+   // the fan opens from its left guard to the right, grows until it fills the screen, then folds away to the right
+   const o=ease(smooth(0,this.C,t)),c=ease(smooth(this.S,.94,t)),A=Math.PI+.06,a0=Math.PI+.03-A*c,a1=Math.PI+.03-A*o,{px,py}=s,R=s.R*(.55+.45*o)*(1-.3*c),r0=R*.14;
+   if(a0-a1>.002){const P=(a,r)=>[px+Math.cos(a)*r,py-Math.sin(a)*r],K=18,at=i=>a0-(a0-a1)*i/K;
+    const sector=(ra,rb)=>{hc.beginPath();hc.arc(px,py,rb,-a0,-a1);hc.arc(px,py,ra,-a1,-a0,true);hc.closePath()};
+    sector(0,r0);hc.fillStyle="#5a1a30";hc.fill();
+    hc.save();sector(r0,R);hc.clip();hc.translate(px,py);hc.scale(R/s.R,R/s.R);hc.translate(-px,-py);hc.drawImage(s.art,0,0);hc.setTransform(1,0,0,1,0,0);
+    for(let i=0;i<K;i++){hc.beginPath();hc.moveTo(px,py);hc.lineTo(...P(at(i),R*1.2));hc.lineTo(...P(at(i+1),R*1.2));hc.closePath();hc.fillStyle=i%2?"rgba(120,20,60,.14)":"rgba(255,255,255,.1)";hc.fill()}
+    hc.restore();hc.lineCap="round";
+    hc.strokeStyle="rgba(110,20,55,.4)";hc.lineWidth=Math.max(1,u*.003);hc.beginPath();for(let i=0;i<=K;i++){hc.moveTo(...P(at(i),r0*.3));hc.lineTo(...P(at(i),R))}hc.stroke();
+    hc.strokeStyle="#c8324f";hc.lineWidth=u*.03;hc.beginPath();hc.arc(px,py,R-u*.015,-a0,-a1);hc.stroke();
+    hc.strokeStyle="#f7c48a";hc.lineWidth=u*.006;hc.beginPath();hc.arc(px,py,R-u*.04,-a0,-a1);hc.stroke();hc.beginPath();hc.arc(px,py,r0,-a0,-a1);hc.stroke();
+    hc.strokeStyle="#3a0e1e";hc.lineWidth=u*.022;hc.beginPath();for(const a of[a0,a1]){hc.moveTo(px,py);hc.lineTo(...P(a,R))}hc.stroke()}
+   // petals blow across, and a gust carries them off as the fan closes
+   const gust=smooth(this.S-.05,1,t);hc.globalAlpha=smooth(0,.08,t)*(1-smooth(.88,1,t));
+   for(const p of s.pet){const off=tt*p.v+1.6*gust*gust,x=(((p.x+off)%1.3+1.3)%1.3-.15)*W,y=(((p.y+off*.25+Math.sin(tt*1.2+p.p)*.03)%1.1+1.1)%1.1-.05)*H;
+    hc.fillStyle=p.s>1?"#fff0f6":"#ffb3cf";hc.beginPath();hc.ellipse(x,y,u*.013*p.s,u*.0075*p.s,tt*2+p.p,0,6.29);hc.fill()}
+   hc.globalAlpha=1}},
+ // Tarzan: lianas drop in and jungle leaves close over the page, a vine swings across, then the leaves part
+ vines:{D:3700,C:.4,S:.64,
+  init(W,H,u){const mx=Math.max(W,H),G=["#2f6b3a","#3f8a48","#4f9e52","#245030","#6aae5e"];
+   const lv=Array.from({length:44},(_,i)=>{const side=i%4,x=side===0?-u*.04:side===1?W+u*.04:rnd(0,W),y=side===2?H+u*.04:side===3?-u*.04:rnd(0,H);
+    return{x,y,a:Math.atan2(H/2-y,W/2-x)+rnd(-.7,.7),L:mx*rnd(.2,.34),c:G[i%5],d:rnd(0,.24),tw:rnd(-.5,.5)}});
+   return{lv,li:Array.from({length:7},(_,i)=>({x:((i+.5)/7+rnd(-.04,.04))*W,len:H*rnd(.45,1),p:rnd(0,6.3),d:rnd(0,.14)})),
+    fly:Array.from({length:28},()=>({x:Math.random(),y:Math.random(),p:rnd(0,6.3)}))}},
+  vine(x0,y0,x1,y1,cx,cy,w,u,tip){hc.strokeStyle="#3a5a26";hc.lineWidth=w;hc.lineCap="round";hc.beginPath();hc.moveTo(x0,y0);hc.quadraticCurveTo(cx,cy,x1,y1);hc.stroke();
+   for(let k=1;k<9;k++){const q=k/9,m=1-q;leaf(hc,m*m*x0+2*m*q*cx+q*q*x1,m*m*y0+2*m*q*cy+q*q*y1,k%2?.5:Math.PI-.5,u*.07,u*.025,k%2?"#5a9e4a":"#3f8a48")}
+   if(tip)blossomAt(hc,x1,y1,u*.045,"#ff7fb0")},
+  draw(s,t,tt,W,H,u){
+   const bg=smooth(this.C-.2,this.C,t)*(1-smooth(this.S,this.S+.24,t)),push=ease(smooth(this.S,this.S+.34,t)),up=ease(smooth(this.S-.02,this.S+.26,t));
+   if(bg>0){hc.globalAlpha=bg;const g=hc.createLinearGradient(0,0,0,H);g.addColorStop(0,"#2c6a3a");g.addColorStop(1,"#0c2414");hc.fillStyle=g;hc.fillRect(0,0,W,H);
+    hc.globalCompositeOperation="lighter";hc.fillStyle="rgba(220,255,160,.07)";
+    for(let i=0;i<4;i++){const x=W*(.15+i*.25)+Math.sin(tt*.5+i)*W*.03;hc.beginPath();hc.moveTo(x-W*.04,0);hc.lineTo(x+W*.04,0);hc.lineTo(x+W*.2,H);hc.lineTo(x+W*.02,H);hc.fill()}
+    for(const f of s.fly)glowAt(f.x*W+Math.sin(tt*.8+f.p)*u*.04,f.y*H+Math.cos(tt*.7+f.p)*u*.03,u*.02,"230,255,150",.45+.45*Math.sin(tt*3+f.p*5));
+    hc.globalCompositeOperation="source-over";hc.globalAlpha=1}
+   // leaves grow in from every edge; to part them, each slides back out the way it came
+   for(const f of s.lv){const g=ease(smooth(f.d,f.d+.22,t));if(g<=0)continue;const L=f.L*g*(1+.5*push);
+    leaf(hc,f.x-Math.cos(f.a)*f.L*push,f.y-Math.sin(f.a)*f.L*push,f.a+f.tw*push+Math.sin(tt*1.1+f.d*30)*.03,L,L*.32,f.c,"rgba(210,255,180,.3)")}
+   for(const l of s.li){const len=l.len*ease(smooth(l.d,l.d+.3,t))*(1-up);if(len<u*.02)continue;const sw=Math.sin(tt*1.3+l.p)*.1;
+    this.vine(l.x,-u*.02,l.x+Math.sin(sw)*len,Math.cos(sw)*len,l.x+Math.sin(sw*.5)*len*.5+Math.sin(tt*1.7+l.p)*u*.04,len*.5,u*.012,u,true)}
+   const sw=smooth(this.C-.14,this.S+.06,t);
+   if(sw>0&&sw<1){const ax=W*.5,ay=-H*.25,len=H*.95,a=-1+2*ease(sw),x1=ax+Math.sin(a)*len,y1=ay+Math.cos(a)*len;
+    this.vine(ax,ay,x1,y1,ax+Math.sin(a*.6)*len*.55,ay+Math.cos(a*.6)*len*.55,u*.02,u,false);
+    hc.strokeStyle="#3a5a26";hc.lineWidth=u*.012;hc.beginPath();hc.arc(x1,y1+u*.03,u*.03,0,6.29);hc.stroke()}}},
+ // Aladdin: a lamp rises, genie smoke billows into a night over Agrabah, a carpet flies past, then it all swirls back into the spout
+ lamp:{D:3800,C:.36,S:.62,
+  init(W,H,u){const by=H*.8;
+   const art=paint(W,H,g=>{const sk=g.createLinearGradient(0,0,0,by);sk.addColorStop(0,"#1c0a36");sk.addColorStop(.55,"#5a1d5c");sk.addColorStop(1,"#e0708a");g.fillStyle=sk;g.fillRect(0,0,W,H);
+    g.fillStyle="#ffe8f2";for(let k=0;k<70;k++){g.globalAlpha=rnd(.3,1);g.beginPath();g.arc(Math.random()*W,Math.random()*by*.7,rnd(.6,1.6)*u*.002,0,6.29);g.fill()}g.globalAlpha=1;
+    const mx=W*.76,my=H*.17,mr=u*.075;g.save();g.beginPath();g.rect(0,0,W,H);g.arc(mx+mr*.42,my-mr*.2,mr*.88,0,6.29,true);g.clip("evenodd");g.fillStyle="#fff0d6";g.beginPath();g.arc(mx,my,mr,0,6.29);g.fill();g.restore();
+    g.fillStyle="#8a3462";g.beginPath();g.moveTo(0,H);for(let k=0;k<=40;k++)g.lineTo(W*k/40,by-u*.03-Math.sin(k*.3)*u*.03);g.lineTo(W,H);g.fill();
+    // the city: houses, a palace with an onion dome between two minarets, a few lit windows
+    g.fillStyle="#2a0c2e";const dome=(x,y,r)=>{g.beginPath();g.moveTo(x-r,y);g.bezierCurveTo(x-r,y-r*1.1,x-r*.1,y-r*1.2,x,y-r*1.8);g.bezierCurveTo(x+r*.1,y-r*1.2,x+r,y-r*1.1,x+r,y);g.fill()};
+    const block=(x,w,h,r)=>{g.fillRect(x-w/2,by-h,w,h+H);if(r)dome(x,by-h,r)};
+    for(let x=-u*.05;x<W+u*.05;x+=u*rnd(.07,.12))block(x,u*rnd(.06,.1),u*rnd(.06,.16),Math.random()<.4?u*.03:0);
+    block(W*.5,u*.3,u*.2,u*.11);block(W*.5-u*.2,u*.035,u*.42,u*.025);block(W*.5+u*.2,u*.035,u*.42,u*.025);block(W*.5-u*.1,u*.08,u*.24,u*.05);block(W*.5+u*.1,u*.08,u*.24,u*.05);
+    g.fillStyle="#ffd98a";for(let k=0;k<22;k++){g.globalAlpha=rnd(.5,1);g.fillRect(W*.5+u*rnd(-.14,.14),by-u*rnd(.03,.18),u*.008,u*.012)}g.globalAlpha=1;
+    const fg=g.createLinearGradient(0,by,0,H);fg.addColorStop(0,"#3a1238");fg.addColorStop(1,"#1a0618");g.fillStyle=fg;g.beginPath();g.moveTo(0,H);
+    for(let k=0;k<=40;k++)g.lineTo(W*k/40,by+u*.02+Math.sin(k*.22+1)*u*.025);g.lineTo(W,H);g.fill()});
+   return{art,puff:Array.from({length:70},(_,i)=>({b:rnd(.03,.34),v:rnd(.35,.6),s:rnd(.6,1.2),p:rnd(0,6.3),c:["195,166,255","159,184,255","240,191,214"][i%3]})),
+    spark:Array.from({length:30},(_,i)=>({a:i*.8,r:.25+(i%5)*.15}))}},
+  lampAt(x,y,u){const g=hc.createLinearGradient(x,y-u*.08,x,y+u*.05);g.addColorStop(0,"#fff0c0");g.addColorStop(.5,"#f7c48a");g.addColorStop(1,"#b06a3a");hc.fillStyle=g;hc.strokeStyle=g;hc.lineCap="round";
+   hc.beginPath();hc.moveTo(x-u*.1,y);hc.bezierCurveTo(x-u*.1,y-u*.07,x+u*.06,y-u*.07,x+u*.09,y-u*.02);hc.lineTo(x+u*.2,y-u*.07);hc.bezierCurveTo(x+u*.17,y+u*.01,x+u*.1,y+u*.04,x,y+u*.04);hc.bezierCurveTo(x-u*.07,y+u*.04,x-u*.1,y+u*.02,x-u*.1,y);hc.fill();
+   hc.lineWidth=u*.016;hc.beginPath();hc.arc(x-u*.12,y-u*.005,u*.035,Math.PI*.5,Math.PI*1.5);hc.stroke();
+   hc.beginPath();hc.ellipse(x-u*.01,y-u*.055,u*.04,u*.018,0,Math.PI,0);hc.fill();hc.beginPath();hc.arc(x-u*.01,y-u*.085,u*.012,0,6.29);hc.fill();
+   hc.beginPath();hc.moveTo(x-u*.05,y+u*.035);hc.lineTo(x+u*.04,y+u*.035);hc.lineTo(x+u*.06,y+u*.07);hc.lineTo(x-u*.07,y+u*.07);hc.fill()},
+  carpet(tt,u){const cw=u*.34,ch=u*.1,wv=k=>Math.sin(k*.7-tt*9)*u*.012,top=[],bot=[],lerp=(a,b,f)=>[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f];
+   for(let k=0;k<=12;k++){const x=-cw/2+cw*k/12;top.push([x+ch*.35,-ch/2+wv(k)]);bot.push([x-ch*.35,ch/2+wv(k)*.6])}
+   hc.fillStyle="#c8324f";hc.beginPath();top.forEach(p=>hc.lineTo(...p));for(let k=12;k>=0;k--)hc.lineTo(...bot[k]);hc.closePath();hc.fill();
+   hc.strokeStyle="#f7c48a";hc.lineWidth=u*.006;hc.stroke();
+   hc.strokeStyle="#f7b5cd";hc.lineWidth=u*.004;hc.beginPath();for(const f of[.3,.7]){hc.moveTo(...lerp(top[0],bot[0],f));for(let k=1;k<=12;k++)hc.lineTo(...lerp(top[k],bot[k],f))}hc.stroke();
+   hc.strokeStyle="#f7c48a";hc.beginPath();for(const[x,y]of[top[0],bot[0]]){hc.moveTo(x,y);hc.lineTo(x-u*.025,y)}for(const[x,y]of[top[12],bot[12]]){hc.moveTo(x,y);hc.lineTo(x+u*.025,y)}hc.stroke()},
+  draw(s,t,tt,W,H,u){const bg=smooth(this.C-.2,this.C,t),e=ease(smooth(this.S,.9,t));
+   const lx=W/2-u*.04,ly=H+u*.12-u*.3*ease(smooth(0,.14,t))+u*.45*smooth(.9,1,t),sx=lx+u*.2,sy=ly-u*.07;
+   // on the way out the night closes like an iris into the spout, with sparkles spiralling in
+   const iris=Math.hypot(W,H)*(1-e)**1.3;
+   if(bg>0&&e<1){hc.save();if(e>0){hc.beginPath();hc.arc(sx,sy,iris,0,6.29);hc.clip()}
+    hc.globalAlpha=bg;hc.drawImage(s.art,0,0);
+    const cp=smooth(this.C-.06,this.S+.1,t),path=q=>[-u*.3+(W+u*.6)*q,H*.46-Math.sin(Math.PI*q)*H*.14];
+    if(cp>0&&cp<1){hc.fillStyle="#fff0f6";for(let k=1;k<12;k++){const[x,y]=path(cp-k*.012);hc.globalAlpha=bg*(1-k/12);star4(hc,x+rnd(-1,1)*u*.01,y+u*.02+rnd(-1,1)*u*.01,u*.008*(1.3-k/12))}
+     hc.globalAlpha=bg;hc.translate(...path(cp));hc.rotate(-Math.cos(Math.PI*cp)*.2);this.carpet(tt,u)}
+    hc.restore();
+    if(e>0)for(const[c,w]of[["rgba(195,166,255,.35)",.09],["rgba(240,191,214,.6)",.03],["rgba(255,240,246,.9)",.008]]){hc.strokeStyle=c;hc.lineWidth=u*w*(1-e*.7);hc.beginPath();hc.arc(sx,sy,iris,0,6.29);hc.stroke()}}
+   // genie smoke pours from the spout; on the way out everything is drawn back into it
+   for(const p of s.puff){const a=(t-p.b)*this.D/1000,k=1-e,al=.34*Math.exp(-a*1.2)*k;if(a<0||al<.01)continue;
+    glowAt(sx+(Math.sin(a*1.8+p.p)*u*.3*a+(W/2-sx)*Math.min(1,a))*k,sy-a*H*p.v*k,u*(.06+.32*a*p.s)*k+u*.02,p.c,al)}
+   hc.globalCompositeOperation="lighter";
+   if(e>0&&e<1){hc.fillStyle="#fff0f6";hc.globalAlpha=Math.min(1,4*e*(1-e));for(const q of s.spark){const a=q.a+e*7,r=(1-e)*u*q.r*2;star4(hc,sx+Math.cos(a)*r,sy+Math.sin(a)*r*.7,u*.012)}hc.globalAlpha=1}
+   glowAt(sx,sy,u*.16,"255,220,150",.6*smooth(.05,.2,t)*(1-smooth(.85,1,t)));
+   hc.globalCompositeOperation="source-over";this.lampAt(lx,ly,u)}},
+ // Rapunzel: lanterns rise into a twilight sky, a golden braid tumbles from the tower window, then the sky lifts away with them
+ tower:{D:3800,C:.38,S:.62,
+  init(W,H,u){const tx=W*.8,ty=H*.34,by=H*.8,tw=u*.16;
+   const art=paint(W,H,g=>{const sk=g.createLinearGradient(0,0,0,by);sk.addColorStop(0,"#160a34");sk.addColorStop(.6,"#4a1d6a");sk.addColorStop(1,"#c0508a");g.fillStyle=sk;g.fillRect(0,0,W,H);
+    g.fillStyle="#ffe8f2";for(let k=0;k<80;k++){g.globalAlpha=rnd(.3,1);g.beginPath();g.arc(Math.random()*W,Math.random()*by*.75,rnd(.6,1.6)*u*.002,0,6.29);g.fill()}g.globalAlpha=1;
+    g.fillStyle="#3a1450";g.beginPath();g.moveTo(0,by);for(let k=0;k<=40;k++)g.lineTo(W*k/40,by-u*.04-Math.sin(k*.25)*u*.04-Math.sin(k*.7)*u*.015);g.lineTo(W,by);g.fill();
+    const lk=g.createLinearGradient(0,by,0,H);lk.addColorStop(0,"#5a2470");lk.addColorStop(1,"#14051f");g.fillStyle=lk;g.fillRect(0,by,W,H-by);
+    g.strokeStyle="rgba(255,200,170,.25)";g.lineWidth=u*.004;for(let k=0;k<14;k++){const y=by+(H-by)*rnd(.05,.9),x=rnd(0,W);g.beginPath();g.moveTo(x,y);g.lineTo(x+u*rnd(.05,.15),y);g.stroke()}
+    const tg=g.createLinearGradient(tx-tw/2,0,tx+tw/2,0);tg.addColorStop(0,"#7a2f6a");tg.addColorStop(1,"#3a1240");g.fillStyle=tg;g.fillRect(tx-tw/2,ty,tw,by-ty+u*.01);g.fillRect(tx-tw*.7,ty-u*.02,tw*1.4,u*.12);
+    g.fillStyle="#e0569a";g.beginPath();g.moveTo(tx-tw*.85,ty-u*.02);g.lineTo(tx,ty-u*.3);g.lineTo(tx+tw*.85,ty-u*.02);g.closePath();g.fill();
+    g.fillStyle="#ffd98a";g.beginPath();g.moveTo(tx-u*.025,ty+u*.08);g.lineTo(tx-u*.025,ty+u*.03);g.arc(tx,ty+u*.03,u*.025,Math.PI,0);g.lineTo(tx+u*.025,ty+u*.08);g.fill()});
+   return{art,tx,ty,by,lan:Array.from({length:80},()=>({x:Math.random(),y:rnd(.1,2.1),v:rnd(.22,.42),z:rnd(.5,1.2),p:rnd(0,6.3)}))}},
+  draw(s,t,tt,W,H,u){const bg=smooth(.04,this.C,t),e=smooth(this.S,.96,t),b=ease(smooth(this.C-.16,this.C+.14,t));
+   hc.globalAlpha=bg;hc.drawImage(s.art,0,0);
+   hc.globalCompositeOperation="lighter";glowAt(s.tx,s.ty+u*.055,u*.12,"255,210,140",.6);hc.globalCompositeOperation="source-over";
+   if(b>0){const x0=s.tx,y0=s.ty+u*.075,x2=s.tx-u*.16+Math.sin(tt*1.2)*u*.02,y2=s.by+u*.03,cx=s.tx+u*.03,cy=(y0+y2)/2,n=Math.ceil(60*b);
+    for(let k=0;k<n;k++){const q=k/60,m=1-q,x=m*m*x0+2*m*q*cx+q*q*x2+Math.sin(tt*2+q*6)*u*.006*q,y=m*m*y0+2*m*q*cy+q*q*y2;
+     hc.fillStyle=k%2?"#f2c25a":"#ffdc8a";hc.beginPath();hc.ellipse(x,y,u*.02,u*.011,k%2?.5:-.5,0,6.29);hc.fill();
+     if(k%5===2){hc.fillStyle=k%10===2?"#ff7fb0":"#fff0f6";hc.beginPath();hc.arc(x+u*.012,y,u*.006,0,6.29);hc.fill()}}}
+   hc.globalAlpha=1;
+   // the sky lifts away from the bottom up while the lanterns sail on over the new page
+   if(e>0){const y=H*(1.25-1.6*e),g=hc.createLinearGradient(0,y-H*.25,0,y);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"#000");
+    hc.globalCompositeOperation="destination-out";hc.fillStyle=g;hc.fillRect(0,y-H*.25,W,H*1.5);hc.globalCompositeOperation="source-over"}
+   const off=2.6*e*e,lan=[];
+   for(const l of s.lan){const z=u*.022*l.z,y=(l.y-tt*l.v*l.z-off)*H;if(y>-z*4&&y<H+z*4)lan.push([l.x*W+Math.sin(tt*.8+l.p)*u*.015,y,z,l.y<1?bg:1])}
+   hc.globalCompositeOperation="lighter";for(const[x,y,z,a]of lan)glowAt(x,y,z*4,"255,170,110",.35*a);hc.globalCompositeOperation="source-over";
+   for(const[x,y,z,a]of lan){hc.globalAlpha=a;hc.fillStyle="#ffb36b";hc.beginPath();hc.moveTo(x-z*.55,y-z*.7);hc.lineTo(x+z*.55,y-z*.7);hc.lineTo(x+z*.45,y+z*.7);hc.lineTo(x-z*.45,y+z*.7);hc.fill();
+    hc.fillStyle="#fff0d0";hc.fillRect(x-z*.25,y,z*.5,z*.5)}
+   hc.globalAlpha=1}}
+};
+function peek(sc,swap,fromLight){return new Promise(done=>{
+  const dpr=Math.min(devicePixelRatio||1,2),W=hallC.width=Math.round(innerWidth*dpr),H=hallC.height=Math.round(innerHeight*dpr),u=Math.min(W,H),s=sc.init(W,H,u);
+  const flare=hc.createRadialGradient(W/2,H*.46,0,W/2,H*.46,Math.hypot(W,H)*.55);flare.addColorStop(0,"#fff3f8");flare.addColorStop(.45,"#ffc4dc");flare.addColorStop(1,"#f7b5cd");
+  hallC.style.opacity=1;let swapped=false;const t0=performance.now();
+  function frame(now){const el=now-t0,t=Math.min(1,el/sc.D);
+    hc.setTransform(1,0,0,1,0,0);hc.globalAlpha=1;hc.globalCompositeOperation="source-over";hc.clearRect(0,0,W,H);
+    sc.draw(s,t,el/1000,W,H,u);
+    hc.setTransform(1,0,0,1,0,0);hc.globalAlpha=1;hc.globalCompositeOperation="source-over";
+    // coming through the castle gate, its light fades into the first scene
+    const fl=fromLight?1-smooth(0,700,el):0;if(fl>0){hc.globalAlpha=fl;hc.fillStyle=flare;hc.fillRect(0,0,W,H);hc.globalAlpha=1}
+    if(!swapped&&t>=sc.S){swapped=true;document.body.classList.remove("walking");swap()}else if(!swapped&&t>=sc.C)document.body.classList.add("walking");
+    if(t<1)requestAnimationFrame(frame);else{hc.clearRect(0,0,W,H);done()}}
+  requestAnimationFrame(frame)})}
 
 // the scrambled seals swap places until they spell the magic word
 function spellWord(){return new Promise(res=>{
@@ -510,7 +693,7 @@ async function openVault(src){
   await fadeTo(flare,0,1000);outside.innerHTML="";walk.hidden=true;window.scrollTo({top:0});
 }
 
-function hall(D,fromLight,th){return new Promise(done=>{
+function hall(D,th){return new Promise(done=>{
   const dpr=Math.min(devicePixelRatio||1,2),W=hallC.width=Math.round(innerWidth*dpr),H=hallC.height=Math.round(innerHeight*dpr);
   // world units: corridor half-width, floor, ceiling, arch half-width + springline (centre for moon gates), arch spacing, end door
   const{climb,turn}=th,f=Math.min(W,H*.6)*.42,HW=1.55,FL=1.3,CE=-2.7,L=3,DW=.62,DS=-.55,dist=7,zEnd=dist+1.7,NEAR=.28;
@@ -520,7 +703,7 @@ function hall(D,fromLight,th){return new Promise(done=>{
   vignette.addColorStop(0,"rgba(18,0,14,0)");vignette.addColorStop(1,"rgba(18,0,14,.55)");
   const t0=performance.now();
   function frame(now){
-    const t=Math.min(1,(now-t0)/D),e=fromLight?1-(1-t)**2:ease(t),v=fromLight?1-t:(t<.5?2*t:2-2*t),cam=dist*e,tt=now/1000;
+    const t=Math.min(1,(now-t0)/D),e=ease(t),v=t<.5?2*t:2-2*t,cam=dist*e;
     const ph=cam/.8*Math.PI,cx=W/2+Math.sin(ph)*W*.007*v,cy=H*.46-Math.abs(Math.sin(ph))*W*.016*v;
     // fog fades towards the theme's murk; surfaces near the end door catch its warm light
     const col=(c,z)=>{const k=Math.exp(-(z-cam)/6),w=.6*Math.exp(-(zEnd-z)/1.5);return`rgb(${c.map((x,i)=>(x*k+th.fog[i]*(1-k))*(1-w)+GOLD[i]*w|0)})`};
@@ -534,24 +717,9 @@ function hall(D,fromLight,th){return new Promise(done=>{
         hc.lineTo(ax+R,bt)};
       hc.beginPath();hc.rect(l,tp,r-l,bt-tp);hole();hc.closePath();hc.fillStyle=fill;hc.fill("evenodd");
       if(trim){hc.strokeStyle=trim;hc.lineWidth=.06*s;hc.beginPath();hole();hc.stroke();hc.fillStyle=trim;hc.beginPath();hc.arc(ax,sy-R*(shape==="pointed"?1.55:1),.09*s,0,6.29);hc.fill()}};
-    const lamp=(x,y,qx,qy,s,fl,z)=>{
-      if(th.light==="torch"){hc.fillStyle=col([196,90,134],z);hc.beginPath();hc.arc(x,y,.06*s,0,6.29);hc.fill();
-        hc.fillStyle=th.fl;hc.beginPath();hc.ellipse(qx,qy,.07*s,.14*s*fl,0,0,6.29);hc.fill();
-        hc.fillStyle=th.fl2;hc.beginPath();hc.ellipse(qx,qy+.04*s,.03*s,.07*s*fl,0,0,6.29);hc.fill()}
-      else if(th.light==="lamp"){hc.fillStyle=col(th.trim,z);hc.beginPath();hc.ellipse(x,y,.11*s,.045*s,0,0,6.29);hc.fill();
-        hc.fillStyle=th.fl;hc.beginPath();hc.ellipse(qx,qy+.07*s,.035*s,.08*s*fl,0,0,6.29);hc.fill()}
-      else if(th.light==="lantern"){hc.fillStyle=th.fl;hc.fillRect(qx-.06*s,qy-.06*s,.12*s,.17*s);hc.fillStyle=th.fl2;hc.fillRect(qx-.03*s,qy-.03*s,.06*s,.11*s*fl);
-        hc.strokeStyle=col(th.trim,z);hc.lineWidth=.015*s;hc.strokeRect(qx-.06*s,qy-.06*s,.12*s,.17*s)}
-      else if(th.light==="paper"){hc.fillStyle=col(th.trim,z);hc.fillRect(qx-.05*s,qy-.16*s,.1*s,.03*s);hc.fillRect(qx-.05*s,qy+.11*s,.1*s,.03*s);
-        hc.fillStyle=th.fl;hc.beginPath();hc.ellipse(qx,qy,.1*s,.13*s,0,0,6.29);hc.fill();
-        hc.fillStyle=th.fl2;hc.beginPath();hc.ellipse(qx,qy,.05*s,.1*s*fl,0,0,6.29);hc.fill()}
-      else{hc.fillStyle=th.fl;hc.beginPath();hc.arc(qx,qy+Math.sin(tt*1.7+z)*.06*s,.07*s*fl,0,6.29);hc.fill()}};
-    const mote=(a,b,s,p)=>{const m=th.motes;
-      if(m==="sparkle"){const r=Math.max(1.2,.035*s);hc.fillStyle=th.mc;hc.beginPath();for(let i=0;i<8;i++){const q=i*Math.PI/4,rr=i%2?r*.3:r;hc.lineTo(a+Math.cos(q)*rr,b+Math.sin(q)*rr)}hc.fill()}
-      else if(m==="lantern"){const r=Math.max(1,.03*s);hc.fillStyle=th.mc;hc.fillRect(a-r*.7,b-r,r*1.4,r*1.9);hc.fillStyle=th.fl2;hc.fillRect(a-r*.35,b-r*.5,r*.7,r)}
-      else if(m==="bubble"){hc.strokeStyle=th.mc;hc.lineWidth=Math.max(.6,.005*s);hc.beginPath();hc.arc(a,b,Math.max(1.2,.035*s),0,6.29);hc.stroke()}
-      else if(m==="petal"){hc.fillStyle=th.mc;hc.beginPath();hc.ellipse(a,b,Math.max(1.2,.03*s),Math.max(.7,.017*s),tt*2+p.p,0,6.29);hc.fill()}
-      else{hc.fillStyle=th.mc;hc.beginPath();hc.arc(a,b,Math.max(.8,.018*s),0,6.29);hc.fill()}};
+    const lamp=(x,y,qx,qy,s,fl,z)=>{hc.fillStyle=col([196,90,134],z);hc.beginPath();hc.arc(x,y,.06*s,0,6.29);hc.fill();
+      hc.fillStyle=th.fl;hc.beginPath();hc.ellipse(qx,qy,.07*s,.14*s*fl,0,0,6.29);hc.fill();
+      hc.fillStyle=th.fl2;hc.beginPath();hc.ellipse(qx,qy+.04*s,.03*s,.07*s*fl,0,0,6.29);hc.fill()};
     hc.setTransform(1,0,0,1,0,0);hc.fillStyle="#fff0f6";hc.fillRect(0,0,W,H);
     hc.translate(W/2,H/2);hc.rotate(Math.sin(ph)*.008*v);hc.translate(-W/2,-H/2);
     face(zEnd,DW,DS,"round",col(th.wall.map(x=>x*1.6),zEnd),col(th.trim,zEnd));
@@ -576,7 +744,7 @@ function hall(D,fromLight,th){return new Promise(done=>{
       const tz=z+.5;
       if(z%L===1&&tz>cam+NEAR&&tz<zEnd)for(const sx of[-1,1]){
         const s=f/(tz-cam),fl=.85+.15*Math.sin(now/70+z*5+sx),lx=sx*(HW-.12),[ux,uy]=P(lx,-.8,tz),[qx,qy]=P(lx,-.97,tz);
-        if(th.light!=="orb")poly([[sx*HW,-.78,tz],[lx,-.82,tz],[lx,-.76,tz],[sx*HW,-.6,tz]],col([196,90,134],tz));
+        poly([[sx*HW,-.78,tz],[lx,-.82,tz],[lx,-.76,tz],[sx*HW,-.6,tz]],col([196,90,134],tz));
         lamp(ux,uy,qx,qy,s,fl,tz);glows.push([lx,-.97,tz,fl])}
       const z1=z+.45,z2=z+1.05,zm=(z1+z2)/2;
       if(th.banners&&z%L===0&&z1>cam+NEAR&&z2<zEnd)for(const sx of[-1,1]){
@@ -603,15 +771,15 @@ function hall(D,fromLight,th){return new Promise(done=>{
       poly([[-DW*.85,FL,zEnd],[DW*.85,FL,zEnd],[1.15,FL,near],[-1.15,FL,near]],g)}
     {const[a,b]=P(0,.2,zEnd),rad=2.4*f/(zEnd-cam),g=hc.createRadialGradient(a,b,0,a,b,rad);
       g.addColorStop(0,`rgba(255,214,232,${.55*(.35+.65*open)})`);g.addColorStop(1,"rgba(255,214,232,0)");hc.fillStyle=g;hc.fillRect(a-rad,b-rad,rad*2,rad*2)}
-    if(th.motes==="bubble"||th.motes==="petal")hc.globalCompositeOperation="source-over";
+    // drifting dust
+    hc.fillStyle=th.mc;
     for(const p of motes){while(p.z<cam+NEAR)p.z+=12;const dz=p.z-cam;if(p.z>zEnd)continue;
-      const vy=MOTE_VY[th.motes],y=vy?-2.3+((p.y+vy*tt)%3.4+3.4)%3.4:p.y-2.3+Math.sin(now/900+p.p)*.1,x=p.x+(th.motes==="petal"?Math.sin(tt*1.5+p.p)*.15:0);
-      const[a,b]=P(x,y,p.z);hc.globalAlpha=Math.min(1,dz/1.5)*Math.exp(-dz/7)*(vy&&th.motes!=="sparkle"?.85:.5+.5*Math.sin(now/200+p.p));
-      mote(a,b,f/dz,p)}
+      const[a,b]=P(p.x,p.y-2.3+Math.sin(now/900+p.p)*.1,p.z);hc.globalAlpha=Math.min(1,dz/1.5)*Math.exp(-dz/7)*(.5+.5*Math.sin(now/200+p.p));
+      hc.beginPath();hc.arc(a,b,Math.max(.8,.018*f/dz),0,6.29);hc.fill()}
     hc.globalAlpha=1;hc.globalCompositeOperation="source-over";
     hc.setTransform(1,0,0,1,0,0);hc.fillStyle=vignette;hc.fillRect(0,0,W,H);
-    // golden light: fades out after stepping through the gate, floods in as we reach the far door
-    const sh=Math.max(fromLight?1-smooth(0,.3,t):0,smooth(.7,1,t));
+    // golden light floods in as we reach the far door
+    const sh=smooth(.7,1,t);
     if(sh>0){hc.setTransform(1,0,0,1,0,0);const g=hc.createRadialGradient(W/2,H*.46,0,W/2,H*.46,Math.hypot(W,H)*.55);
       g.addColorStop(0,"#fff3f8");g.addColorStop(.45,"#ffc4dc");g.addColorStop(1,"#f7b5cd");hc.globalAlpha=sh;hc.fillStyle=g;hc.fillRect(0,0,W,H);hc.globalAlpha=1}
     if(t<1)requestAnimationFrame(frame);else done();
