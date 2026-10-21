@@ -640,15 +640,15 @@ const PEEK={
    for(let k=1;k<9;k++){const q=k/9,m=1-q;leaf(hc,m*m*x0+2*m*q*cx+q*q*x1,m*m*y0+2*m*q*cy+q*q*y1,k%2?.5:Math.PI-.5,u*.07,u*.025,k%2?"#5a9e4a":"#3f8a48")}
    if(tip)blossomAt(hc,x1,y1,u*.045,"#ff7fb0")},
   draw(s,t,tt,W,H,u){
-   const bg=smooth(this.C-.2,this.C,t)*(1-smooth(this.S,this.S+.24,t)),push=ease(smooth(this.S,this.S+.34,t)),up=ease(smooth(this.S-.02,this.S+.26,t));
+   const bg=smooth(this.C-.2,this.C,t)*(1-smooth(this.S,this.S+.24,t)),push=smooth(this.S,this.S+.3,t),up=ease(smooth(this.S-.02,this.S+.26,t));
    if(bg>0){hc.globalAlpha=bg;const g=hc.createLinearGradient(0,0,0,H);g.addColorStop(0,"#2c6a3a");g.addColorStop(1,"#0c2414");hc.fillStyle=g;hc.fillRect(0,0,W,H);
     hc.globalCompositeOperation="lighter";hc.fillStyle="rgba(220,255,160,.07)";
     for(let i=0;i<4;i++){const x=W*(.15+i*.25)+Math.sin(tt*.5+i)*W*.03;hc.beginPath();hc.moveTo(x-W*.04,0);hc.lineTo(x+W*.04,0);hc.lineTo(x+W*.2,H);hc.lineTo(x+W*.02,H);hc.fill()}
     for(const f of s.fly)glowAt(f.x*W+Math.sin(tt*.8+f.p)*u*.04,f.y*H+Math.cos(tt*.7+f.p)*u*.03,u*.02,"230,255,150",.45+.45*Math.sin(tt*3+f.p*5));
     hc.globalCompositeOperation="source-over";hc.globalAlpha=1}
-   // leaves grow in from every edge; to part them, each slides back out the way it came
-   for(const f of s.lv){const g=ease(smooth(f.d,f.d+.22,t));if(g<=0)continue;const L=f.L*g*(1+.5*push);
-    leaf(hc,f.x-Math.cos(f.a)*f.L*push,f.y-Math.sin(f.a)*f.L*push,f.a+f.tw*push+Math.sin(tt*1.1+f.d*30)*.03,L,L*.32,f.c,"rgba(210,255,180,.3)")}
+   // leaves grow in from every edge; to part them, each speeds back out the way it came, far enough to clear the screen before the end
+   for(const f of s.lv){const g=ease(smooth(f.d,f.d+.22,t)),back=f.L*2.3*push*push;if(g<=0)continue;const L=f.L*g*(1+.5*push);
+    leaf(hc,f.x-Math.cos(f.a)*back,f.y-Math.sin(f.a)*back,f.a+f.tw*push+Math.sin(tt*1.1+f.d*30)*.03,L,L*.32,f.c,"rgba(210,255,180,.3)")}
    for(const l of s.li){const len=l.len*ease(smooth(l.d,l.d+.3,t))*(1-up);if(len<u*.02)continue;const sw=Math.sin(tt*1.3+l.p)*.1;
     this.vine(l.x,-u*.02,l.x+Math.sin(sw)*len,Math.cos(sw)*len,l.x+Math.sin(sw*.5)*len*.5+Math.sin(tt*1.7+l.p)*u*.04,len*.5,u*.012,u,true)}
    const sw=smooth(this.C-.14,this.S+.06,t);
@@ -723,7 +723,7 @@ const PEEK={
    hc.globalAlpha=1;
    // the sky lifts away from the bottom up while the lanterns sail on over the new page
    if(e>0){const y=H*(1.25-1.6*e),g=hc.createLinearGradient(0,y-H*.25,0,y);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"#000");
-    hc.globalCompositeOperation="destination-out";hc.fillStyle=g;hc.fillRect(0,y-H*.25,W,H*1.5);hc.globalCompositeOperation="source-over"}
+    hc.globalCompositeOperation="destination-out";hc.fillStyle=g;hc.fillRect(0,y-H*.25,W,H*2);hc.globalCompositeOperation="source-over"}
    const off=2.6*e*e,lan=[];
    for(const l of s.lan){const z=u*.022*l.z,y=(l.y-tt*l.v*l.z-off)*H;if(y>-z*4&&y<H+z*4)lan.push([l.x*W+Math.sin(tt*.8+l.p)*u*.015,y,z,l.y<1?bg:1])}
    hc.globalCompositeOperation="lighter";for(const[x,y,z,a]of lan)glowAt(x,y,z*4,"255,170,110",.35*a);hc.globalCompositeOperation="source-over";
