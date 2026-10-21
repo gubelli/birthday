@@ -121,6 +121,8 @@ button.big{font-size:1rem;padding:14px 24px;box-shadow:0 0 0 0 color-mix(in srgb
 .hint{margin:0;font-size:1.05rem;color:var(--muted);border-top:1px solid color-mix(in srgb,var(--gold) 25%,transparent);padding-top:8px;max-width:32ch;animation:enter .6s both}
 .sign{font-style:italic;color:var(--rose);font-size:1.35rem!important}
 .reveal p{margin:0;max-width:36ch;font-size:1.2rem}
+.reveal p.encore{font-size:1.05rem;font-style:italic;color:var(--muted);border-top:1px solid color-mix(in srgb,var(--gold) 25%,transparent);padding-top:12px;margin-top:6px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .foot{display:flex;justify-content:center;padding-top:96px}
 .foot button{font-size:.75rem;padding:8px 12px}
 /* illustration motion */
@@ -226,6 +228,67 @@ blossom:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true">
  ${[[200,28],[160,46],[120,64],[86,66],[72,46],[138,86],[180,34]].map(([x,y])=>`<g transform="translate(${x} ${y})">${[0,72,144,216,288].map(a=>`<ellipse rx="4" ry="7" cy="-6" transform="rotate(${a})" fill="#f6c1d2"/>`).join("")}<circle r="2.5" fill="#f7b5cd"/></g>`).join("")}
  ${[[150,0],[110,1.5],[190,3],[80,4.2],[130,2.2]].map(([x,d])=>`<ellipse class="fall" style="animation-delay:-${d}s" cx="${x}" cy="70" rx="3" ry="5" fill="#f6c1d2"/>`).join("")}
  <g class="bob" style="animation-delay:-1s"><path d="M44 104h24" stroke="#f7b5cd" stroke-width="2"/><rect x="40" y="106" width="32" height="40" rx="12" fill="#c8324f"/><path d="M40 126h32" stroke="#f7b5cd" stroke-width="1.5"/><path d="M56 146v12" stroke="#f7b5cd" stroke-width="2"/><circle cx="56" cy="126" r="9" fill="#fff0f6" opacity=".35" class="flick"/></g>
+</svg>`,
+// the bonus round
+snow:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="snowHalo"><stop offset="0" stop-color="#e4f0ff" stop-opacity=".8"/><stop offset="1" stop-color="#e4f0ff" stop-opacity="0"/></radialGradient></defs>
+ <path d="M0 122L48 72L82 102L128 50L178 104L210 80L240 108V170H0z" fill="#4a2a6a"/>
+ <path d="M48 72L60 84L52 82L46 88L38 82zM128 50L142 64L134 62L128 70L120 64L114 64zM210 80L220 90L212 88L206 92z" fill="#fff0f6"/>
+ <path d="M0 140Q60 126 120 138T240 132V170H0z" fill="#f3e6f5"/>
+ ${[[28,140,26],[200,134,30],[224,140,20]].map(([x,y,h])=>`<path d="M${x} ${y-h}l${h*.4} ${h*.55}h-${h*.18}l${h*.3} ${h*.45}h-${h*1.04}l${h*.3}-${h*.45}h-${h*.18}z" fill="#2e3a5a"/>`).join("")}
+ <g class="bob"><circle cx="120" cy="96" r="30" fill="url(#snowHalo)" class="glow"/>
+ ${[0,60,120].map(a=>`<path d="M120 78V114M120 85l-5-5M120 85l5-5M120 107l-5 5M120 107l5 5" stroke="#f4f9ff" stroke-width="2.4" stroke-linecap="round" fill="none" transform="rotate(${a} 120 96)"/>`).join("")}</g>
+ ${[[40,0],[90,1.5],[150,3],[190,4.2],[120,2.2],[66,5]].map(([x,d])=>`<circle class="fall" style="animation-delay:-${d}s" cx="${x}" cy="10" r="2.5" fill="#fff0f6"/>`).join("")}
+</svg>`,
+book:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="roseHalo"><stop offset="0" stop-color="#ff8fb8" stop-opacity=".7"/><stop offset="1" stop-color="#ff8fb8" stop-opacity="0"/></radialGradient>
+  <linearGradient id="domeGl"><stop offset="0" stop-color="#fff0f6" stop-opacity=".4"/><stop offset=".45" stop-color="#fff0f6" stop-opacity=".05"/><stop offset="1" stop-color="#fff0f6" stop-opacity=".28"/></linearGradient></defs>
+ <path d="M20 150h200" stroke="#f7b5cd" stroke-opacity=".5"/>
+ <circle cx="120" cy="96" r="44" fill="url(#roseHalo)" class="glow"/>
+ <path d="M84 150h72l-6-9h-60z" fill="#8a2f6a"/>
+ <path d="M120 141C117 126 123 114 120 100" stroke="#5a9e4a" stroke-width="2.5" fill="none"/><path d="M120 124q-13-1-15-10q11 0 15 10zM120 116q11-3 14-11q-10 1-14 11z" fill="#5a9e4a"/>
+ <circle cx="120" cy="94" r="9" fill="#c8324f"/><path d="M111 94q9-12 18 0q-9 7-18 0z" fill="#ff5f8f"/><path d="M116 91q4-5 8 0" stroke="#8a1f3a" fill="none"/>
+ <path d="M93 141V98a27 27 0 0154 0v43z" fill="url(#domeGl)" stroke="#fff0f6" stroke-opacity=".6" stroke-width="1.5"/><circle cx="120" cy="69" r="3" fill="#f7b5cd"/>
+ <g class="bob" style="animation-delay:-1.5s"><path d="M30 126h26v6a13 13 0 01-26 0z" fill="#fff0f6"/><path d="M56 129a5 5 0 010 9" stroke="#fff0f6" stroke-width="2" fill="none"/><path d="M38 126l3 5 3-5z" fill="#c45a86"/><path d="M26 147h34" stroke="#f7b5cd" stroke-width="2"/></g>
+ <path class="smoke" d="M43 120C48 110 38 104 43 94" stroke="#f0bfd6" stroke-width="2" fill="none" stroke-linecap="round"/>
+ <rect x="184" y="120" width="8" height="28" rx="2" fill="#f7c48a"/><path d="M178 148h20" stroke="#f7c48a" stroke-width="3"/><path class="flick" d="M188 118c-5-5 0-11 0-15c2 4 6 9 0 15z" fill="#ffd98a"/>
+ ${[[100,40],[150,52],[78,80],[166,96]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.6}s" d="M${x} ${y-4}L${x+1.2} ${y-1.2}L${x+4} ${y}L${x+1.2} ${y+1.2}L${x} ${y+4}L${x-1.2} ${y+1.2}L${x-4} ${y}L${x-1.2} ${y-1.2}Z" fill="#fff0f6"/>`).join("")}
+</svg>`,
+savanna:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="sunG"><stop offset="0" stop-color="#fff3d6"/><stop offset=".6" stop-color="#ffb070"/><stop offset="1" stop-color="#ff7a8a"/></radialGradient>
+  <radialGradient id="sunHalo"><stop offset="0" stop-color="#ffc89a" stop-opacity=".7"/><stop offset="1" stop-color="#ffc89a" stop-opacity="0"/></radialGradient></defs>
+ <circle cx="146" cy="112" r="72" fill="url(#sunHalo)" class="glow"/><circle cx="146" cy="112" r="40" fill="url(#sunG)"/>
+ <path d="M0 132H240V170H0z" fill="#3a1238"/>
+ <path d="M98 0L128 0L110 90L102 90z" fill="#fff0d6" opacity=".2" class="glow"/>
+ <path d="M0 134V108L44 102L110 92L104 100L60 112L54 134z" fill="#2a0c2e"/>
+ <path d="M204 133V104M204 110L192 98M204 112L216 100" stroke="#2a0c2e" stroke-width="3.5" stroke-linecap="round"/><path d="M170 98Q204 82 236 98Q204 104 170 98z" fill="#2a0c2e"/>
+ <g class="bob"><path d="M58 50q5-5 10 0q5-5 10 0M88 40q4-4 8 0q4-4 8 0M36 64q4-4 8 0q4-4 8 0" stroke="#3a1238" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+ ${[14,40,72,150,180,226].map((x,i)=>`<path class="sway ${"abc"[i%3]}" style="transform-origin:${x}px 170px" d="M${x} 170q2-10-2-18M${x+4} 170q1-8 4-14" stroke="#1e0820" stroke-width="2" fill="none" stroke-linecap="round"/>`).join("")}
+</svg>`,
+mine:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="mineHalo"><stop offset="0" stop-color="#ffd98a" stop-opacity=".6"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient></defs>
+ <path d="M30 160V92a90 76 0 01180 0v68z" fill="#1a0716" stroke="#6a2f5a" stroke-width="8"/>
+ <path d="M50 160V84M190 160V84M42 86H198" stroke="#8a5a3a" stroke-width="7" stroke-linecap="round"/>
+ ${[[18,40,"#ff5fa2"],[222,34,"#c3a6ff"],[12,120,"#8fd6a8"],[228,128,"#ff5fa2"],[98,22,"#c3a6ff"],[156,18,"#ffd98a"],[70,120,"#7fd0ff"],[172,124,"#8fd6a8"]].map(([x,y,c],i)=>`<path class="twinkle" style="animation-delay:-${i*.45}s" d="M${x} ${y-7}l6 5-6 9-6-9z" fill="${c}"/>`).join("")}
+ <circle cx="120" cy="112" r="34" fill="url(#mineHalo)" class="glow"/>
+ <g class="sway" style="transform-origin:120px 86px"><path d="M120 86v14" stroke="#f7b5cd"/><rect x="112" y="100" width="16" height="18" rx="3" fill="#ffd98a" class="flick"/><path d="M110 100h20M110 118h20" stroke="#5a2a3a" stroke-width="2.5"/></g>
+ <g class="bob" style="animation-delay:-2s"><path d="M84 134h48l-5 16h-38z" fill="#6a3a5a" stroke="#f7b5cd" stroke-width="1.2"/><path d="M92 134l5-8 5 8zM102 134l6-10 6 10zM114 134l5-7 5 7z" fill="#ff5fa2"/><path d="M104 130l3-4 3 4z" fill="#c3a6ff"/>
+  <circle cx="96" cy="152" r="5" fill="#3a1238" stroke="#f7b5cd"/><circle cx="122" cy="152" r="5" fill="#3a1238" stroke="#f7b5cd"/></g>
+ <path d="M150 158l36-36M180 116q12 2 16 12q-10-8-22-6z" stroke="#c8963e" stroke-width="3.5" fill="#c8963e" stroke-linecap="round"/>
+</svg>`,
+star:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><radialGradient id="wishHalo"><stop offset="0" stop-color="#fff6dc" stop-opacity=".85"/><stop offset="1" stop-color="#c3d4ff" stop-opacity="0"/></radialGradient></defs>
+ ${[[20,30],[60,14],[96,52],[210,20],[226,80],[188,110],[40,92]].map(([x,y],i)=>`<circle class="twinkle" style="animation-delay:-${i*.4}s" cx="${x}" cy="${y}" r="1.6" fill="#fff0f6"/>`).join("")}
+ <path class="dust" d="M150 52Q96 74 30 64" stroke="#fff0f6" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+ <circle cx="150" cy="52" r="46" fill="url(#wishHalo)" class="glow"/>
+ <path d="${Array.from({length:10},(_,i)=>{const r=i%2?7:18,a=-Math.PI/2+i*Math.PI/5;return(i?"L":"M")+(150+Math.cos(a)*r).toFixed(1)+" "+(52+Math.sin(a)*r).toFixed(1)}).join("")}Z" fill="#fffbea"/>
+ <path d="M0 170V138l22-18 22 18V122l30-24 30 24v48z" fill="#3a1238"/><rect x="66" y="128" width="14" height="14" fill="#ffd98a" class="flick"/><path d="M73 128v14M66 135h14" stroke="#3a1238" stroke-width="1.5"/>
+ <g class="bob" style="animation-delay:-1s"><path d="M168 132a16 11 0 0132 0q-4-3-8 0q-4-3-8 0q-4-3-8 0q-4-3-8 0z" fill="#c8324f"/><path d="M184 132v16q0 4-4 4" stroke="#f7b5cd" stroke-width="1.6" fill="none"/>
+  <path d="M176 112h16v-2h-3v-9h-10v9h-3z" fill="#2a0c2e"/></g>
+</svg>`,
+crown:`<svg class="art" viewBox="0 0 240 170" aria-hidden="true"><defs><linearGradient id="crownG" x2="0" y2="1"><stop offset="0" stop-color="#fff0c0"/><stop offset=".5" stop-color="#f7c48a"/><stop offset="1" stop-color="#c87a3a"/></linearGradient>
+  <radialGradient id="crownHalo"><stop offset="0" stop-color="#ffd3e4" stop-opacity=".75"/><stop offset="1" stop-color="#ffd3e4" stop-opacity="0"/></radialGradient></defs>
+ <circle cx="120" cy="100" r="74" fill="url(#crownHalo)" class="glow"/>
+ <g class="bob"><path d="M66 132L56 66L92 98L120 50L148 98L184 66L174 132z" fill="url(#crownG)" stroke="#fff0f6" stroke-width="1.5"/>
+  <rect x="62" y="128" width="116" height="18" rx="4" fill="url(#crownG)" stroke="#fff0f6" stroke-width="1.5"/>
+  <circle cx="56" cy="64" r="6" fill="#ff5fa2" stroke="#fff0f6"/><circle cx="120" cy="48" r="7" fill="#c3a6ff" stroke="#fff0f6"/><circle cx="184" cy="64" r="6" fill="#ff5fa2" stroke="#fff0f6"/>
+  <circle cx="88" cy="137" r="4.5" fill="#8fd6a8"/><path d="M120 143c-5-3.5-8-6-8-9a4 4 0 018-1a4 4 0 018 1c0 3-3 5.5-8 9z" fill="#ff5fa2"/><circle cx="152" cy="137" r="4.5" fill="#c3a6ff"/></g>
+ ${[[30,40],[210,30],[200,124],[36,130],[120,16]].map(([x,y],i)=>`<path class="twinkle" style="animation-delay:-${i*.5}s" d="M${x} ${y-5}L${x+1.5} ${y-1.5}L${x+5} ${y}L${x+1.5} ${y+1.5}L${x} ${y+5}L${x-1.5} ${y+1.5}L${x-5} ${y}L${x-1.5} ${y-1.5}Z" fill="#f7b5cd"/>`).join("")}
 </svg>`
 
 };
@@ -314,10 +377,29 @@ const R=[
  {t:"Das Haar im Turm",art:"tower",v:"Achtzehn Jahre sass ich in einem Turm,\nmein goldenes Haar war mein Geheimnis.\nJedes Jahr an meinem Geburtstag\nstiegen Lichter in den Himmel.\nWer bin ich?",a:["rapunzel"],h:"Ihr Begleiter ist ein Chamäleon namens Pascal.",l:"R"}
 ];
 
-const FINAL="traum", N=R.length;
+// bonus round after the vault: side characters, answered with their German names. n: near misses and a friendly nudge
+const HR=[
+ {t:"Der treue Gefährte im Eis",art:"snow",v:"Ich ziehe einen Schlitten durch Schnee und Eis.\nMein bester Freund erntet Eis\nund spricht gern mit verstellter Stimme für mich.\nFür eine Karotte tue ich fast alles.\nWer bin ich?",a:["sven"],
+  n:{olaf:"Olaf liebt warme Umarmungen, aber den Schlitten zieht ein anderer.",kristoff:"Kristoff ist sein bester Freund. Gesucht ist das Rentier.",anna:"Anna ist die Prinzessin. Gesucht ist ein Tier.",elsa:"Elsa ist die Eiskönigin. Gesucht ist ein Tier."},
+  h:"Er gehört zu Kristoff aus «Die Eiskönigin».",l:"K"},
+ {t:"Das Schloss voller Zauber",art:"book",v:"Einst war ich eine Frau, nun bin ich eine Teekanne.\nIm Schloss des Biests singe ich vom Märchen,\nund mein kleiner Sohn ist eine Tasse mit einem Sprung.\nWer bin ich?",a:["madame pottine","pottine"],
+  n:{tassilo:"Tassilo ist ihr Sohn, die kleine Tasse.",lumiere:"Lumière ist der Kerzenleuchter.",unruh:"Herr von Unruh ist die Uhr.",belle:"Belle ist zu Gast im Schloss. Gesucht ist die Teekanne."},
+  h:"Auf Deutsch hat sie einen französischen Namen: Madame …",l:"R"},
+ {t:"Der Weise vom Königsfelsen",art:"savanna",v:"Ich wohne in einem Affenbrotbaum und male mit Früchten.\nVom Königsfelsen hob ich den neugeborenen Prinzen ins Licht,\nund Jahre später zeigte ich ihm im Wasser seinen Vater.\nWer bin ich?",a:["rafiki"],
+  n:{zazu:"Zazu ist der Nashornvogel. Gesucht ist der weise Affe.",simba:"Simba ist der Prinz. Gesucht ist, wer ihn hochhob.",mufasa:"Mufasa ist der König. Gesucht ist der weise Affe.",timon:"Timon ist das Erdmännchen.",pumbaa:"Pumbaa ist das Warzenschwein."},
+  h:"Ein Mandrill aus «Der König der Löwen».",l:"O"},
+ {t:"Der Stille im Bergwerk",art:"mine",v:"Ich bin der Jüngste von sieben im Bergwerk.\nMeine Ärmel sind zu lang, meine Ohren wackeln,\nund ein einziges Wort habe ich nie gesagt.\nWer bin ich?",a:["seppl"],
+  n:Object.fromEntries(["chef","brummbar","happy","hatschi","schlafmutz","pimpel"].map(k=>[k,"Das ist einer seiner Brüder, aber nicht der Stille."])),
+  h:"Einer der sieben Zwerge aus «Schneewittchen».",l:"N"},
+ {t:"Der Wunsch an den Stern",art:"star",v:"Ich bin klein und trage Zylinder und Regenschirm.\nDie blaue Fee ernannte mich zum Gewissen einer Holzpuppe,\nund ich singe davon, was geschieht,\nwenn man sich etwas von einem Stern wünscht.\nWer bin ich?",a:["jiminy grille","jiminy","grille"],
+  n:{pinocchio:"Pinocchio ist die Holzpuppe. Gesucht ist ihr Gewissen.",geppetto:"Geppetto hat die Puppe geschnitzt. Gesucht ist ihr Gewissen.",fee:"Die Fee hat ihn ernannt. Gesucht ist das Gewissen."},
+  h:"Eine Grille aus «Pinocchio». Auf Deutsch heisst er Jiminy …",l:"E"}
+];
+const FINAL="traum", N=R.length, HARD=8, CROWN="KRONE", FIN=HARD+HR.length;
+const riddle=ix=>ix>=1&&ix<=N?R[ix-1]:ix>=HARD&&ix<FIN?HR[ix-HARD]:null;
 if("scrollRestoration"in history)history.scrollRestoration="manual";
 let pageIx=0;
-try{pageIx=Math.min(7,Math.max(0,parseInt(localStorage.getItem("tresor-deluxe-v2")||"0",10)||0))}catch(e){}
+try{pageIx=Math.min(FIN,Math.max(0,parseInt(localStorage.getItem("tresor-deluxe-v2")||"0",10)||0))}catch(e){}
 const save=()=>{try{localStorage.setItem("tresor-deluxe-v2",String(pageIx))}catch(e){}};
 const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z]/g,"");
 const solvedCount=()=>Math.min(N,Math.max(0,pageIx-1));
@@ -328,10 +410,12 @@ const chars=t=>{let i=0;return t.split(" ").map(w=>`<span class="word">${[...w].
 
 function letters(popIx){
   const L=document.getElementById("letters");L.innerHTML="";
-  const word=pageIx===7?FINAL.toUpperCase():null;
-  R.forEach((r,i)=>{const s=document.createElement("div");const on=word||i<solvedCount()&&i!==popIx;s.className="slot"+(on?" lit":"");s.textContent=word?word[i]:on?r.l:"?";L.appendChild(s)});
-  document.getElementById("step").textContent=pageIx===0?"Eine Geburtstagsquest · fünf Siegel":pageIx<=N?`Siegel ${pageIx} von ${N}`:pageIx===6?"Die Tresortür":"Der Tresor ist offen";
+  const hard=pageIx>=HARD,word=pageIx===7?FINAL.toUpperCase():pageIx===FIN?CROWN:null,solved=hard?pageIx-HARD:solvedCount();
+  (hard?HR:R).forEach((r,i)=>{const s=document.createElement("div");const on=word||i<solved&&i!==popIx;s.className="slot"+(on?" lit":"");s.textContent=word?word[i]:on?r.l:"?";L.appendChild(s)});
+  document.getElementById("step").textContent=pageIx===0?"Eine Geburtstagsquest · fünf Siegel":pageIx<=N?`Siegel ${pageIx} von ${N}`:pageIx===6?"Die Tresortür":pageIx===7?"Der Tresor ist offen":pageIx<FIN?`Bonusrätsel ${pageIx-HARD+1} von ${HR.length}`:"Die Märchenkrone";
 }
+// a typed name counts if it matches an answer or contains one, so "Herr Seppl" or "Madame Pottine" both work
+const hit=(r,val)=>r.a.some(a=>{const n=norm(a);return val===n||n.length>3&&val.includes(n)});
 // close the iPhone keyboard and scroll up; Safari can shift the page again once the keyboard has gone, so scroll once more then
 function toTop(){
   if(document.activeElement&&document.activeElement!==document.body)document.activeElement.blur();
@@ -351,15 +435,15 @@ function build(ix){
   if(ix===0){
     p.innerHTML=`<div class="artbox wide">${bigCastle("h")}</div><h1>${chars("Der verzauberte")}<br>${chars("Geburtstagstresor")}</h1><p class="lead">Irgendwo in deinen Lieblingsgeschichten ist ein Geschenk eingeschlossen. Brich fünf Siegel, indem du die Figur in jedem Rätsel errätst. Jedes Siegel schenkt dir einen Buchstaben.</p><button class="big" id="go">Das Märchen beginnt</button>`;
     p.querySelector("#go").onclick=()=>go(1);
-  } else if(ix<=N){
-    const r=R[ix-1];
-    p.innerHTML=`<div class="artbox">${ART[r.art]}</div><span class="eyebrow">Siegel ${ix} · ${r.t}</span><p class="verse"></p><form><input id="ans" placeholder="Name der Figur" autocomplete="off" aria-label="Antwort"><button>Siegel brechen</button><button type="button" class="ghost" id="tip">Tipp</button></form><p class="feedback" aria-live="polite"></p>`;
+  } else if(riddle(ix)){
+    const r=riddle(ix),hard=ix>=HARD,k=hard?ix-HARD+1:ix;
+    p.innerHTML=`<div class="artbox">${ART[r.art]}</div><span class="eyebrow">${hard?"Bonus":"Siegel"} ${k} · ${r.t}</span><p class="verse"></p><form><input id="ans" placeholder="Name der Figur" autocomplete="off" aria-label="Antwort"><button>${hard?"Lösen":"Siegel brechen"}</button><button type="button" class="ghost" id="tip">Tipp</button></form><p class="feedback" aria-live="polite"></p>`;
     const v=p.querySelector(".verse");r.v.split("\n").forEach((t,i)=>{const s=document.createElement("span");s.style.setProperty("--l",i);s.textContent=t;v.appendChild(s)});
     const f=p.querySelector("form"),fb=p.querySelector(".feedback"),inp=f.querySelector("input");
-    f.onsubmit=async e=>{e.preventDefault();const val=norm(inp.value);
-      if(r.a.some(a=>norm(a)===val)){fb.className="feedback good";fb.textContent="Siegel gebrochen! Du erhältst den Buchstaben "+r.l+".";const up=toTop();f.querySelectorAll("button,input").forEach(x=>x.disabled=true);
-        await up;const ir=inp.getBoundingClientRect();sparkleBurst(90,ir.left+ir.width/2,ir.top);await flyLetter(r.l,ir,ix-1);await wait(500);go(ix+1,ix-1)}
-      else wrong(p,fb,val?"Das Siegel hält. Versuch einen anderen Namen.":"Gib zuerst einen Namen ein.")};
+    f.onsubmit=async e=>{e.preventDefault();const val=norm(inp.value),near=val&&r.n&&Object.keys(r.n).find(x=>val.includes(x));
+      if(val&&hit(r,val)){fb.className="feedback good";fb.textContent=(hard?"Richtig! ":"Siegel gebrochen! ")+"Du erhältst den Buchstaben "+r.l+".";const up=toTop();f.querySelectorAll("button,input").forEach(x=>x.disabled=true);
+        await up;const ir=inp.getBoundingClientRect();sparkleBurst(90,ir.left+ir.width/2,ir.top);await flyLetter(r.l,ir,k-1);await wait(500);go(ix+1,k-1)}
+      else wrong(p,fb,!val?"Gib zuerst einen Namen ein.":near?"Fast! "+r.n[near]:hard?"Knapp daneben. Versuch es noch einmal.":"Das Siegel hält. Versuch einen anderen Namen.")};
     p.querySelector("#tip").onclick=()=>{if(!p.querySelector(".hint")){const h=document.createElement("p");h.className="hint";h.textContent="Tipp: "+r.h;p.appendChild(h)}};
   } else if(ix===6){
     p.innerHTML=`<div class="artbox">${vaultDoor()}</div><h2>${chars("Die Tresortür")}</h2><p class="lead">Alle fünf Siegel sind gebrochen. Ordne deine Buchstaben zu dem Wort, aus dem Wünsche gemacht sind, und sprich es an der Tür aus.</p><form><input id="final" placeholder="Das Zauberwort" autocomplete="off" aria-label="Zauberwort"><button>Öffnen</button></form><p class="feedback" aria-live="polite"></p>`;
@@ -369,10 +453,16 @@ function build(ix){
         if(still){go(7,null,true);return}
         await up;await spellWord();await wait(450);await openVault(p.querySelector(".vault"))}
       else wrong(p,fb,"Die Tür rührt sich nicht. Tipp: Man hat ihn nachts, und manchmal wird er wahr.")};
+  } else if(ix===7){
+    p.classList.add("reveal");
+    p.innerHTML=`<div class="artbox wide">${bigCastle("v",true)}</div><span class="eyebrow">Der Tresor ist offen</span><h2>${chars("Alles Liebe zum Geburtstag,")}<br>${chars("mein Schatz")}</h2><p>Du hast jedes Rätsel gelöst, so wie du jeden gewöhnlichen Tag ein bisschen verzauberst. Ich wünsche dir für dieses Jahr Abenteuer, die einen ganzen Film füllen, Lachen in jedem Kapitel und ein Happy End, das einfach weitergeht.</p><p>Hör nie auf, gross zu träumen. Ich bin bei jedem deiner Träume an deiner Seite.</p><p class="sign">In Liebe, Fabian</p><button class="ghost" id="more">Noch mehr Feuerwerk</button><p class="encore">Lust auf eine Zugabe? Fünf knifflige Rätsel über Nebenfiguren warten.</p><button class="big" id="hard">Schwerer Modus</button>`;
+    p.querySelector("#more").onclick=()=>{fireworks(6);hearts(30)};
+    p.querySelector("#hard").onclick=()=>go(HARD);
   } else {
     p.classList.add("reveal");
-    p.innerHTML=`<div class="artbox wide">${bigCastle("v",true)}</div><span class="eyebrow">Der Tresor ist offen</span><h2>${chars("Alles Liebe zum Geburtstag,")}<br>${chars("mein Schatz")}</h2><p>Du hast jedes Rätsel gelöst, so wie du jeden gewöhnlichen Tag ein bisschen verzauberst. Ich wünsche dir für dieses Jahr Abenteuer, die einen ganzen Film füllen, Lachen in jedem Kapitel und ein Happy End, das einfach weitergeht.</p><p>Hör nie auf, gross zu träumen. Ich bin bei jedem deiner Träume an deiner Seite.</p><p class="sign">In Liebe, Fabian</p><button id="more">Noch mehr Feuerwerk</button>`;
+    p.innerHTML=`<div class="artbox">${ART.crown}</div><span class="eyebrow">Alle Bonusrätsel gelöst</span><h2>${chars("Die Märchenkrone")}</h2><p>Sogar die Nebenfiguren kennst du beim Namen, vom Rentier bis zur Grille. Damit bist du offiziell die Königin aller Märchen.</p><p class="sign">Ich bin so stolz auf dich</p><div class="row"><button class="ghost" id="back">Zurück zum Tresor</button><button id="more">Noch mehr Feuerwerk</button></div>`;
     p.querySelector("#more").onclick=()=>{fireworks(6);hearts(30)};
+    p.querySelector("#back").onclick=()=>go(7);
   }
   stagger(p);tilt(p);return p;
 }
@@ -383,9 +473,9 @@ async function go(ix,popIx,fromFlash){
   const old=stage.querySelector(".page");
   const swap=()=>{pageIx=ix;save();letters(popIx);const p=build(ix);if(old)old.remove();stage.appendChild(p);window.scrollTo({top:0});
     if(ix===0&&!still)setTimeout(()=>{if(pageIx===0)castleArt=prepareCastle()},1200);
-    if(popIx!=null){const s=document.querySelectorAll(".slot")[popIx];s.textContent=R[popIx].l;s.classList.add("lit","pop")}
+    if(popIx!=null){const s=document.querySelectorAll(".slot")[popIx];s.textContent=(ix>=HARD?HR:R)[popIx].l;s.classList.add("lit","pop")}
     const inp=p.querySelector("input");if(inp&&old&&matchMedia("(pointer:fine)").matches)setTimeout(()=>inp.focus({preventScroll:true}),1200);
-    if(ix===7){setTimeout(()=>fireworks(8),300);setTimeout(()=>hearts(40),900)}};
+    if(ix===7||ix===FIN){setTimeout(()=>fireworks(8),300);setTimeout(()=>hearts(40),900)}};
   if(!old||still||fromFlash){swap();busy=false;return}
   await walkIn(old,swap,ix);window.scrollTo({top:0});busy=false;
 }
@@ -399,7 +489,7 @@ function fadeTo(el,to,ms){const a=el.animate([{opacity:getComputedStyle(el).opac
 
 async function walkIn(old,swap,ix){
   walk.hidden=false;
-  const gate=pageIx===0&&old.querySelector(".bigcastle"),scene=ix>=1&&ix<=N&&PEEK[R[ix-1].art];
+  const gate=pageIx===0&&old.querySelector(".bigcastle"),scene=riddle(ix)&&PEEK[riddle(ix).art];
   const hide=()=>document.body.classList.add("walking");
   if(gate){await approach(gate);hide()}
   if(scene){await peek(scene,swap,!!gate);hallC.style.opacity=0;walk.hidden=true;return}
@@ -639,7 +729,175 @@ const PEEK={
    hc.globalCompositeOperation="lighter";for(const[x,y,z,a]of lan)glowAt(x,y,z*4,"255,170,110",.35*a);hc.globalCompositeOperation="source-over";
    for(const[x,y,z,a]of lan){hc.globalAlpha=a;hc.fillStyle="#ffb36b";hc.beginPath();hc.moveTo(x-z*.55,y-z*.7);hc.lineTo(x+z*.55,y-z*.7);hc.lineTo(x+z*.45,y+z*.7);hc.lineTo(x-z*.45,y+z*.7);hc.fill();
     hc.fillStyle="#fff0d0";hc.fillRect(x-z*.25,y,z*.5,z*.5)}
-   hc.globalAlpha=1}}
+   hc.globalAlpha=1}},
+ // bonus round
+ // Sven: frost creeps over the page and melts open on a snowy night under the northern lights, then the ice shatters and falls away
+ snow:{D:3800,C:.34,S:.62,
+  init(W,H,u){
+   const land=paint(W,H,g=>{const sk=g.createLinearGradient(0,0,0,H);sk.addColorStop(0,"#140f3a");sk.addColorStop(.55,"#3a2a6a");sk.addColorStop(1,"#8a6aa8");g.fillStyle=sk;g.fillRect(0,0,W,H);
+    g.globalCompositeOperation="lighter";g.lineWidth=u*.16;g.lineCap="round";
+    [["120,255,200",.16],["255,130,220",.3]].forEach(([c,y0],j)=>{const lg=g.createLinearGradient(0,H*y0-u*.14,0,H*y0+u*.14);lg.addColorStop(0,`rgba(${c},0)`);lg.addColorStop(.5,`rgba(${c},.24)`);lg.addColorStop(1,`rgba(${c},0)`);
+     g.strokeStyle=lg;g.beginPath();for(let k=0;k<=30;k++)g.lineTo(W*k/30,H*y0+Math.sin(k*.35+j*2)*u*.06);g.stroke()});
+    g.globalCompositeOperation="source-over";
+    g.fillStyle="#fff";for(let k=0;k<90;k++){g.globalAlpha=rnd(.3,1);g.beginPath();g.arc(Math.random()*W,Math.random()*H*.55,rnd(.6,1.6)*u*.002,0,6.29);g.fill()}g.globalAlpha=1;
+    // snowy peaks, a snowfield, dark pines
+    [[.58,"#5a4a8a",.2],[.68,"#9a8ac4",.14]].forEach(([b,c,a],j)=>{g.fillStyle=c;g.beginPath();g.moveTo(0,H);for(let k=0;k<=10;k++)g.lineTo(W*k/10,H*b-(k%2?a:a*.3)*u*(1+.3*Math.sin(k*2+j)));g.lineTo(W,H);g.fill()});
+    g.fillStyle="#f2ecf8";g.beginPath();g.moveTo(0,H);for(let k=0;k<=30;k++)g.lineTo(W*k/30,H*.76+Math.sin(k*.4)*u*.03);g.lineTo(W,H);g.fill();
+    g.fillStyle="#2a3050";for(let k=0;k<9;k++){const x=rnd(0,W),y=H*rnd(.78,.84),h=u*rnd(.12,.22);for(let q=0;q<3;q++){g.beginPath();g.moveTo(x,y-h+q*h*.22);g.lineTo(x+h*(.18+q*.07),y-h*.4+q*h*.2);g.lineTo(x-h*(.18+q*.07),y-h*.4+q*h*.2);g.fill()}g.fillRect(x-h*.04,y-h*.05,h*.08,h*.1)}});
+   // frost crystals branch inwards from the edges; b is when each stroke starts, as a share of the cover phase
+   const seg=[],grow=(x,y,a,len,d,b)=>{const x1=x+Math.cos(a)*len,y1=y+Math.sin(a)*len;seg.push([x,y,x1,y1,b]);if(d>=4)return;
+    grow(x1,y1,a+rnd(-.25,.25),len*.8,d+1,b+.16);if(Math.random()<.8)grow(x1,y1,a+(Math.random()<.5?-1:1)*rnd(.8,1.1),len*.5,d+1,b+.16)};
+   for(let k=0;k<44;k++){const e=k%4,q=Math.random(),x=e===0?0:e===1?W:q*W,y=e===2?0:e===3?H:q*H;grow(x,y,Math.atan2(H/2-y,W/2-x)+rnd(-.5,.5),u*rnd(.06,.1),0,rnd(0,.25))}
+   // shards: a jittered grid split into triangles, outer points pinned to the screen edges
+   const c=4,r=Math.max(5,Math.round(c*H/W)),P=[],tri=[];
+   for(let j=0;j<=r;j++)for(let i=0;i<=c;i++)P.push([i/c*W+(i%c?rnd(-.3,.3)*W/c:0),j/r*H+(j%r?rnd(-.3,.3)*H/r:0)]);
+   const pt=(i,j)=>P[j*(c+1)+i];
+   for(let j=0;j<r;j++)for(let i=0;i<c;i++){const a=pt(i,j),b=pt(i+1,j),d=pt(i,j+1),e=pt(i+1,j+1);
+    for(const T of(i+j)%2?[[a,b,e],[a,e,d]]:[[a,b,d],[b,e,d]]){const cx=(T[0][0]+T[1][0]+T[2][0])/3,cy=(T[0][1]+T[1][1]+T[2][1])/3;
+     tri.push({T,cx,cy,dl:Math.hypot(cx-W/2,cy-H/2)/Math.hypot(W,H)*.5+rnd(0,.08),vx:(cx-W/2)/W*rnd(.6,1.2),vr:rnd(-1,1)})}}
+   return{land,seg,tri,flakes:Array.from({length:70},()=>({x:Math.random(),y:Math.random(),v:rnd(.04,.1),r:rnd(.004,.01),p:rnd(0,6.3)}))}},
+  frost(s,t,tt,W,H,u){const fr=smooth(0,this.C,t),win=ease(smooth(this.C,this.C+.16,t)),Rm=Math.hypot(W,H)/2;
+   hc.globalAlpha=smooth(this.C-.06,this.C,t);if(hc.globalAlpha>0)hc.drawImage(s.land,0,0);hc.globalAlpha=1;
+   hc.fillStyle="#fff";for(const f of s.flakes){hc.beginPath();hc.arc(f.x*W+Math.sin(tt+f.p)*u*.02,((f.y+tt*f.v)%1.05)*H,f.r*u,0,6.29);hc.fill()}
+   // the frost thickens from the edges in, then a clear window melts open in the middle
+   const ri=t<this.C?Rm*Math.max(0,1.1-1.4*fr):Rm*.55*win,g=hc.createRadialGradient(W/2,H/2,ri,W/2,H/2,ri+Rm*.4),solid=t<this.C?smooth(.7,1,fr):1-win;
+   g.addColorStop(0,"rgba(228,238,255,0)");g.addColorStop(1,"rgba(236,242,255,.93)");hc.fillStyle=g;hc.fillRect(0,0,W,H);
+   if(solid>0){hc.globalAlpha=solid;hc.fillStyle="rgba(236,242,255,.93)";hc.fillRect(0,0,W,H);hc.globalAlpha=1}
+   const tf=Math.min(1,t/this.C);hc.strokeStyle="rgba(255,255,255,.9)";hc.lineWidth=Math.max(1,u*.004);hc.lineCap="round";hc.beginPath();
+   for(const[x0,y0,x1,y1,b]of s.seg){const q=Math.min(1,(tf-b)/.16);if(q<=0)continue;hc.moveTo(x0,y0);hc.lineTo(x0+(x1-x0)*q,y0+(y1-y0)*q)}hc.stroke()},
+  draw(s,t,tt,W,H,u){
+   // at the swap the finished frame is kept as a picture so it can break into shards
+   if(t>=this.S&&!s.snap){this.frost(s,this.S,tt,W,H,u);s.snap=paint(W,H,g=>g.drawImage(hallC,0,0));hc.clearRect(0,0,W,H)}
+   if(!s.snap){this.frost(s,t,tt,W,H,u);return}
+   const k=(t-this.S)/(1-this.S),crack=smooth(0,.1,k);
+   for(const sh of s.tri){const q=Math.max(0,k-.1-sh.dl),a=1-smooth(.2,.5,q);if(a<=0)continue;const[A,B,D]=sh.T;
+    hc.save();hc.globalAlpha=a;hc.translate(sh.cx+sh.vx*q*W*.6,sh.cy+q*q*H*4-q*H*.15);hc.rotate(sh.vr*q*3);hc.translate(-sh.cx,-sh.cy);
+    hc.beginPath();hc.moveTo(...A);hc.lineTo(...B);hc.lineTo(...D);hc.closePath();hc.save();hc.clip();hc.drawImage(s.snap,0,0);hc.restore();
+    hc.strokeStyle=`rgba(255,255,255,${.85*crack})`;hc.lineWidth=u*.004;hc.stroke();hc.restore()}}},
+ // Madame Pottine: storybook pages riffle over the page and stop at the enchanted rose, then turn on to the next riddle
+ book:{D:3800,C:.36,S:.64,
+  init(W,H,u){
+   const sheet=(g,y0,y1)=>{const pg=g.createRadialGradient(W/2,H/2,u*.1,W/2,H/2,Math.hypot(W,H)*.6);pg.addColorStop(0,"#fdf3e1");pg.addColorStop(1,"#e2c49a");g.fillStyle=pg;g.fillRect(0,0,W,H);
+    g.fillStyle="rgba(120,70,30,.06)";for(let k=0;k<160;k++){g.beginPath();g.arc(Math.random()*W,Math.random()*H,rnd(.5,2.5)*u*.003,0,6.29);g.fill()}
+    g.fillStyle="rgba(90,40,30,.25)";for(let y=y0;y<y1;y+=u*.055)g.fillRect(W*.14,y,W*.72*(Math.random()<.2?rnd(.3,.7):1),u*.012)};
+   const R=u*.2,plain=paint(W,H,g=>sheet(g,H*.1,H*.92)),rose=paint(W,H,g=>{sheet(g,H*.66,H*.9);
+    const m=u*.05;g.strokeStyle="#c8963e";g.lineWidth=u*.008;g.strokeRect(m,m,W-2*m,H-2*m);g.lineWidth=u*.003;g.strokeRect(m*1.4,m*1.4,W-2.8*m,H-2.8*m);
+    g.fillStyle="#c8963e";for(const[x,y]of[[m,m],[W-m,m],[m,H-m],[W-m,H-m]]){g.beginPath();g.arc(x,y,u*.018,0,6.29);g.fill()}
+    g.fillStyle="#7a2f4a";g.textAlign="center";g.font=`700 ${u*.08}px "Cinzel Decorative",Georgia,serif`;g.fillText("Es war einmal",W/2,H*.17);
+    // the enchanted rose under its glass dome
+    const cx=W/2,cy=H*.42;g.fillStyle="#8a2f6a";g.beginPath();g.ellipse(cx,cy+R*1.1,R*1.25,R*.18,0,0,6.29);g.fill();
+    g.strokeStyle="#4a7a3a";g.lineWidth=u*.012;g.beginPath();g.moveTo(cx,cy+R*1.05);g.bezierCurveTo(cx-R*.15,cy+R*.6,cx+R*.15,cy+R*.3,cx,cy-R*.05);g.stroke();
+    leaf(g,cx,cy+R*.55,-2.6,R*.4,R*.14,"#5a9e4a");leaf(g,cx,cy+R*.35,-.5,R*.35,R*.12,"#5a9e4a");
+    g.fillStyle="#c8324f";g.beginPath();g.arc(cx,cy-R*.15,R*.24,0,6.29);g.fill();
+    g.fillStyle="#ff5f8f";for(let k=0;k<5;k++){const a=k*1.2566-1.57;g.beginPath();g.ellipse(cx+Math.cos(a)*R*.14,cy-R*.15+Math.sin(a)*R*.12,R*.13,R*.09,a,0,6.29);g.fill()}
+    g.strokeStyle="#8a1f3a";g.lineWidth=u*.004;g.beginPath();g.arc(cx,cy-R*.17,R*.08,0,5);g.stroke();
+    const gl=g.createLinearGradient(cx-R,0,cx+R,0);gl.addColorStop(0,"rgba(255,255,255,.45)");gl.addColorStop(.3,"rgba(255,255,255,.08)");gl.addColorStop(1,"rgba(255,255,255,.3)");
+    g.fillStyle=gl;g.strokeStyle="rgba(140,90,110,.6)";g.lineWidth=u*.005;g.beginPath();g.moveTo(cx-R*.9,cy+R*1.05);g.lineTo(cx-R*.9,cy-R*.1);g.arc(cx,cy-R*.1,R*.9,Math.PI,0);g.lineTo(cx+R*.9,cy+R*1.05);g.fill();g.stroke();
+    g.fillStyle="#c8963e";g.beginPath();g.arc(cx,cy-R*1.05,u*.015,0,6.29);g.fill()});
+   return{plain,rose,R,spark:Array.from({length:14},()=>({a:rnd(0,6.3),r:rnd(.9,1.5),p:rnd(0,6.3)}))}},
+  // a page turning about a vertical spine (right edge or left edge), drawn in strips that stretch taller towards the free edge
+  page(img,o,right,W,H){if(o<=0)return;if(o>=1){hc.drawImage(img,0,0);return}
+   const n=24,f=.2*Math.sqrt(1-o*o),hx=right?W:0,ex=right?W-W*o:W*o;
+   for(let i=0;i<n;i++){const d0=i/n*W,d1=(i+1)/n*W,h=H*(1+f*(i+.5)/n);hc.drawImage(img,right?W-d1:d0,0,W/n,H,right?hx-d1*o:hx+d0*o,(H-h)/2,W/n*o+1,h)}
+   const g=hc.createLinearGradient(hx,0,ex,0);g.addColorStop(0,`rgba(60,20,10,${.35*(1-o)+.05})`);g.addColorStop(1,`rgba(255,240,220,${.25*(1-o)})`);
+   hc.fillStyle=g;hc.beginPath();hc.moveTo(hx,0);hc.lineTo(ex,-H*f/2);hc.lineTo(ex,H*(1+f/2));hc.lineTo(hx,H);hc.fill()},
+  draw(s,t,tt,W,H,u){
+   // three pages turn in over the spine on the right, then turn away again over the left, top page first
+   [s.plain,s.plain,s.rose].forEach((img,k)=>{if(t<this.S)this.page(img,ease(smooth(k*.08,k*.08+.2,t)),true,W,H);else{const a=this.S+(2-k)*.07;this.page(img,1-ease(smooth(a,a+.2,t)),false,W,H)}});
+   // while the rose page lies still it glows, sparkles and sheds a petal
+   const gl=smooth(this.C-.02,this.C+.08,t)*(1-smooth(this.S-.02,this.S+.02,t));
+   if(gl>0){const cx=W/2,cy=H*.42-s.R*.15;hc.globalCompositeOperation="lighter";glowAt(cx,cy,s.R*(1.3+.15*Math.sin(tt*4)),"255,120,170",.5*gl);
+    hc.fillStyle="#fff0f6";for(const p of s.spark){hc.globalAlpha=gl*(.5+.5*Math.sin(tt*5+p.p));star4(hc,cx+Math.cos(p.a+tt*.4)*s.R*p.r,cy+Math.sin(p.a+tt*.4)*s.R*p.r,u*.012)}
+    hc.globalAlpha=1;hc.globalCompositeOperation="source-over";
+    const q=smooth(this.C,this.S,t);hc.globalAlpha=gl;hc.fillStyle="#e0336e";hc.beginPath();hc.ellipse(cx+Math.sin(q*9)*s.R*.15,cy+s.R*.2+q*s.R*1.05,s.R*.06,s.R*.035,q*6,0,6.29);hc.fill();hc.globalAlpha=1}}},
+ // Rafiki: dawn climbs up the screen over the savanna, light falls on the King's Rock, then the sun opens onto the next riddle
+ savanna:{D:3800,C:.38,S:.62,
+  init(W,H,u){const G=H*.68;
+   const sky=paint(W,H,g=>{const sk=g.createLinearGradient(0,0,0,G);sk.addColorStop(0,"#4a1850");sk.addColorStop(.6,"#e0708a");sk.addColorStop(1,"#ffc07a");g.fillStyle=sk;g.fillRect(0,0,W,H)}),
+    land=paint(W,H,g=>{g.fillStyle="#b0506e";g.beginPath();g.moveTo(0,G+2);for(let k=0;k<=30;k++)g.lineTo(W*k/30,G-u*.035-Math.sin(k*.4)*u*.025);g.lineTo(W,G+2);g.fill();
+     const gr=g.createLinearGradient(0,G,0,H);gr.addColorStop(0,"#5a1d4a");gr.addColorStop(1,"#1e0820");g.fillStyle=gr;g.fillRect(0,G,W,H-G);
+     g.strokeStyle="#1e0820";g.lineWidth=u*.006;g.lineCap="round";g.beginPath();for(let k=0;k<80;k++){const x=Math.random()*W,y=H*rnd(.86,1.02),h=u*rnd(.04,.09);g.moveTo(x,y);g.quadraticCurveTo(x+h*.2,y-h*.6,x+rnd(-.4,.4)*h,y-h)}g.stroke()});
+   return{G,sky,land,birds:Array.from({length:6},(_,i)=>({x:rnd(-.3,0)-i*.06,y:rnd(.12,.3),s:rnd(.7,1.2),p:rnd(0,6.3)}))}},
+  draw(s,t,tt,W,H,u){const{G}=s,yw=H*(1.05-1.2*ease(smooth(0,this.C,t)));
+   const sx=W*.62,sy=G+u*.25-u*.45*ease(smooth(.06,.5,t)),rock=-W*.7*(1-ease(smooth(.06,.36,t))),tree=W*.5*(1-ease(smooth(.12,.4,t)));
+   hc.save();if(t<this.C){hc.beginPath();hc.rect(0,yw,W,H);hc.clip()}
+   hc.drawImage(s.sky,0,0);
+   hc.globalCompositeOperation="lighter";glowAt(sx,sy,u*.6,"255,190,120",.55);hc.globalCompositeOperation="source-over";
+   const sg=hc.createRadialGradient(sx,sy,0,sx,sy,u*.2);sg.addColorStop(0,"#fff6dc");sg.addColorStop(.6,"#ffbe78");sg.addColorStop(1,"#ff8a7a");hc.fillStyle=sg;hc.beginPath();hc.arc(sx,sy,u*.2,0,6.29);hc.fill();
+   hc.drawImage(s.land,0,0);
+   // the King's Rock slides in from the left, an acacia from the right
+   hc.fillStyle="#2a0c2e";hc.beginPath();hc.moveTo(rock-u*.1,G+u*.02);hc.lineTo(rock-u*.1,G-u*.38);hc.lineTo(rock+W*.18,G-u*.43);hc.lineTo(rock+W*.44,G-u*.47);hc.lineTo(rock+W*.4,G-u*.41);hc.lineTo(rock+W*.2,G-u*.33);hc.lineTo(rock+W*.3,G+u*.02);hc.fill();
+   const tx=W*.84+tree;hc.strokeStyle="#2a0c2e";hc.lineCap="round";hc.lineWidth=u*.025;hc.beginPath();hc.moveTo(tx,G+u*.01);hc.lineTo(tx,G-u*.2);hc.moveTo(tx,G-u*.16);hc.lineTo(tx-u*.08,G-u*.26);hc.moveTo(tx,G-u*.17);hc.lineTo(tx+u*.07,G-u*.25);hc.stroke();
+   hc.beginPath();hc.ellipse(tx,G-u*.28,u*.2,u*.045,0,0,6.29);hc.fill();
+   // a shaft of light picks out the tip of the rock
+   const pk=smooth(this.C-.06,this.C+.08,t)*(1-smooth(this.S-.04,this.S+.06,t));
+   if(pk>0){const bx=rock+W*.43,by=G-u*.47,bg=hc.createLinearGradient(0,0,0,by);bg.addColorStop(0,"rgba(255,240,200,0)");bg.addColorStop(1,`rgba(255,240,200,${.45*pk})`);
+    hc.globalCompositeOperation="lighter";hc.fillStyle=bg;hc.beginPath();hc.moveTo(bx-u*.18,0);hc.lineTo(bx+u*.05,0);hc.lineTo(bx+u*.04,by);hc.lineTo(bx-u*.04,by);hc.fill();glowAt(bx,by,u*.1,"255,240,200",.6*pk);hc.globalCompositeOperation="source-over"}
+   hc.strokeStyle="#2a0c2e";hc.lineWidth=u*.006;
+   for(const b of s.birds){const x=(b.x+tt*.18)*W,y=b.y*H+Math.sin(tt*2+b.p)*u*.01,w=u*.03*b.s,f=Math.sin(tt*10+b.p)*w*.5;hc.beginPath();hc.moveTo(x-w,y-f);hc.quadraticCurveTo(x-w*.4,y-w*.3,x,y);hc.quadraticCurveTo(x+w*.4,y-w*.3,x+w,y-f);hc.stroke()}
+   hc.restore();
+   if(t<this.C){const g=hc.createLinearGradient(0,yw-u*.12,0,yw+u*.02);g.addColorStop(0,"rgba(255,190,120,0)");g.addColorStop(1,"rgba(255,190,120,.7)");
+    hc.globalCompositeOperation="lighter";hc.fillStyle=g;hc.fillRect(0,yw-u*.12,W,u*.14);hc.globalCompositeOperation="source-over"}
+   // the sun flares, then a widening circle of light opens the way through
+   const fl=smooth(this.S,this.S+.1,t)*(1-smooth(.9,1,t)),rh=Math.hypot(W,H)*1.1*ease(smooth(this.S+.06,.97,t));
+   if(fl>0){hc.globalCompositeOperation="lighter";glowAt(sx,sy,u*.9,"255,220,170",.8*fl);hc.globalCompositeOperation="source-over"}
+   if(rh>0){const g=hc.createRadialGradient(sx,sy,0,sx,sy,rh);g.addColorStop(0,"#000");g.addColorStop(.82,"#000");g.addColorStop(1,"rgba(0,0,0,0)");
+    hc.globalCompositeOperation="destination-out";hc.fillStyle=g;hc.fillRect(0,0,W,H);
+    hc.globalCompositeOperation="lighter";hc.strokeStyle=`rgba(255,215,160,${.7*(1-smooth(.85,1,t))})`;hc.lineWidth=u*.03;hc.beginPath();hc.arc(sx,sy,rh*.86,0,6.29);hc.stroke();hc.globalCompositeOperation="source-over"}}},
+ // Seppl: two rock walls glittering with gems slam shut over the page, a lantern swings, "Hei-ho!", then the walls roll apart
+ mine:{D:3700,C:.36,S:.62,
+  init(W,H,u){const GEM=["#ff5fa2","#c3a6ff","#8fd6a8","#ffd98a","#7fd0ff"],gems=Array.from({length:22},(_,i)=>({x:rnd(.05,.95)*W,y:rnd(.05,.95)*H,r:u*rnd(.025,.045),c:GEM[i%5],p:rnd(0,6.3)}));
+   const rock=paint(W,H,g=>{const rg=g.createLinearGradient(0,0,W,H);rg.addColorStop(0,"#4a2048");rg.addColorStop(1,"#1e0a1e");g.fillStyle=rg;g.fillRect(0,0,W,H);
+    for(let k=0;k<150;k++){g.fillStyle=k%2?"rgba(120,70,110,.25)":"rgba(10,0,10,.3)";g.beginPath();g.ellipse(Math.random()*W,Math.random()*H,u*rnd(.03,.12),u*rnd(.02,.07),rnd(0,3),0,6.29);g.fill()}
+    for(const m of gems){g.fillStyle=m.c;g.beginPath();g.moveTo(m.x,m.y-m.r);g.lineTo(m.x+m.r*.7,m.y-m.r*.2);g.lineTo(m.x,m.y+m.r);g.lineTo(m.x-m.r*.7,m.y-m.r*.2);g.closePath();g.fill();
+     g.fillStyle="rgba(255,255,255,.55)";g.beginPath();g.moveTo(m.x,m.y-m.r);g.lineTo(m.x+m.r*.3,m.y-m.r*.2);g.lineTo(m.x,m.y);g.lineTo(m.x-m.r*.3,m.y-m.r*.2);g.closePath();g.fill()}});
+   const seam=[];for(let k=0;k<=14;k++)seam.push([W/2+(k%2?1:-1)*u*rnd(.02,.06),H*k/14]);
+   return{rock,gems,seam,sparks:Array.from({length:40},()=>({a:rnd(-Math.PI,0),v:rnd(.3,1)}))}},
+  draw(s,t,tt,W,H,u){const shut=smooth(0,this.C,t),open=ease(smooth(this.S+.04,.96,t)),since=t-this.C;
+   // the walls speed up and stop dead with a jolt; on the way out they rumble
+   const shake=(since>0?Math.exp(-since*40)*Math.sin(tt*90)*u*.02:0)+(open>0&&open<1?Math.sin(tt*60)*u*.006:0),d=t<this.S?W*.62*(1-shut*shut):W*.62*open;
+   for(const side of[-1,1]){hc.save();hc.translate(side*d+shake,0);hc.beginPath();hc.moveTo(side<0?-2:W+2,0);for(const[x,y]of s.seam)hc.lineTo(x,y);hc.lineTo(side<0?-2:W+2,H);hc.closePath();hc.clip();hc.drawImage(s.rock,0,0);
+    hc.strokeStyle="rgba(255,190,220,.25)";hc.lineWidth=u*.006;hc.beginPath();for(const[x,y]of s.seam)hc.lineTo(x,y);hc.stroke();hc.restore()}
+   hc.globalCompositeOperation="lighter";
+   for(const m of s.gems){const x=m.x+(m.x<W/2?-d:d)+shake,a=.5+.5*Math.sin(tt*4+m.p);glowAt(x,m.y,m.r*2,"255,230,250",.3*a);hc.fillStyle="#fff";hc.globalAlpha=a;star4(hc,x,m.y-m.r*.3,m.r*.6);hc.globalAlpha=1}
+   if(since>0&&since<.3){const k=since/.3;for(let j=0;j<=6;j++)glowAt(W/2,H*j/6,u*.15*(1+k*3),"200,150,180",.35*(1-k));
+    hc.strokeStyle="#ffd98a";hc.lineWidth=u*.005;hc.globalAlpha=1-k;hc.beginPath();
+    for(const p of s.sparks){const r=k*u*.5*p.v,x=W/2+Math.cos(p.a)*r,y=H*.5+Math.sin(p.a)*r+k*k*u*.3;hc.moveTo(x,y);hc.lineTo(x-Math.cos(p.a)*u*.03,y-Math.sin(p.a)*u*.03)}hc.stroke();hc.globalAlpha=1}
+   hc.globalCompositeOperation="source-over";
+   const pk=smooth(this.C,this.C+.06,t)*(1-smooth(this.S-.02,this.S+.04,t));
+   if(pk>0){const sw=Math.sin(tt*2.4)*.35,lx=W/2+Math.sin(sw)*H*.2,ly=Math.cos(sw)*H*.2;hc.globalAlpha=pk;
+    hc.strokeStyle="#c8963e";hc.lineWidth=u*.004;hc.beginPath();hc.moveTo(W/2,0);hc.lineTo(lx,ly);hc.stroke();
+    hc.globalCompositeOperation="lighter";glowAt(lx,ly+u*.04,u*.25,"255,210,140",.5);hc.globalCompositeOperation="source-over";
+    hc.fillStyle="#3a1a1a";hc.fillRect(lx-u*.035,ly,u*.07,u*.012);hc.fillRect(lx-u*.035,ly+u*.072,u*.07,u*.012);hc.fillStyle="#ffd98a";hc.fillRect(lx-u*.028,ly+u*.012,u*.056,u*.06);
+    const z=.85+.15*ease(smooth(this.C,this.C+.08,t));hc.save();hc.translate(W/2,H*.62);hc.scale(z,z);hc.rotate(-.06);
+    hc.globalCompositeOperation="lighter";glowAt(0,-u*.03,u*.3,"255,200,120",.35);hc.globalCompositeOperation="source-over";
+    hc.font=`700 ${u*.13}px "Cinzel Decorative",Georgia,serif`;hc.textAlign="center";hc.fillStyle="#ffd98a";hc.fillText("Hei-ho!",0,0);hc.restore();hc.globalAlpha=1}}},
+ // Jiminy: a night sky tiles itself in around the wishing star, an umbrella drifts down, then the tiles wink out one by one
+ star:{D:3700,C:.38,S:.62,
+  init(W,H,u){const sx=W*.64,sy=H*.24;
+   const night=paint(W,H,g=>{const sk=g.createLinearGradient(0,0,0,H);sk.addColorStop(0,"#0c0a2e");sk.addColorStop(.6,"#2a1a5a");sk.addColorStop(1,"#5a2a6a");g.fillStyle=sk;g.fillRect(0,0,W,H);
+    g.fillStyle="#fff";for(let k=0;k<160;k++){g.globalAlpha=rnd(.25,1);g.beginPath();g.arc(Math.random()*W,Math.random()*H*.8,rnd(.5,1.8)*u*.002,0,6.29);g.fill()}g.globalAlpha=1;
+    // rooftops of a little village with lit windows
+    g.fillStyle="#1a0a26";g.beginPath();g.moveTo(0,H);let x=-u*.05;while(x<W){const w=u*rnd(.14,.24),h=H*rnd(.12,.2);g.lineTo(x,H-h);g.lineTo(x+w/2,H-h-u*.08);g.lineTo(x+w,H-h);x+=w}g.lineTo(W,H);g.fill();
+    g.fillStyle="#ffd98a";for(let k=0;k<10;k++){g.globalAlpha=rnd(.6,1);g.fillRect(rnd(0,W),H*(1-rnd(.03,.1)),u*.025,u*.03)}g.globalAlpha=1});
+   const ts=Math.ceil(u/6),tiles=[],md=Math.hypot(W,H);
+   for(let y=0;y<H;y+=ts)for(let x=0;x<W;x+=ts)tiles.push({x,y,w:Math.min(ts,W-x),h:Math.min(ts,H-y),din:Math.hypot(x+ts/2-sx,y+ts/2-sy)/md*.24+rnd(0,.05),dout:rnd(0,.24)});
+   return{night,tiles,sx,sy}},
+  draw(s,t,tt,W,H,u){const{sx,sy}=s,back=x=>1+2.7*(x-1)**3+1.7*(x-1)**2;
+   for(const q of s.tiles){const b=1-smooth(this.S+q.dout,this.S+q.dout+.1,t),k=back(smooth(q.din,q.din+.1,t))*b,cx=q.x+q.w/2,cy=q.y+q.h/2;
+    if(k>.001){if(Math.abs(k-1)<.002)hc.drawImage(s.night,q.x,q.y,q.w,q.h,q.x,q.y,q.w+1,q.h+1);
+     else{hc.save();hc.translate(cx,cy);hc.rotate((1-k)*.9);hc.scale(k,k);hc.drawImage(s.night,q.x,q.y,q.w,q.h,-q.w/2,-q.h/2,q.w+1,q.h+1);hc.restore()}}
+    // a tile winking out leaves a sparkle behind
+    if(b>0&&b<1){hc.globalCompositeOperation="lighter";hc.fillStyle="#fff0f6";hc.globalAlpha=Math.sin(Math.PI*b);star4(hc,cx,cy,q.w*.25*(1-b)+u*.005);hc.globalAlpha=1;hc.globalCompositeOperation="source-over"}}
+   const ws=smooth(this.C-.1,this.C+.02,t)*(1-smooth(this.S-.04,this.S+.04,t));
+   if(ws>0){hc.globalCompositeOperation="lighter";glowAt(sx,sy,u*.45,"200,220,255",.5*ws);glowAt(sx,sy,u*.12,"255,250,230",.9*ws);
+    hc.save();hc.translate(sx,sy);hc.rotate(tt*.4);hc.fillStyle=`rgba(255,245,220,${.25*ws})`;for(let k=0;k<12;k++){hc.rotate(Math.PI/6);hc.beginPath();hc.moveTo(0,0);hc.lineTo(u*.012,u*.4);hc.lineTo(-u*.012,u*.4);hc.fill()}hc.restore();
+    hc.fillStyle="#fffbea";hc.globalAlpha=ws;hc.beginPath();for(let k=0;k<10;k++){const r=k%2?u*.022:u*.055,a=-Math.PI/2+k*Math.PI/5;hc.lineTo(sx+Math.cos(a)*r,sy+Math.sin(a)*r)}hc.fill();hc.globalCompositeOperation="source-over";
+    // a little umbrella drifts down, a top hat dangling from it
+    const q=smooth(this.C-.06,this.S+.04,t),ux=W*.3+Math.sin(tt*2)*u*.05,uy=-u*.1+q*H*.55;hc.save();hc.translate(ux,uy);hc.rotate(Math.sin(tt*2)*.2);
+    hc.fillStyle="#c8324f";hc.beginPath();hc.arc(0,0,u*.06,Math.PI,0);hc.quadraticCurveTo(u*.03,u*.015,0,0);hc.quadraticCurveTo(-u*.03,u*.015,-u*.06,0);hc.fill();
+    hc.strokeStyle="#f7b5cd";hc.lineWidth=u*.005;hc.beginPath();hc.moveTo(0,0);hc.lineTo(0,u*.07);hc.quadraticCurveTo(0,u*.085,u*.012,u*.085);hc.stroke();
+    hc.fillStyle="#2a0c2e";hc.fillRect(-u*.014,u*.09,u*.028,u*.026);hc.fillRect(-u*.022,u*.114,u*.044,u*.007);hc.restore();hc.globalAlpha=1}}}
 };
 function peek(sc,swap,fromLight){return new Promise(done=>{
   const dpr=Math.min(devicePixelRatio||1,2),W=hallC.width=Math.round(innerWidth*dpr),H=hallC.height=Math.round(innerHeight*dpr),u=Math.min(W,H),s=sc.init(W,H,u);
